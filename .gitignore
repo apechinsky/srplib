@@ -1,0 +1,10 @@
+target
+build
+.gradle
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings
+*.novcs

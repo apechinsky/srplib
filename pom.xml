@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>net.srplib</groupId>
+  <artifactId>srp</artifactId>
+  <version>0.1-SNAPSHOT</version>
+
+  <packaging>pom</packaging>
+
+  <name>srp</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.8.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+   
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <!-- version 2.3 defaults to java 1.5, so no further configuration needed-->
+                    <version>2.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <modules>
+        <module>contract</module>
+        <module>conversion</module>
+        <module>conversion-support</module>
+        <module>validation</module>
+        <module>validation-support</module>
+        <module>binding</module>
+        <module>criteria</module>
+    </modules>
+</project>
