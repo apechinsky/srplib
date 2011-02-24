@@ -21,9 +21,8 @@ public interface ValidationError extends Serializable {
      *
      * <p>This may be a field, a form, a panel etc. In other words context is reference to object is being validated.</p>
      *
-     * @return ValidationContext if any, <code>null</code> if error isn't associated with particular context.
-     * @see ValidationContext
+     * @return Object an object representing context, <code>null</code> if error isn't associated with particular context.
      */
-    ValidationContext<?> getContext();
+    Object getContext();
 
 }

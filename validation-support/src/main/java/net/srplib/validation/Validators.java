@@ -25,7 +25,7 @@ public class Validators {
      * @param formField FormField a field where validation error has been detected.
      * @return ValidationError validation error
      */
-    public static ValidationError newError(String message, ValidationContext<?> formField) {
+    public static ValidationError newError(String message, Object formField) {
         return new DefaultValidationError(message, formField);
     }
 
@@ -46,7 +46,6 @@ public class Validators {
      *
      * @param minimum minimal string length (inclusive).
      * @return Validator<String>
-     * @see net.srplib.validation.validators.StringMinLengthValidator
      */
     public static Validator<String> minLength(int minimum) {
         return new StringMinLengthValidator(minimum);
@@ -67,7 +66,6 @@ public class Validators {
      *
      * @param regexp String regular expression.
      * @return Validator<String>
-     * @see net.srplib.validation.validators.RegexpValidator
      */
     public static Validator<String> regexp(String regexp) {
         return new RegexpValidator(regexp);

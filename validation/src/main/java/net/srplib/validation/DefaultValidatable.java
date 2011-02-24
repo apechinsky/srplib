@@ -13,11 +13,11 @@ public class DefaultValidatable<T> implements Validatable<T> {
 
     private final T value;
 
-    private final ValidationContext context;
+    private final Object context;
 
     private List<ValidationError> errors = new LinkedList<ValidationError>();
 
-    public DefaultValidatable(T value, ValidationContext context) {
+    public DefaultValidatable(T value, Object context) {
         this.value = value;
         this.context = context;
     }
@@ -47,7 +47,7 @@ public class DefaultValidatable<T> implements Validatable<T> {
     }
 
     @Override
-    public ValidationContext getContext() {
+    public Object getContext() {
         return context;
     }
 

@@ -96,8 +96,8 @@ public class ValidationErrors {
      *
      * @return Set of FormField
      */
-    public Set<ValidationContext> getErrorFields() {
-        Set<ValidationContext> errorFields = new HashSet<ValidationContext>();
+    public Set<Object> getErrorContexts() {
+        Set<Object> errorFields = new HashSet<Object>();
         for (ValidationError validationError : validationErrors) {
             if (validationError.getContext() != null) {
                 errorFields.add(validationError.getContext());
@@ -107,17 +107,17 @@ public class ValidationErrors {
     }
 
     /**
-     * Find all validation errors for specified {@link ValidationContext}.
+     * Find all validation errors for specified validation context.
      *
      * <p>Note, comparison is done by references!</p>
      *
-     * @param formField FormField to find errors for
+     * @param context FormField to find errors for
      * @return List of {@link ValidationError}
      */
-    public List<ValidationError> getErrorsFor(ValidationContext formField) {
+    public List<ValidationError> getErrorsFor(Object context) {
         List<ValidationError> fieldErrors = new LinkedList<ValidationError>();
         for (ValidationError validationError : validationErrors) {
-            if (validationError.getContext() == formField) {
+            if (validationError.getContext() == context) {
                 fieldErrors.add(validationError);
             }
         }

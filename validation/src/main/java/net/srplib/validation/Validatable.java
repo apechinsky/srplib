@@ -44,9 +44,8 @@ public interface Validatable<T> {
     /**
      * Returns a reference to component which is being validated.
      *
-     * @return ValidationContext validation context
-     * @see ValidationContext
+     * @return Object validation context
      */
-    ValidationContext getContext();
+    Object getContext();
 
 }
