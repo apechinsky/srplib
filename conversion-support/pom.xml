@@ -5,7 +5,7 @@
     <parent>
         <groupId>net.srplib</groupId>
         <artifactId>srp</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>srp-conversion-support</artifactId>
@@ -18,12 +18,12 @@
         <dependency>
             <groupId>net.srplib</groupId>
             <artifactId>srp-contract</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>net.srplib</groupId>
             <artifactId>srp-conversion</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -1,0 +1,29 @@
+<document>
+    <properties>
+        <title>Single Responsiblity Principle Tools</title>
+        <author email="anton@pechinsky.com">Anton Pechinsky</author>
+    </properties>
+
+    <body>
+
+        <release version="0.2-SNAPSHOT" date="2011-03-10" description="Minor modifications.">
+            <action dev="Anton Pechinsky" type="add">
+                Add TwoWayConverter. An extension of Converter having convertBack() method.
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                Add method Binding.getConverter(). An optional Binding specific converter.
+                If exists specific converter is used for value conversion otherwise global converters are used.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add new converters: DateToStringConverter, StringToDateConverter
+            </action>
+        </release>
+
+        <release version="0.1-SNAPSHOT" date="2011-01-10" description="Initial version.">
+            <action dev="Anton Pechinsky" type="add">
+                Committed.
+            </action>
+        </release>
+
+    </body>
+</document>

@@ -1,13 +1,11 @@
 package net.srplib.conversion;
 
-import net.srplib.conversion.Converter;
-
 /**
  * This implementation doesn't make any conversions. In simply returns passed value back to the caller.
  *
  * @author Anton Pechinsky
  */
-public class EmptyConverter<I, O> implements Converter<I, O> {
+public class EmptyConverter<I, O> implements TwoWayConverter<I, O> {
 
     public static EmptyConverter INSTANCE = new EmptyConverter();
 
@@ -24,12 +22,18 @@ public class EmptyConverter<I, O> implements Converter<I, O> {
      */
     @SuppressWarnings("unchecked")
     public static <I, O> EmptyConverter<I, O> instance() {
-        return (EmptyConverter<I, O>)INSTANCE;
+        return (EmptyConverter<I, O>) INSTANCE;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public O convert(I input) {
-        return (O)input;
+        return (O) input;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public I convertBack(O output) {
+        return (I) output;
     }
 }

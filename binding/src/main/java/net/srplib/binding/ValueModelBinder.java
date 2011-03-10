@@ -5,9 +5,11 @@ import java.util.List;
 
 import net.srplib.contract.Argument;
 import net.srplib.contract.Assert;
+import net.srplib.conversion.ConvertBackConverter;
 import net.srplib.conversion.Converter;
 import net.srplib.conversion.ConverterRegistry;
 import net.srplib.conversion.EmptyConverter;
+import net.srplib.conversion.TwoWayConverter;
 import net.srplib.validation.ValidationErrors;
 import net.srplib.validation.ValidationException;
 
@@ -83,10 +85,16 @@ public class ValueModelBinder<T> implements Binder<T> {
 
         ValueModel target = binding.getTarget();
 
-        Converter converter = getConverter(source.getType(), target.getType());
+        Object value = source.getValue();
 
-        Object convertedValue = converter.convert(source.getValue());
+        // Use binding specific converter if exists otherwise use global converter
+        Converter converter = binding.getConverter() != null
+            ? binding.getConverter()
+            : getConverterNullSafe(source.getType(), target.getType());
 
+        Object convertedValue = converter.convert(value);
+
+        // Set converted value to target model
         target.setValue(convertedValue);
     }
 
@@ -113,10 +121,16 @@ public class ValueModelBinder<T> implements Binder<T> {
 
         ValueModel target = binding.getTarget();
 
-        Converter converter = getConverter(target.getType(), source.getType());
+        Object value = target.getValue();
 
-        Object convertedValue = converter.convert(target.getValue());
+        // Use binding specific converter if exists and its type is TwoWayConverter otherwise use global converter
+        Converter converter = binding.getConverter() instanceof TwoWayConverter
+            ? new ConvertBackConverter((TwoWayConverter)binding.getConverter())
+            : getConverterNullSafe(target.getType(), source.getType());
 
+        Object convertedValue = converter.convert(value);
+
+        // Set converted value to target model
         source.setValue(convertedValue);
     }
 
@@ -126,7 +140,7 @@ public class ValueModelBinder<T> implements Binder<T> {
         }
     }
 
-    private Converter getConverter(Class<?> source, Class<?> target) {
+    private Converter getConverterNullSafe(Class<?> source, Class<?> target) {
         Converter converter = null;
 
         if (target.isAssignableFrom(source)) {
