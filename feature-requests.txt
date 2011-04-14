@@ -1,0 +1,4 @@
+- BindException - binding subsystem top level exception
+- Convert bind()/unbind() throw ConverterException. Solution:
+    - bind() wrap it to BindException ValidationException instead
+    - unbind() create ValidationError based on ConverterException
