@@ -30,10 +30,10 @@ public class ConverterRegistry {
     }
 
     /**
-     * Non generic version of {@link #registerConverter}.
+     * Non generic version of {@link #registerConverter(Class, Class, Converter)}.
      *
      * <p>Some types can't be used in generic expression and haven't wrappers. For instance, see byte[].class.
-     * This method should be used only if {@link #registerConverter} doesn't help.</p>
+     * This method should be used only if {@link #registerConverter(Class, Class, Converter)} doesn't help.</p>
      *
      * @param source Class source type
      * @param target Class target type
@@ -41,6 +41,14 @@ public class ConverterRegistry {
      * @return this object for easy chaining
      */
     public ConverterRegistry registerConverterUntyped(Class<?> source, Class<?> target, Converter<?, ?> converter) {
+        registerConverterInternal(source, target, converter);
+        if (converter instanceof TwoWayConverter) {
+            registerConverterInternal(target, source, new ConvertBackConverter((TwoWayConverter)converter));
+        }
+        return this;
+    }
+
+    private ConverterRegistry registerConverterInternal(Class<?> source, Class<?> target, Converter<?, ?> converter) {
         MappingKey mappingKey = createKey(source, target);
 
         Assert.isTrue(!converters.containsKey(mappingKey),

@@ -12,20 +12,29 @@ import net.srplib.contract.Argument;
  */
 public class ConvertBackConverter<O, I> implements Converter<O, I> {
 
-    private TwoWayConverter<I, O> twoWayConverter;
+    private TwoWayConverter<I, O> delegate;
 
     /**
-     * Constructs class using specfied TwoWayConverter.
+     * Constructs class using specified TwoWayConverter.
      *
-     * @param twoWayConverter ConvertBackConverter
+     * @param delegate ConvertBackConverter
      */
-    public ConvertBackConverter(TwoWayConverter<I, O> twoWayConverter) {
-        Argument.notNull(twoWayConverter, "twoWayConverter");
-        this.twoWayConverter = twoWayConverter;
+    public ConvertBackConverter(TwoWayConverter<I, O> delegate) {
+        Argument.notNull(delegate, "delegate");
+        this.delegate = delegate;
     }
 
     @Override
     public I convert(O input) {
-        return twoWayConverter.convertBack(input);
+        return delegate.convertBack(input);
+    }
+
+    /**
+     * Returns underlying TwoWayConverter delegate converter.
+     *
+     * @return TwoWayConverter delegate converter
+     */
+    public TwoWayConverter<I, O> getDelegate() {
+        return delegate;
     }
 }

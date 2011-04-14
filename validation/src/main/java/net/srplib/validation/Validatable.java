@@ -3,9 +3,18 @@ package net.srplib.validation;
 import java.util.List;
 
 /**
- * Represents an object which can be validated or validation error collection object.
+ * Encapsulates an object which can be validated.
  *
- * <p>Note that Validatable is unaware of UI framework.</p>
+ * <p>Validatable is unaware of UI framework and contains only validation specific logic.</p>
+ *
+ * <p>Usage patterns:
+ * <ol>
+ *  <li>Extract value from to be-validated-component and wap it with Validatable implementation (e.g. DefaultValidatable).</li>
+ *  <li>Pass resulting validatable to all associated validators</li>
+ *  <li>Query validatable.hasErrors() method</li>
+ * </ol>
+ *
+ * </p>
  *
  * @author Anton Pechinsky
  */

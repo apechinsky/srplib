@@ -7,6 +7,16 @@
     <body>
 
         <release version="0.2-SNAPSHOT" date="2011-03-10" description="Minor modifications.">
+            <action dev="Anton Pechinsky" type="change">
+                ConvererRegistry registers reverse converter if TwoWayConverter is registered.
+                For example if call:
+                    ConvererRegistry.registerConverter(Integer.class, String.class, twoWayConverter).
+                then following converter is registered implicitly:
+                    ConvererRegistry.registerConverter(String.class, Integer.class, new ConvertBackConverter(twoWayConverter))
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                Migrated to Mockito mocking framework.
+            </action>
             <action dev="Anton Pechinsky" type="add">
                 Add TwoWayConverter. An extension of Converter having convertBack() method.
             </action>
