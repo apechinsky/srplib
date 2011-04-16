@@ -1,63 +1,123 @@
 package net.srplib.contract;
 
 /**
- * Utility methods to validate methods' arguments.
+ * Helper class containing methods for checking method arguments.
+ *
+ * <p>Each method throws {@link IllegalArgumentException} in case of wrong argument.</p>
  *
  * @author Anton Pechinsky
+ * @see Assert
  */
-public final class Argument {
-
-    private Argument() {
-        // prevent instantiation
-    }
+public class Argument {
 
     /**
-     * Ensures that specified parameter is null.
+     * Asserts that specified expression is true.
      *
-     * @param object Object to test
-     * @param name String representing parameter name.
-     * @throws IllegalArgumentException if object is not null.
+     * @param expression boolean expression
+     * @param messageFormat String representing message format
+     * @param arguments vararg array of message format parameters.
+     * @throws IllegalStateException if object is false.
      */
-    public static void isNull(Object object, String name) {
-        if (object != null) {
-            throw new IllegalArgumentException("Argument '" + name + "' must be null!");
-        }
-    }
-
-    /**
-     * Ensures that specified parameter is NOT null.
-     *
-     * @param object Object to test
-     * @param name String representing parameter name.
-     * @throws IllegalArgumentException if object null.
-     */
-    public static void notNull(Object object, String name) {
-        if (object == null) {
-            throw new IllegalArgumentException("Argument '" + name + "' must not be null!");
-        }
-    }
-
-    /**
-     * Ensures that specified parameter expression is true.
-     *
-     * @param expression Object to test
-     * @param message String representing message to pass to exception.
-     * @throws IllegalArgumentException if object is false.
-     */
-    public static void isTrue(boolean expression, String message) {
+    public static void isTrue(boolean expression, String messageFormat, Object... arguments) {
         if (!expression) {
-            throw new IllegalArgumentException(message);
+            throw new IllegalArgumentException(Utils.format(messageFormat, arguments));
         }
     }
 
     /**
-     * Ensures that specified parameter expression is false.
+     * Asserts that specified expression is false.
      *
-     * @param expression Object to test
-     * @param message String representing message to pass to exception.
-     * @throws IllegalArgumentException if object is false.
+     * @param expression boolean expression
+     * @param messageFormat String representing message format
+     * @param arguments vararg array of message format parameters.
+     * @throws IllegalStateException if object is false.
      */
-    public static void isFalse(boolean expression, String message) {
-        isTrue(!expression, message);
+    public static void isFalse(boolean expression, String messageFormat, Object... arguments) {
+        isTrue(!expression, messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified object is null.
+     *
+     * @param object Object to test
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object is not null.
+     */
+    public static void isNull(Object object, String messageFormat, Object... arguments) {
+        isTrue(object == null, messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified object is NOT null.
+     *
+     * @param object Object to test
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object null.
+     */
+    public static void notNull(Object object, String messageFormat, Object... arguments) {
+        isTrue(object != null, messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified string is blank.
+     *
+     * @param string String to check
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object is not null.
+     */
+    public static void isBlank(String string, String messageFormat, Object... arguments) {
+        isTrue(Utils.isBlank(string), messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified string is NOT blank.
+     *
+     * @param string String to check
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object is not null.
+     */
+    public static void isNotBlank(String string, String messageFormat, Object... arguments) {
+        isTrue(!Utils.isBlank(string), messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified objects are equal.
+     *
+     * @param object1 Object first object
+     * @param object2 Object second object
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object1 is not null.
+     */
+    public static void isEqual(Object object1, Object object2, String messageFormat, Object... arguments) {
+        isTrue(Utils.equals(object1, object2), messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified objects are NOT equal.
+     *
+     * @param object1 Object first object
+     * @param object2 Object second object
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object1 is not null.
+     */
+    public static void isNotEqual(Object object1, Object object2, String messageFormat, Object... arguments) {
+        isTrue(!Utils.equals(object1, object2), messageFormat, arguments);
+    }
+
+    /**
+     * Throws <code>IllegalStateException</code> unconditionally.
+     *
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException
+     */
+    public static void fail(String messageFormat, Object... arguments) {
+        isTrue(false, messageFormat, arguments);
     }
 }

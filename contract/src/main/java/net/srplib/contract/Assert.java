@@ -1,116 +1,129 @@
 package net.srplib.contract;
 
 /**
- * Helper methods to maintain invariants.
+ * Helper class containing method for maintaining invariants.
+ *
+ * <p>Each method throws {@link IllegalStateException} in case of wrong argument.</p>
+ *
+ * <p>
+ * It's common practice to make such utility classes non-instantiable. A number of good reasons for that and we agree
+ * with the most of them. Nevertheless this class has been designed non-final, non-abstract and doesn't
+ * prevent instantiation. The reason is maximal reusability.
+ * </p>
  *
  * @author Anton Pechinsky
  */
-public final class Assert {
+public class Assert {
 
-    private Assert() {
-        // prevent instantiation
+    /**
+     * Asserts that specified expression is true.
+     *
+     * @param expression boolean expression
+     * @param messageFormat String representing message format
+     * @param arguments vararg array of message format parameters.
+     * @throws IllegalStateException if object is false.
+     */
+    public static void isTrue(boolean expression, String messageFormat, Object... arguments) {
+        if (!expression) {
+            throw new IllegalStateException(Utils.format(messageFormat, arguments));
+        }
     }
 
     /**
-     * Ensures that specified object isnull.
+     * Asserts that specified expression is false.
+     *
+     * @param expression boolean expression
+     * @param messageFormat String representing message format
+     * @param arguments vararg array of message format parameters.
+     * @throws IllegalStateException if object is false.
+     */
+    public static void isFalse(boolean expression, String messageFormat, Object... arguments) {
+        isTrue(!expression, messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified object is null.
      *
      * @param object Object to test
-     * @param message String representing message to pass to exception.
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
      * @throws IllegalStateException if object is not null.
      */
-    public static void isNull(Object object, String message) {
-        if (object != null) {
-            throw new IllegalStateException(message);
-        }
+    public static void isNull(Object object, String messageFormat, Object... arguments) {
+        isTrue(object == null, messageFormat, arguments);
     }
 
     /**
      * Ensures that specified object is NOT null.
      *
      * @param object Object to test
-     * @param message String representing message to pass to exception.
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
      * @throws IllegalStateException if object null.
      */
-    public static void notNull(Object object, String message) {
-        if (object == null) {
-            throw new IllegalStateException(message);
-        }
+    public static void notNull(Object object, String messageFormat, Object... arguments) {
+        isTrue(object != null, messageFormat, arguments);
     }
 
     /**
-     * Ensures that specified expression is true.
+     * Ensures that specified string is blank.
      *
-     * @param expression boolean expression
-     * @param message String representing message to pass to exception.
-     * @throws IllegalStateException if object is false.
+     * @param string String to check
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object is not null.
      */
-    public static void isTrue(boolean expression, String message) {
-        if (!expression) {
-            throw new IllegalStateException(message);
-        }
+    public static void isBlank(String string, String messageFormat, Object... arguments) {
+        isTrue(Utils.isBlank(string), messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified string is NOT blank.
+     *
+     * @param string String to check
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object is not null.
+     */
+    public static void isNotBlank(String string, String messageFormat, Object... arguments) {
+        isTrue(!Utils.isBlank(string), messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified objects are equal.
+     *
+     * @param object1 Object first object
+     * @param object2 Object second object
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object1 is not null.
+     */
+    public static void isEqual(Object object1, Object object2, String messageFormat, Object... arguments) {
+        isTrue(Utils.equals(object1, object2), messageFormat, arguments);
+    }
+
+    /**
+     * Ensures that specified objects are NOT equal.
+     *
+     * @param object1 Object first object
+     * @param object2 Object second object
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalStateException if object1 is not null.
+     */
+    public static void isNotEqual(Object object1, Object object2, String messageFormat, Object... arguments) {
+        isTrue(!Utils.equals(object1, object2), messageFormat, arguments);
     }
 
     /**
      * Throws <code>IllegalStateException</code> unconditionally.
      *
-     * @param message String representing message to pass to exception.
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
      * @throws IllegalStateException
      */
-    public static void fail(String message) {
-        isTrue(false, message);
+    public static void fail(String messageFormat, Object... arguments) {
+        isTrue(false, messageFormat, arguments);
     }
 
-    /**
-     * Throws <code>UnsupportedOperationException</code> unconditionally. A quick way to implements method :)
-     *
-     * @param message String message
-     * @throws IllegalStateException
-     */
-    public static void throwNotImplemented(String message) {
-        throw new UnsupportedOperationException(message);
-    }
-
-    /**
-     * Throws <code>UnsupportedOperationException</code>.exception with default message ("Not implemented yet.").
-     *
-     * @throws UnsupportedOperationException
-     */
-    public static void throwNotImplemented() {
-        throwNotImplemented("Not implemented yet.");
-    }
-
-    /**
-     * Throws <code>UnsupportedOperationException</code> with default message ("Unsupported operation").
-     *
-     * @throws UnsupportedOperationException
-     */
-    public static void throwUnsupportedOperationException() {
-        throw new UnsupportedOperationException("Unsupported operation.");
-    }
-
-    /**
-     * Ensures that specified objects are equal.
-     *
-     * @param object Object to test
-     * @param expected Expected object
-     * @throws IllegalStateException if object is not null.
-     */
-    public static void isEqual(Object object, Object expected) {
-        isEqual(object, expected, "Assertion failed.");
-    }
-
-    /**
-     * Ensures that specified objects are equal.
-     *
-     * @param object Object to test
-     * @param expected Expected object
-     * @param message Additional message.
-     * @throws IllegalStateException if object is not null.
-     */
-    public static void isEqual(Object object, Object expected, String message) {
-        boolean equals = object == null ? expected == null : object.equals(expected);
-        if (!equals) {
-            throw new IllegalStateException(message + String.format(" Expected '%s' but got '%s'", expected, object));
-        }
-    }
 }
