@@ -12,7 +12,9 @@
 
     <packaging>jar</packaging>
 
-    <name>Context independent binding library</name>
+    <name>Binding library</name>
+
+    <description>Context independent binding library</description>
 
     <dependencies>
         <dependency>

@@ -12,7 +12,9 @@
 
     <packaging>jar</packaging>
 
-    <name>Context independent validation library</name>
+    <name>Generic criteria API</name>
+
+    <description>Context independent criteria API</description>
 
     <dependencies>
         <dependency>

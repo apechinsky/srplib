@@ -12,7 +12,9 @@
 
     <packaging>jar</packaging>
 
-    <name>Context independent conversion library</name>
+    <name>Conversion library</name>
+
+    <description>Context independent conversion library</description>
 
     <dependencies>
         <dependency>
@@ -24,11 +26,13 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
   

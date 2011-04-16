@@ -12,7 +12,9 @@
 
     <packaging>jar</packaging>
 
-    <name>Context independent  validation library</name>
+    <name>Validation library</name>
+
+    <description>Context independent validation library</description>
 
     <dependencies>
         <dependency>

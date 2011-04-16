@@ -12,7 +12,9 @@
 
     <packaging>jar</packaging>
 
-    <name>Context independent conversion library</name>
+    <name>Conversion library support classes</name>
+
+    <description>Context independent conversion library support classes</description>
 
     <dependencies>
         <dependency>

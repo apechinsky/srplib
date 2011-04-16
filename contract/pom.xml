@@ -12,7 +12,9 @@
 
     <packaging>jar</packaging>
 
-    <name>Abstract validation library</name>
+    <name>Contract support library</name>
+
+    <description>Context independent contract support library</description>
 
     <dependencies>
         <dependency>

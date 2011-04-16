@@ -8,7 +8,9 @@
 
     <packaging>pom</packaging>
 
-    <name>srp</name>
+    <name>Single Responsibility Principle libraries</name>
+
+    <description>Single Responsibility Principle (SRP) libraries collection</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
