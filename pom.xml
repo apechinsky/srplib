@@ -12,6 +12,8 @@
 
     <description>Single Responsibility Principle (SRP) libraries collection</description>
 
+    <url>https://github.com/apechinsky/srplib</url>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -21,8 +23,8 @@
     </licenses>
 
     <scm>
-        <url>http://svn.apache.org/viewcvs.cgi/maven</url>
-        <connection>http://svn.apache.org/viewcvs.cgi/maven</connection>
+        <url>https://github.com/apechinsky/srplib.git</url>
+        <connection>https://github.com/apechinsky/srplib.git</connection>
     </scm>
 
     <developers>
@@ -36,19 +38,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>qulix.nexus.server</id>
-            <name>Qulix Company repository</name>
-            <url>http://java.qulix.com/nexus/content/repositories/thirdparty</url>
-        </repository>
-        <snapshotRepository>
-            <id>qulix.nexus.server</id>
-            <name>Qulix Company repository</name>
-            <url>http://java.qulix.com/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
