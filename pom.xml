@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.srplib</groupId>
@@ -12,10 +12,30 @@
 
     <description>Single Responsibility Principle (SRP) libraries collection</description>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>http://svn.apache.org/viewcvs.cgi/maven</url>
+        <connection>http://svn.apache.org/viewcvs.cgi/maven</connection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>apechinsky</id>
+            <name>Anton Pechinsky</name>
+            <email>anton@pechinsky.com</email>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 
     <distributionManagement>
         <repository>
@@ -60,50 +80,50 @@
 
                 <plugin>
                     <!-- Enable maven-source-plugin to generate modules' sources jar -->
-                   <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-source-plugin</artifactId>
-                   <executions>
-                      <execution>
-                         <!--
-                            Restrict execution of source compilation to install or deploy.
-                            The default is package.
-                         -->
-                         <phase>install</phase>
-                         <goals>
-                            <goal>jar</goal>
-                         </goals>
-                      </execution>
-                   </executions>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <!--
+                               Restrict execution of source compilation to install or deploy.
+                               The default is package.
+                            -->
+                            <phase>install</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <plugin>
                     <!-- Enable maven-javadoc-plugin to generate modules' javadocs jar  -->
-                   <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-javadoc-plugin</artifactId>
-                   <executions>
-                      <execution>
-                         <id>attach-javadocs</id>
-                         <!--
-                            Restrict execution of source compilation to install
-                         -->
-                         <phase>install</phase>
-                         <goals>
-                            <goal>jar</goal>
-                         </goals>
-                      </execution>
-                   </executions>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <!--
+                               Restrict execution of source compilation to install
+                            -->
+                            <phase>install</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
             </plugins>
         </pluginManagement>
 
         <plugins>
-           <plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-           </plugin>
-           <plugin>
-              <artifactId>maven-source-plugin</artifactId>
-           </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
         </plugins>
 
     </build>
