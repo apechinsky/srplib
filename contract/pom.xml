@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.srplib</groupId>
+        <groupId>org.srplib</groupId>
         <artifactId>srp</artifactId>
         <version>0.2-SNAPSHOT</version>
     </parent>

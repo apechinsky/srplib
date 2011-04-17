@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.srplib</groupId>
+        <groupId>org.srplib</groupId>
         <artifactId>srp</artifactId>
         <version>0.2-SNAPSHOT</version>
     </parent>
@@ -18,12 +18,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.srplib</groupId>
+            <groupId>org.srplib</groupId>
             <artifactId>srp-contract</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>net.srplib</groupId>
+            <groupId>org.srplib</groupId>
             <artifactId>srp-conversion</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
