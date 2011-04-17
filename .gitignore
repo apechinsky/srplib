@@ -9,3 +9,4 @@ build
 .settings
 *.novcs
 mvn.cmd
+maven.cmd
