@@ -20,7 +20,7 @@ public class ConvertBackConverter<O, I> implements Converter<O, I> {
      * @param delegate ConvertBackConverter
      */
     public ConvertBackConverter(TwoWayConverter<I, O> delegate) {
-        Argument.notNull(delegate, "delegate");
+        Argument.checkNotNull(delegate, "delegate");
         this.delegate = delegate;
     }
 

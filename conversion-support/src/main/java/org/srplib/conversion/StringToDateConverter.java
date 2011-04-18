@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.srplib.contract.Argument;
-import org.srplib.conversion.Converter;
-import org.srplib.conversion.ConverterException;
 
 /**
  * Converts {@link String} to {@link Date} using specified pattern.
@@ -25,7 +23,7 @@ public class StringToDateConverter implements Converter<String, Date> {
      * @param format String date format. See {@link SimpleDateFormat} for syntax details.
      */
     public StringToDateConverter(String format) {
-        Argument.notNull(format, "format");
+        Argument.checkNotNull(format, "format");
 
         // fail-fast check
         createDateFormat(format);

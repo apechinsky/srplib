@@ -51,7 +51,7 @@ public class ConverterRegistry {
     private ConverterRegistry registerConverterInternal(Class<?> source, Class<?> target, Converter<?, ?> converter) {
         MappingKey mappingKey = createKey(source, target);
 
-        Assert.isTrue(!converters.containsKey(mappingKey),
+        Assert.checkTrue(!converters.containsKey(mappingKey),
             String.format("Converter from '%s' to '%s' already registered.", source.getName(), target.getName()));
 
         converters.put(mappingKey, converter);

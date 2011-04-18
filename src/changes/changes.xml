@@ -27,6 +27,9 @@
             <action dev="Anton Pechinsky" type="add">
                 Add new converters: DateToStringConverter, StringToDateConverter
             </action>
+            <action dev="Anton Pechinsky" type="change">
+                Rename methods of Assert/Argument from isXXXXX to checkXXXXX.
+            </action>
         </release>
 
         <release version="0.1-SNAPSHOT" date="2011-01-10" description="Initial version.">

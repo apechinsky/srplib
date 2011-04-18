@@ -17,8 +17,8 @@ public class DefaultBinding implements Binding {
     private final Converter converter;
 
     public DefaultBinding(ValueModel source, ValueModel target, Converter converter) {
-        Argument.notNull(source, "source");
-        Argument.notNull(target, "target");
+        Argument.checkNotNull(source, "source");
+        Argument.checkNotNull(target, "target");
         this.source = source;
         this.target = target;
         this.converter = converter;

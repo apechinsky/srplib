@@ -25,7 +25,7 @@ public class ValueModelBinder<T> implements Binder<T> {
     private ConverterRegistry converterRegistry;
 
     public ValueModelBinder(List<Binding> bindings) {
-        Argument.notNull(bindings, "binding");
+        Argument.checkNotNull(bindings, "binding");
         this.bindings = bindings;
         this.converterRegistry = createDefaultConverterRegistry();
     }
@@ -149,7 +149,7 @@ public class ValueModelBinder<T> implements Binder<T> {
         else {
             converter = converterRegistry.getConverter(source, target);
         }
-        Assert.notNull(converter, "No converter from type '" + source + "' to type '" + target + "'.");
+        Assert.checkNotNull(converter, "No converter from type '" + source + "' to type '" + target + "'.");
 
         return converter;
     }

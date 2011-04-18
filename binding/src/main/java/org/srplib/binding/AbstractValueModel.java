@@ -25,7 +25,7 @@ public abstract class AbstractValueModel<T> implements ValueModel<T> {
      */
     public AbstractValueModel() {
         this.type = BeanUtils.getTypeParameter(getClass());
-        Assert.notNull(type, "Can't construct ValueModel for class '" + getClass() + "'. Class has no type parameters.");
+        Assert.checkNotNull(type, "Can't construct ValueModel for class '" + getClass() + "'. Class has no type parameters.");
     }
 
     @Override

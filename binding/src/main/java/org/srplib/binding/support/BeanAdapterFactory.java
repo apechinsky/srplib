@@ -10,7 +10,7 @@ public class BeanAdapterFactory {
     private Class beanClass;
 
     public BeanAdapterFactory(Class beanClass) {
-        Argument.notNull(beanClass, "beanClass");
+        Argument.checkNotNull(beanClass, "beanClass");
         this.beanClass = beanClass;
     }
 

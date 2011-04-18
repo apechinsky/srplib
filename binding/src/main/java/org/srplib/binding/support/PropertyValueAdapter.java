@@ -31,13 +31,13 @@ public class PropertyValueAdapter<T> extends AbstractValueModel<T> implements Co
 
     @Override
     public void setValue(T value) {
-        Assert.notNull(context, "Context object isn't set!");
+        Assert.checkNotNull(context, "Context object isn't set!");
         BeanUtils.setField(context, property, value);
     }
 
     @Override
     public T getValue() {
-        Assert.notNull(context, "Context object isn't set!");
+        Assert.checkNotNull(context, "Context object isn't set!");
         return (T) BeanUtils.getField(context, property);
     }
 

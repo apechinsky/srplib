@@ -24,7 +24,7 @@ public class DateToStringConverter implements Converter<Date, String> {
      * @param format String date format. See {@link SimpleDateFormat} for syntax details.
      */
     public DateToStringConverter(String format) {
-        Argument.notNull(format, "format");
+        Argument.checkNotNull(format, "format");
 
         // fail-fast check
         createDateFormat(format);
