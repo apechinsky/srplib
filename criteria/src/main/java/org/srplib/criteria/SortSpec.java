@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Models sort clause. Maintains list of sort properties and their sort types.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class SortSpec implements Serializable {
 

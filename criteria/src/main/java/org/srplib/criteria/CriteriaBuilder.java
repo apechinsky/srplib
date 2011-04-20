@@ -1,39 +1,43 @@
 package org.srplib.criteria;
 
 /**
- * @author Q-APE
+ * A builder simplifying criteria {@link Criteria} creation.
+ *
+ * TODO: consider removing this class
+ *
+ * @author Anton Pechinsky
  */
 public class CriteriaBuilder {
 
     private State state;
 
-    public CriteriaBuilder equals(String property, Object value) {
-        register(Criteria.equals(property, value));
+    public CriteriaBuilder eq(String property, Object value) {
+        register(Criteria.eq(property, value));
         return this;
     }
 
-    public CriteriaBuilder notEquals(String property, Object value) {
-        register(Criteria.notEquals(property, value));
+    public CriteriaBuilder ne(String property, Object value) {
+        register(Criteria.ne(property, value));
         return this;
     }
 
-    public CriteriaBuilder greate(String property, Object value) {
-        register(Criteria.greate(property, value));
+    public CriteriaBuilder gt(String property, Object value) {
+        register(Criteria.gt(property, value));
         return this;
     }
 
-    public CriteriaBuilder greateEquals(String property, Object value) {
-        register(Criteria.greateEquals(property, value));
+    public CriteriaBuilder ge(String property, Object value) {
+        register(Criteria.ge(property, value));
         return this;
     }
 
-    public CriteriaBuilder less(String property, Object value) {
-        register(Criteria.less(property, value));
+    public CriteriaBuilder ls(String property, Object value) {
+        register(Criteria.ls(property, value));
         return this;
     }
 
-    public CriteriaBuilder lessEquals(String property, Object value) {
-        register(Criteria.lessEquals(property, value));
+    public CriteriaBuilder le(String property, Object value) {
+        register(Criteria.le(property, value));
         return this;
     }
 

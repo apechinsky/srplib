@@ -33,8 +33,8 @@ public class Converters {
         converters.registerConverter(String.class, Boolean.class, new StringToBooleanConverter());
         converters.registerConverter(String.class, boolean.class, new StringToBooleanConverter());
 
-        converters.registerConverter(Boolean.class, boolean.class, EmptyConverter.<Boolean, Boolean>instance());
-        converters.registerConverter(boolean.class, Boolean.class, EmptyConverter.<Boolean, Boolean>instance());
+        converters.registerConverter(Boolean.class, boolean.class, EmptyConverter.<Boolean>instance());
+        converters.registerConverter(boolean.class, Boolean.class, EmptyConverter.<Boolean>instance());
 
         converters.registerConverter(Integer.class, String.class, new IntegerToStringConverter());
         converters.registerConverter(int.class, String.class, new IntegerToStringConverter());
@@ -51,7 +51,7 @@ public class Converters {
      * @return EmptyConverter an empty converter
      * @see EmptyConverter
      */
-    public static <I, O> Converter<I, O> empty() {
+    public static <I> Converter<I, I> empty() {
         return EmptyConverter.instance();
     }
 

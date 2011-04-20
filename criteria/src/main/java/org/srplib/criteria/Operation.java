@@ -1,9 +1,9 @@
 package org.srplib.criteria;
 
 /**
- * Represents comparison operations.
+ * Models name value(s) relationship operation.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public enum Operation {
 

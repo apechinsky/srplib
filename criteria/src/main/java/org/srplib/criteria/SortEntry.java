@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Encapsulates sort property name and its sort mode (ascending or descending).
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class SortEntry implements Serializable {
 

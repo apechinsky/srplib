@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class ConverterRegistryTest {
 

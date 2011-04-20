@@ -30,6 +30,12 @@
             <action dev="Anton Pechinsky" type="change">
                 Rename methods of Assert/Argument from isXXXXX to checkXXXXX.
             </action>
+            <action dev="Anton Pechinsky" type="change">
+                Add DelegateTwoWayConverter converter - composes TwoWayConverter from two other converters.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add javadoc for classes from org.srplib.conversion package.
+            </action>
         </release>
 
         <release version="0.1-SNAPSHOT" date="2011-01-10" description="Initial version.">

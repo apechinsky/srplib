@@ -3,7 +3,7 @@ package org.srplib.criteria;
 /**
  * Models sort modes.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public enum SortMode {
 

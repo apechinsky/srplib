@@ -17,12 +17,25 @@ public class ConverterRegistry {
     private Map<MappingKey, Converter> converters = new HashMap<MappingKey, Converter>();
 
     /**
-     * Register type converter.
+     * Register specified converter in this converter registry.
+     *
+     * <p>If converter implements {@link TwoWayConverter} interface then two converters are registered: converter itself and
+     * its reverse converter ({@link }):
+     * <pre>
+     *     // an invocation with TwoWayConverter
+     *     converterRegistry.registerConverter(String.class, Integer.class, new StringToIntTwoWayConverter());
+     *
+     *     // what actually happens
+     *     TwoWayConverter converter = new StringToIntTwoWayConverter()
+     *     converterRegistry.registerConverterInternal(String.class, Integer.class, converter);
+     *     converterRegistry.registerConverterInternal(Integer.class, String.class, new ConvertBackConverter(converter));
+     * </pre>
      *
      * @param source Class source type
      * @param target Class target type
      * @param converter converter instance
      * @return this object for easy chaining
+     * @see ConvertBackConverter
      */
     public <I, O> ConverterRegistry registerConverter(Class<I> source, Class<O> target, Converter<I, O> converter) {
         registerConverterUntyped(source, target, converter);

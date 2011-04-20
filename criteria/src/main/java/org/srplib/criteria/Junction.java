@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Represents junction operation for criteria joining (NOT, AND, OR etc.).
+ * A criterion representing junction operation. Is used for criteria joining (NOT, AND, OR etc.).
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class Junction implements Criterion {
 

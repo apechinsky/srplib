@@ -1,11 +1,15 @@
 package org.srplib.conversion;
 
 /**
- * This implementation doesn't make any conversions. In simply returns passed value back to the caller.
+ * A empty implementation of {@link TwoWayConverter}.
+ *
+ * <p>This implementation doesn't make any conversions. It simply returns passed value back to the caller.</p>
+ *
+ * <p>Typical usage is "null value" pattern.</p>
  *
  * @author Anton Pechinsky
  */
-public class EmptyConverter<I, O> implements TwoWayConverter<I, O> {
+public class EmptyConverter<T> implements TwoWayConverter<T, T> {
 
     public static EmptyConverter INSTANCE = new EmptyConverter();
 
@@ -21,19 +25,19 @@ public class EmptyConverter<I, O> implements TwoWayConverter<I, O> {
      * @return EmptyConverter an instance of this class.
      */
     @SuppressWarnings("unchecked")
-    public static <I, O> EmptyConverter<I, O> instance() {
-        return (EmptyConverter<I, O>) INSTANCE;
+    public static <T> EmptyConverter<T> instance() {
+        return (EmptyConverter<T>) INSTANCE;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public O convert(I input) {
-        return (O) input;
+    public T convert(T input) {
+        return (T) input;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public I convertBack(O output) {
-        return (I) output;
+    public T convertBack(T output) {
+        return (T) output;
     }
 }

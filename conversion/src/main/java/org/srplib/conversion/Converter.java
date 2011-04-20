@@ -2,12 +2,13 @@ package org.srplib.conversion;
  
 
 /**
- * General purpose value converter.
+ * General purpose value converter interface.
+ *
+ * <p>It's implementation responsibility how to convert values an how to handle errors.</p>
  *
  * <ul>Use cases:
- *  <li>Data binding</li>
- *  <li>Data mapping</li>
- *  <li>Data migration</li>
+ *  <li>data binding</li>
+ *  <li>data transformation</li>
  *  <li>etc.</li>
  * </ul>
  *

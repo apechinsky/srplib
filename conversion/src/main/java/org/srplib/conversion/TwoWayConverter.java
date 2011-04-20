@@ -13,7 +13,7 @@ public interface TwoWayConverter<I, O> extends Converter<I, O>{
      *
      * @param output a value to convert.
      * @return an input value.
-     * @throws org.srplib.conversion.ConverterException if value can't be converted.
+     * @throws ConverterException if value can't be converted.
      */
     I convertBack(O output);
 

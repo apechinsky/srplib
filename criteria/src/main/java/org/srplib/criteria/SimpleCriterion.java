@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * An implementation of {@link Criterion} containing property operation and value.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class SimpleCriterion implements Criterion {
 

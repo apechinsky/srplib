@@ -1,9 +1,9 @@
 package org.srplib.criteria;
 
 /**
- * Types of criteria join operations.
+ * Enumerates all possible types of {@link Junction} objects.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public enum JunctionType {
 

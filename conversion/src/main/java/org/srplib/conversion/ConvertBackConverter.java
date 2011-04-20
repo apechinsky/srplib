@@ -3,12 +3,12 @@ package org.srplib.conversion;
 import org.srplib.contract.Argument;
 
 /**
- * An adapter for {@link TwoWayConverter} which implements {@link Converter} using
- * {@link TwoWayConverter#convertBack(Object)}} method.
+ * An adapter for {@link TwoWayConverter} implementing {@link Converter#convert(Object)} method using
+ * {@link TwoWayConverter#convertBack(Object)}} method of provided converter.
  *
  * <p>Class allows use of {@link TwoWayConverter#convertBack(Object)}} method where Converter is expected</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class ConvertBackConverter<O, I> implements Converter<O, I> {
 
