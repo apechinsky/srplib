@@ -1,6 +1,7 @@
 package org.srplib.conversion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.srplib.contract.Argument;
@@ -20,6 +21,10 @@ public class ChainConverter<I, O> implements Converter<I, O> {
         Argument.checkNotNull(converters, "Converters list should not be null.");
 
         this.converters = converters;
+    }
+
+    public ChainConverter(Converter... converters) {
+        this(Arrays.asList(converters));
     }
 
     @Override
