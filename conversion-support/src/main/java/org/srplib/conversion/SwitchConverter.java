@@ -3,7 +3,6 @@ package org.srplib.conversion;
 import java.util.Map;
 
 import org.srplib.contract.Argument;
-import org.srplib.contract.Assert;
 
 /**
  * A converter encapsulating switch operator logic.
@@ -39,7 +38,7 @@ public class SwitchConverter<I, O> implements Converter<I, O> {
      *
      * @param map Map input value to output value map
      */
-    private SwitchConverter(Map<I, O> map) {
+    public SwitchConverter(Map<I, O> map) {
         this(map, true);
     }
 
