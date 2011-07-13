@@ -36,6 +36,9 @@
             <action dev="Anton Pechinsky" type="add">
                 Add javadoc for classes from org.srplib.conversion package.
             </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add method Argument.checkNotNullWithGenericMessage.
+            </action>
         </release>
 
         <release version="0.1-SNAPSHOT" date="2011-01-10" description="Initial version.">

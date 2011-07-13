@@ -61,6 +61,21 @@ public class Argument {
     }
 
     /**
+     * Asserts that specified object is NOT null.
+     *
+     * <p>Unlike {@link #checkNotNull(Object, String, Object...)} this method produces generic error message:
+     * {@code Argument '${argument}' must not be null!}
+     * </p>
+     *
+     * @param object Object to test
+     * @param argument String argument name.
+     * @throws IllegalStateException if object null.
+     */
+    public static void checkNotNullWithGenericMessage(Object object, String argument) {
+        checkNotNull(object, "Argument '%s' must not be null!", argument);
+    }
+
+    /**
      * Asserts that specified string is blank.
      *
      * @param string String to check
