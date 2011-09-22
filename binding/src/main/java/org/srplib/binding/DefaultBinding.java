@@ -2,6 +2,7 @@ package org.srplib.binding;
 
 import org.srplib.contract.Argument;
 import org.srplib.conversion.Converter;
+import org.srplib.model.ValueModel;
 
 /**
  * A simple implementation of {@link Binding} interface.

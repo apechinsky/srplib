@@ -1,6 +1,4 @@
-package org.srplib.binding;
-
-import org.srplib.contract.Assert;
+package org.srplib.model;
 
 /**
  * A convenient subclass for {@link ValueModel} implementers which holds value type.
@@ -20,16 +18,17 @@ public abstract class AbstractValueModel<T> implements ValueModel<T> {
         this.type = type;
     }
 
-    /**
-     *
-     */
-    public AbstractValueModel() {
-        this.type = BeanUtils.getTypeParameter(getClass());
-        Assert.checkNotNull(type, "Can't construct ValueModel for class '" + getClass() + "'. Class has no type parameters.");
-    }
+//    /**
+//     *
+//     */
+//    public AbstractValueModel() {
+//        this.type = BeanUtils.getTypeParameter(getClass(),
+//            "Can't construct ValueModel for class '%s'. Class has no type parameters.", getClass().getName());
+//    }
 
     @Override
     public Class<T> getType() {
         return type;
     }
+
 }

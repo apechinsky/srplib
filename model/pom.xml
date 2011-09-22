@@ -8,13 +8,13 @@
         <version>0.3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>srp-validation</artifactId>
+    <artifactId>srp-model</artifactId>
 
     <packaging>jar</packaging>
 
-    <name>Validation library</name>
+    <name>Abstract model library</name>
 
-    <description>Context independent validation library</description>
+    <description>Context independent model library</description>
 
     <dependencies>
         <dependency>

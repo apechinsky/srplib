@@ -3,13 +3,13 @@ package org.srplib.binding;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.srplib.binding.support.PropertyValueAdapter;
 import org.srplib.conversion.Converter;
 import org.srplib.conversion.ConverterRegistry;
 import org.srplib.conversion.IntegerToStringConverter;
 import org.srplib.conversion.StringToIntegerConverter;
 import org.srplib.conversion.TwoWayConverter;
+import org.srplib.model.BeanPropertyValueAdapter;
+import org.srplib.model.ValueModel;
 
 /**
  * @author Anton Pechinsky
@@ -152,8 +152,7 @@ public class ValueModelBinderTest {
     private class TestBean {
 
         public ValueModel newPropertyModel(String property) {
-            Class<?> type = BeanUtils.getFieldType(getClass(), property);
-            PropertyValueAdapter valueModel = new PropertyValueAdapter(property, type);
+            BeanPropertyValueAdapter<Object, String> valueModel = BeanPropertyValueAdapter.forBean((Object) this, property);
             valueModel.setContext(this);
             return valueModel;
         }

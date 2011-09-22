@@ -10,6 +10,8 @@ import org.srplib.conversion.Converter;
 import org.srplib.conversion.ConverterRegistry;
 import org.srplib.conversion.EmptyConverter;
 import org.srplib.conversion.TwoWayConverter;
+import org.srplib.model.ContextDependentValueModel;
+import org.srplib.model.ValueModel;
 import org.srplib.validation.ValidationErrors;
 import org.srplib.validation.ValidationException;
 

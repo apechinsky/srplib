@@ -34,7 +34,6 @@ public class Converters {
         converters.registerConverter(String.class, boolean.class, new StringToBooleanConverter());
 
         converters.registerConverter(Boolean.class, boolean.class, EmptyConverter.<Boolean>instance());
-        converters.registerConverter(boolean.class, Boolean.class, EmptyConverter.<Boolean>instance());
 
         converters.registerConverter(Integer.class, String.class, new IntegerToStringConverter());
         converters.registerConverter(int.class, String.class, new IntegerToStringConverter());

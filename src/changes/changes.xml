@@ -6,6 +6,33 @@
 
     <body>
 
+        <release version="0.3-SNAPSHOT" date="2011-09-21">
+            <action dev="Anton Pechinsky" type="add">
+                Create new module 'srp-module' containing ValueModel and corresponding abstractions.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Create new module 'srp-model-support' ValueModel extension classes.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add PropertyAdapterFactory - factory for creation ValueModel for named property.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add BeanPropertyAdapterFactory - an implementation of PropertyAdapterFactory which creates ValueModel for bean properties.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add MapPropertyAdapterFactory - an implementation of PropertyAdapterFactory which creates ValueModel for Map.
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                ValueModel and corresponding abstractions are moved out from srp-binding to new srp-model module.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add ImmutableValueModel - immutable concrete implementation of ValueModel.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add MutableValueModel - mutable concrete implementation of ValueModel.
+            </action>
+        </release>
+
         <release version="0.2-SNAPSHOT" date="2011-03-10" description="Minor modifications.">
             <action dev="Anton Pechinsky" type="change">
                 ConvererRegistry registers reverse converter if TwoWayConverter is registered.
@@ -37,6 +64,9 @@
                 Add javadoc for classes from org.srplib.conversion package.
             </action>
             <action dev="Anton Pechinsky" type="add">
+                Add method Argument.checkNotNullWithGenericMessage.
+            </action>
+            <action dev="Anton Pechinsky" type="fix">
                 Add method Argument.checkNotNullWithGenericMessage.
             </action>
         </release>

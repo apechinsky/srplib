@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.srplib</groupId>
         <artifactId>srp</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.3.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>srp-conversion-support</artifactId>
@@ -21,13 +21,13 @@
         <dependency>
             <groupId>org.srplib</groupId>
             <artifactId>srp-contract</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.srplib</groupId>
             <artifactId>srp-conversion</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

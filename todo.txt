@@ -1,0 +1,28 @@
+- BindingException - an exception for binding subsystem
+
+- consider single method in binder bind(inputObject, outputObject, ValidationErrors)
+
+- Converters.newDefaultRegistry() throws exception boolean->Boolean already registered.
+This is because EmptyConverter is TwoWayConverter. Remove boolean->Boolean converter registration.
+
+- PropertyValueAdapter - the only usage is to provide class and property name.
+  It would be very convenient to create adapter for existing object.
+  Now we are forced to do the following:
+
+    Object bean = ...
+    PropertyValueAdapter model = PropertyValueAdapter.newFromBean(bean.getClass(), "property1");
+    model.setContext(bean);
+
+    // now model is ready to use
+
+  Wanted:
+    PropertyValueAdapter model = PropertyValueAdapter.newFromBean(bean, "property1");
+    PropertyValueAdapter model = PropertyValueAdapter.newFromClass(bean.getClass(), "property1");
+
+    also rename newFromBean(Class beanClass, String property) to newFromClass(Class beanClass, String property)
+    as shown above
+
+
+- provide simple implementation of ValueModel. It will be useful in tests.
+
+- provide SendParams.create() for symmetry with SendParams.empty()

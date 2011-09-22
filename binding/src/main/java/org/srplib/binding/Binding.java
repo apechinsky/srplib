@@ -1,6 +1,7 @@
 package org.srplib.binding;
 
 import org.srplib.conversion.Converter;
+import org.srplib.model.ValueModel;
 
 /**
  * Binding is an association between two value models.
