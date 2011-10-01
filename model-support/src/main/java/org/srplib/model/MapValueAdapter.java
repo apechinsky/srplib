@@ -17,6 +17,10 @@ public class MapValueAdapter<K, V> extends AbstractValueModel<V> implements Cont
 
     private Map<K, V> map;
 
+    public static <K, V> MapValueAdapter<K, V> create(Map<K, V> map, K key) {
+        return new MapValueAdapter<K, V>(map, key);
+    }
+
     /**
      * Creates value model for specified key of specified class.
      *

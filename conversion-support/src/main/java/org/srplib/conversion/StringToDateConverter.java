@@ -9,7 +9,7 @@ import org.srplib.contract.Argument;
 /**
  * Converts {@link String} to {@link Date} using specified pattern.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class StringToDateConverter implements Converter<String, Date> {
 

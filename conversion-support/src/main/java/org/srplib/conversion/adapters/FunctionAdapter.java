@@ -18,7 +18,7 @@ import com.google.common.base.Function;
  * </pre>
  * <p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class FunctionAdapter<I, O> implements Function<I, O> {
 

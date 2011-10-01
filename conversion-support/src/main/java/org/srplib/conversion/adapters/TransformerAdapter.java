@@ -17,12 +17,18 @@ import org.srplib.conversion.Converter;
  * </pre>
  * <p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class TransformerAdapter<I, O> implements Transformer {
 
     private Converter<I, O> converter;
 
+    /**
+     * Creates instance of TransformerAdapter.
+     *
+     * @param converter Converter a converter to use when {@link Transformer#transform(Object)} method is called.
+     * @throws IllegalArgumentException if converter is null.
+     */
     public TransformerAdapter(Converter<I, O> converter) {
         Argument.checkNotNull(converter, "Converter should not be null!");
         this.converter = converter;

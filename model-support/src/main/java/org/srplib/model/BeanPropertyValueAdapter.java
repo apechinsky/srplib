@@ -1,7 +1,7 @@
 package org.srplib.model;
 
 import org.srplib.contract.Assert;
-import org.srplib.support.BeanUtils;
+import org.srplib.support.ReflectionUtils;
 
 /**
  * A value model adapter for java bean property.
@@ -66,7 +66,7 @@ public class BeanPropertyValueAdapter<B, T> extends AbstractValueModel<T> implem
      * @param property String property name to be accessed.
      */
     public BeanPropertyValueAdapter(Class<B> beanClass, String property) {
-        super((Class<T>) BeanUtils.getFieldType(beanClass, property));
+        super((Class<T>) ReflectionUtils.getFieldType(beanClass, property));
         this.property = property;
     }
 
@@ -79,7 +79,7 @@ public class BeanPropertyValueAdapter<B, T> extends AbstractValueModel<T> implem
     @Override
     public void setValue(T value) {
         Assert.checkNotNull(context, "Context object isn't set!");
-        BeanUtils.setField(context, property, value);
+        ReflectionUtils.setField(context, property, value);
     }
 
     /**
@@ -90,8 +90,8 @@ public class BeanPropertyValueAdapter<B, T> extends AbstractValueModel<T> implem
      */
     @Override
     public T getValue() {
-        Assert.checkNotNull(context, "Context object isn't set!");
-        return (T) BeanUtils.getField(context, property);
+        Assert.checkNotNull(context, "Context object was not set!");
+        return (T) ReflectionUtils.getField(context, property);
     }
 
     @Override

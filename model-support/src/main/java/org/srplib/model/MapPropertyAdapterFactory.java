@@ -8,7 +8,7 @@ import org.srplib.contract.Argument;
  * Implementation of {@link PropertyAdapterFactory} which creates instances of {@link ValueModel} for value of map under
  * specified keys.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class MapPropertyAdapterFactory<T> implements PropertyAdapterFactory<T> {
 

@@ -1,7 +1,7 @@
 package org.srplib.model;
 
 /**
- * General purpose context independent model abstraction.
+ * General purpose and context independent model abstraction.
  *
  * <p>Isolates value consumer from value provider. Make it possible to implement technology independent libraries such as
  * binding, validation, etc.</p>

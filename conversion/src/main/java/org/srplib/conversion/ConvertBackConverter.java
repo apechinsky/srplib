@@ -6,7 +6,7 @@ import org.srplib.contract.Argument;
  * An adapter for {@link TwoWayConverter} implementing {@link Converter#convert(Object)} method using
  * {@link TwoWayConverter#convertBack(Object)}} method of provided converter.
  *
- * <p>Class allows use of {@link TwoWayConverter#convertBack(Object)}} method where Converter is expected</p>
+ * <p>Class allows use of {@link TwoWayConverter#convertBack(Object)}} method where Converter is expected.</p>
  *
  * @author Anton Pechinsky
  */

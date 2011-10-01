@@ -6,7 +6,7 @@ import org.srplib.contract.Argument;
  * Implementation of {@link PropertyAdapterFactory} which creates instances of {@link org.srplib.model.ValueModel} for property of specified
  * java class or an object.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class BeanPropertyAdapterFactory<B, T> implements PropertyAdapterFactory<T> {
 

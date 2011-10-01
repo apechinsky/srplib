@@ -5,7 +5,7 @@ package org.srplib.model;
  *
  * <p>A kind of property is defined by implementation. It may be java class field, property, a key of Map or something else.</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public interface PropertyAdapterFactory<T> {
 

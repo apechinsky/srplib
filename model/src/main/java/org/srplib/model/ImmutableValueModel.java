@@ -7,11 +7,11 @@ import org.srplib.contract.Assert;
  *
  * <p>This implementation doesn't permit to change underlying value.</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class ImmutableValueModel<T> implements ValueModel<T> {
 
-    private T value;
+    private final T value;
 
     /**
      * Constructor.

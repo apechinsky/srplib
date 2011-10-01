@@ -5,7 +5,7 @@ package org.srplib.model;
  *
  * <p>Allows to change underlying value with {@link #setValue} method.</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class MutableValueModel<T> implements ValueModel<T> {
 

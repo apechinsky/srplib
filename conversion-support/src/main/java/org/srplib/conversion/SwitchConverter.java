@@ -10,7 +10,7 @@ import org.srplib.contract.Argument;
  * <p>Input value is used as a key to configured map. If map contains no mapping for specified value then null is returned or
  * an exception is thrown depending on strict property</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class SwitchConverter<I, O> implements Converter<I, O> {
 

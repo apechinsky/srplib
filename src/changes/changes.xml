@@ -6,7 +6,7 @@
 
     <body>
 
-        <release version="0.3-SNAPSHOT" date="2011-09-21">
+        <release version="0.3" date="2011-09-21">
             <action dev="Anton Pechinsky" type="add">
                 Create new module 'srp-module' containing ValueModel and corresponding abstractions.
             </action>
