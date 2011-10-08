@@ -1,5 +1,6 @@
 package org.srplib.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import org.srplib.contract.Assert;
@@ -11,7 +12,8 @@ import org.srplib.contract.Assert;
  *
  * @author Anton Pechinsky
  */
-public class MapValueAdapter<K, V> extends AbstractValueModel<V> implements ContextDependentValueModel<Map<K, V>, V> {
+public class MapValueAdapter<K, V> extends AbstractValueModel<V>
+    implements ContextDependentValueModel<Map<K, V>, V>, Serializable {
 
     private K key;
 

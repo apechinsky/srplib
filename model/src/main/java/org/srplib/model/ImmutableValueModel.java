@@ -1,5 +1,7 @@
 package org.srplib.model;
 
+import java.io.Serializable;
+
 import org.srplib.contract.Assert;
 
 /**
@@ -9,7 +11,7 @@ import org.srplib.contract.Assert;
  *
  * @author Anton Pechinsky
  */
-public class ImmutableValueModel<T> implements ValueModel<T> {
+public class ImmutableValueModel<T> implements ValueModel<T>, Serializable {
 
     private final T value;
 

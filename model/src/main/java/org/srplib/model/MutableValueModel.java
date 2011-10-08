@@ -1,5 +1,7 @@
 package org.srplib.model;
 
+import java.io.Serializable;
+
 /**
  * Simple mutable implementation of {@link ValueModel}.
  *
@@ -7,7 +9,7 @@ package org.srplib.model;
  *
  * @author Anton Pechinsky
  */
-public class MutableValueModel<T> implements ValueModel<T> {
+public class MutableValueModel<T> implements ValueModel<T>, Serializable {
 
     private T value;
 

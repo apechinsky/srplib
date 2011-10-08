@@ -1,11 +1,13 @@
 package org.srplib.model;
 
+import java.io.Serializable;
+
 /**
  * A convenient subclass for {@link ValueModel} implementers which holds value type.
  *
  * @author Anton Pechinsky
  */
-public abstract class AbstractValueModel<T> implements ValueModel<T> {
+public abstract class AbstractValueModel<T> implements ValueModel<T>, Serializable {
 
     private Class<T> type;
 
