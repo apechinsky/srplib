@@ -6,6 +6,15 @@
 
     <body>
 
+        <release version="0.3.1" date="2012-02-11">
+            <action dev="Anton Pechinsky" type="change">
+                Migrating to maven-javadoc-plugin:2.8.1 and maven-source-plugin:2.1.2
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                Promotion to maven Central
+            </action>
+        </release>
+
         <release version="0.3.0" date="2011-10-08">
             <action dev="Anton Pechinsky" type="fix">
                 Defect fixes.
