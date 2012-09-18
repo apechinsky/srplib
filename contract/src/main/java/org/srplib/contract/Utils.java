@@ -39,4 +39,33 @@ public class Utils {
         return String.format(messageFormat, arguments);
     }
 
+    /**
+     * Returns default value if specified value parameter is null.
+     *
+     * @param value value to test
+     * @param defaultValue default value
+     * @param <T> value type parameter
+     * @return value if not null or defaultValue is value parameter is null.
+     */
+    public static <T> T getDefaultIfNull(T value, T defaultValue) {
+        return value != null ? value : defaultValue;
+    }
+
+    /**
+     * Returns first non null value from provided array of values.
+     *
+     * @param defaultValue default value
+     * @param values vararg array of values to choose from.
+     * @param <T> value type parameter
+     * @return first non null value or default value if all values are nulls or vararg array is null or no values are provided.
+     */
+    public static <T> T getFirstNonNull(T defaultValue, T... values) {
+        for (T value : values) {
+            if (value != null) {
+                return value;
+            }
+        }
+        return defaultValue;
+    }
+
 }
