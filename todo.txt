@@ -26,3 +26,5 @@ This is because EmptyConverter is TwoWayConverter. Remove boolean->Boolean conve
 + provide simple implementation of ValueModel. It will be useful in tests.
 
 - provide SendParams.create() for symmetry with SendParams.empty()
+
+- ConverterRegistry. Add MappingKey.toString() returning source and target class names. For easy debugging.
