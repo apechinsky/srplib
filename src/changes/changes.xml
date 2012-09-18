@@ -6,7 +6,7 @@
 
     <body>
 
-        <release version="0.3.2-SNAPSHOT" date="2012-02-11">
+        <release version="0.3.2" date="2012-09-18">
             <action dev="Anton Pechinsky" type="add">
                 Add method srp-contract/Utils.getDefaultIfNull(value, defaultValue)
             </action>
