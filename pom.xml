@@ -9,7 +9,7 @@
   
     <groupId>org.srplib</groupId>
     <artifactId>srp</artifactId>
-    <version>0.3.2-SNAPSHOT</version>
+    <version>0.3.2</version>
 
     <packaging>pom</packaging>
 
