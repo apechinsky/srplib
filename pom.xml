@@ -125,6 +125,7 @@
 <!-- 
 temporary disable sign to deploy to local repository
 Enable to deploy to sonatype repo
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -139,7 +140,6 @@ Enable to deploy to sonatype repo
                     </execution>
                 </executions>
             </plugin>
-            -->
         </plugins>
 
     </build>
