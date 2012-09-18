@@ -7,11 +7,11 @@ import java.lang.reflect.Proxy;
 /**
  * @author Q-APE
  */
-public class BeanBuilder<B>  {
+public class BeanBuilder {
 
     public static final String BUILD_METHOD = "build";
 
-    public static <T, B extends Builder<T>> B create(T object, Class<? extends Builder<B>> builderInterface) {
+    public static <T, B extends Builder<T>> B create(T object, Class<B> builderInterface) {
         BeanBuilderInvocationHandler invocationHandler = new BeanBuilderInvocationHandler(object);
 
         return (B)Proxy.newProxyInstance(
