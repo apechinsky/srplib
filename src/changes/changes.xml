@@ -6,6 +6,24 @@
 
     <body>
 
+        <release version="0.3.2-SNAPSHOT" date="2012-02-11">
+            <action dev="Anton Pechinsky" type="add">
+                Add method srp-contract/Utils.getDefaultIfNull(value, defaultValue)
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add method srp-contract/Utils.getFirstNonNull(value, values...)
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add class srp-support/CompositeKey
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add class srp-support/EmptyInvocationHandler for easy creation interface empty implementations
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add nested properties support to srp-support/ReflectionUtils class.
+            </action>
+        </release>
+
         <release version="0.3.1" date="2012-02-11">
             <action dev="Anton Pechinsky" type="change">
                 Migrating to maven-javadoc-plugin:2.8.1 and maven-source-plugin:2.1.2
