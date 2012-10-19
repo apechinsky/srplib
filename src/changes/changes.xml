@@ -6,6 +6,24 @@
 
     <body>
 
+        <release version="0.3.3" date="2012-10-19">
+            <action dev="Anton Pechinsky" type="add">
+                Add Converters.choice() method.
+            </action>
+
+            <action dev="Anton Pechinsky" type="add">
+                Add Converters.chain() method.
+            </action>
+
+            <action dev="Anton Pechinsky" type="add">
+                Add Converters.equal() method.
+            </action>
+
+            <action dev="Anton Pechinsky" type="add">
+                Add EqualsConverter. Converts an object to boolean by comparing it to specified object.
+            </action>
+        </release>
+
         <release version="0.3.2" date="2012-09-18">
             <action dev="Anton Pechinsky" type="add">
                 Add method srp-contract/Utils.getDefaultIfNull(value, defaultValue)

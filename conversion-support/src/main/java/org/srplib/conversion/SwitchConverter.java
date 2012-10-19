@@ -3,6 +3,7 @@ package org.srplib.conversion;
 import java.util.Map;
 
 import org.srplib.contract.Argument;
+import org.srplib.contract.Assert;
 
 /**
  * A converter encapsulating switch operator logic.
@@ -14,43 +15,56 @@ import org.srplib.contract.Argument;
  */
 public class SwitchConverter<I, O> implements Converter<I, O> {
 
+    public static final String DEFAULT_NO_MATCH_MESSAGE_PATTERN = "There is no mapped value for key '%s'.";
+
     private Map<I, O> map;
 
-    private boolean strict;
+    private O defaultValue;
+
+    private boolean defaultValueSet = false;
+
+    private String noMatchMessagePattern = DEFAULT_NO_MATCH_MESSAGE_PATTERN;
+
 
     /**
      * Construct converter using specified map.
      *
      * @param map Map input value to output value map
-     * @param strict boolean a flag indicating what to do if no mapping is found for input value. If {@code true}
      * then IllegalArgumentException is thrown, if {@code false} then {@code null} is returned.
      */
-    public SwitchConverter(Map<I, O> map, boolean strict) {
+    public SwitchConverter(Map<I, O> map) {
         Argument.checkNotNull(map, "Values map must not be null.");
         this.map = map;
-        this.strict = strict;
+        this.defaultValueSet = false;
+    }
+
+    public SwitchConverter(Map<I, O> map, O defaultValue) {
+        Argument.checkNotNull(map, "Values map must not be null.");
+        this.map = map;
+        this.defaultValue = defaultValue;
+        this.defaultValueSet = true;
     }
 
     /**
-     * Construct converter using specified map.
+     * Set message pattern to be used to construct error message when no matches is found.
      *
-     * <p>Call to this method is equivalent to {@code new SwitchConverter(map, true)}.</p>
-     *
-     * @param map Map input value to output value map
+     * @param pattern String message pattern with single string placeholder '%s'
      */
-    public SwitchConverter(Map<I, O> map) {
-        this(map, true);
+    public void setNoMatchMessagePattern(String pattern) {
+        Assert.checkNotNull(pattern, "Message pattern must not be null!");
+        Assert.checkTrue(pattern.contains("%s"), "Message pattern '%s' is not valid string format pattern!", pattern);
+
+        this.noMatchMessagePattern = pattern;
     }
 
     @Override
     public O convert(I input) {
-        O value = map.get(input);
+        boolean valueExists = map.containsKey(input);
 
-        if (strict && value == null) {
-            throw new IllegalArgumentException(String.format("There is no mapped value for key '%s'", "" + input));
-        }
+        Argument.checkTrue(valueExists || defaultValueSet, noMatchMessagePattern, input);
 
-        return value;
+        return valueExists ? map.get(input) : defaultValue;
     }
+
 }
 

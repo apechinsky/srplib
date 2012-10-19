@@ -107,6 +107,7 @@ public class ReflectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Method method, Object object, Object... args) {
+        boolean accessible = method.isAccessible();
         try {
             method.setAccessible(true);
             return (T) method.invoke(object, args);
@@ -116,8 +117,11 @@ public class ReflectionUtils {
         }
         catch (InvocationTargetException e) {
             ExceptionUtils.rethrow(e.getTargetException());
+            return null;
         }
-        return null;
+        finally {
+            method.setAccessible(accessible);
+        }
     }
 
 

@@ -13,11 +13,24 @@ package org.srplib.conversion;
  *
  * @author Anton Pechinsky
  */
-public class IfConverter<T> implements Converter<Object, T> {
+public class IfConverter<I, O> implements Converter<I, O> {
 
-    private T trueValue;
+    private O trueValue;
 
-    private T falseValue;
+    private O falseValue;
+
+    /**
+     * An alternative to constructor.
+     *
+     * @param trueValue a value to be returned if expression is true. {@code null} is legal value.
+     * @param falseValue a value to be returned if expression is false. {@code null} is legal value.
+     * @param <I> input value type
+     * @param <O> output value type
+     * @return IfConverter
+     */
+    public static <I, O> IfConverter<I, O> ifConverter(O trueValue, O falseValue) {
+        return new IfConverter<I, O>(trueValue, falseValue);
+    }
 
     /**
      * Creates converter using specified true an false values.
@@ -25,13 +38,13 @@ public class IfConverter<T> implements Converter<Object, T> {
      * @param trueValue a value to be returned if expression is true. {@code null} is legal value.
      * @param falseValue a value to be returned if expression is false. {@code null} is legal value.
      */
-    public IfConverter(T trueValue, T falseValue) {
+    public IfConverter(O trueValue, O falseValue) {
         this.trueValue = trueValue;
         this.falseValue = falseValue;
     }
 
     @Override
-    public T convert(Object input) {
+    public O convert(I input) {
         return asBoolean(input) ? trueValue : falseValue;
     }
 
