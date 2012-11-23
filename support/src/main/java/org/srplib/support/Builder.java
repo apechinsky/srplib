@@ -5,7 +5,7 @@ package org.srplib.support;
  *
  * <p>Based on Joshua Bloch article.</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public interface Builder<T> {
 

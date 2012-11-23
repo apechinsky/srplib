@@ -5,7 +5,7 @@ package org.srplib.binding;
  *
  * <p>All other binding exceptions should subclass this exception.</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky 
  */
 public class BindException extends RuntimeException {
 

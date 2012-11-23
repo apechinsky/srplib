@@ -16,7 +16,7 @@ import org.srplib.contract.Argument;
  *
  * TODO: Consider immutable list from common-collections or google guava.
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public final class CompositeKey implements Serializable {
 

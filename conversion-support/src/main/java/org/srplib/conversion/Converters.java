@@ -93,9 +93,24 @@ public class Converters {
      * @param map Map a map where input values are keys and values are output values.
      * @param defaultValue Object default value if no matches found in map
      * @return Converter
+     * @see SwitchConverter
      */
     public static <I, O> Converter<I, O> choice(Map<I, O> map, O defaultValue) {
         return new SwitchConverter<I, O>(map, defaultValue);
+    }
+
+    /**
+     * Creates converter which uses map for value conversion.
+     *
+     * <p>Unlike {@link #choice(Map, Object)} this method doesn't accept default value and throws
+     * {@link IllegalStateException} if no mapping is found.</p>
+     *
+     * @param map Map a map where input values are keys and values are output values.
+     * @return Converter
+     * @see SwitchConverter
+     */
+    public static <I, O> Converter<I, O> choice(Map<I, O> map) {
+        return new SwitchConverter<I, O>(map);
     }
 
     /**

@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 /**
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class BeanBuilder {
 

@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class MapBuilderTest {
     @Test

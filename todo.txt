@@ -15,6 +15,6 @@
     as shown above
 
 
-- ConverterRegistry. Add MappingKey.toString() returning source and target class names. For easy debugging.
+DONE - ConverterRegistry. Add MappingKey.toString() returning source and target class names. For easy debugging.
 
 - ValidationException - add method accepting throwable

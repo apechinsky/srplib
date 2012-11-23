@@ -1,7 +1,7 @@
 package org.srplib.model;
 
 /**
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class TestBean {
 

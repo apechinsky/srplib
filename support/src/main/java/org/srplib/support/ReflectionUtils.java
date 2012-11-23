@@ -9,12 +9,14 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.srplib.contract.Argument;
 import org.srplib.contract.Assert;
 
 /**
@@ -24,6 +26,19 @@ import org.srplib.contract.Assert;
  */
 public class ReflectionUtils {
 
+    /**
+     * Predeclared empty object array (new Object[0]).
+     */
+    public static final Object[] EMPTY_ARGUMENTS = new Object[0];
+
+    /**
+     * Predeclared empty class array (new Class<?>[0]).
+     */
+    public static final Class<?>[] EMPTY_TYPES = new Class<?>[0];
+
+    /**
+     * Set containing primitive wrapper classes.
+     */
     public static final Set<Class<?>> WRAPPERS = new HashSet<Class<?>>();
 
     static {
@@ -31,6 +46,41 @@ public class ReflectionUtils {
             Boolean.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class
         ));
     }
+
+    /**
+     * Map containing init values for primitive classes.
+     */
+    public static final Map<Class, Object> INIT_VALUES = new HashMap<Class, Object>();
+
+    static {
+        INIT_VALUES.put(boolean.class, false);
+        INIT_VALUES.put(byte.class, (byte) 0);
+        INIT_VALUES.put(short.class, (short) 0);
+        INIT_VALUES.put(int.class, 0);
+        INIT_VALUES.put(long.class, (long) 0);
+        INIT_VALUES.put(float.class, (float) 0.0);
+        INIT_VALUES.put(double.class, 0.0);
+    }
+
+
+    /**
+     * Returns init value for specified class (including classes representing primitives).
+     *
+     * @param type Class class
+     * @return null for reference types, for primitives returns their init values.
+     */
+    public static Object getInitValue(Class<?> type) {
+
+        Object result = null;
+
+        if (type.isPrimitive() && !void.class.equals(type)) {
+//            result = Array.get(Array.newInstance(type, 1), 0);
+            result = INIT_VALUES.get(type);
+        }
+
+        return result;
+    }
+
 
     /**
      * Returns first generic type parameter of specified class.
@@ -62,7 +112,7 @@ public class ReflectionUtils {
      *
      * @param clazz Class starting class to search method in
      * @param methodName String method name.
-     * @param parameterTypes an array of parameter types
+     * @param parameterTypes an array of parameter parameters
      * @return Method if found, {@code null} otherwise
      * @throws IllegalStateException if no method found
      */
@@ -80,7 +130,7 @@ public class ReflectionUtils {
      *
      * @param clazz Class starting class to search method in
      * @param methodName String method name.
-     * @param parameterTypes an array of parameter types
+     * @param parameterTypes an array of parameter parameters
      * @return Method if found, {@code null} otherwise
      */
     public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
@@ -123,8 +173,6 @@ public class ReflectionUtils {
             method.setAccessible(accessible);
         }
     }
-
-
 
 
     /**
@@ -265,15 +313,90 @@ public class ReflectionUtils {
         }
     }
 
-    public static <T> Class<T> getFieldType(Class<?> clazz, String property) {
+    /**
+     * Returns field type.
+     *
+     * @param clazz Class a class where field is declared
+     * @param field String field name
+     * @return Class return field type
+     * @throws IllegalStateException if no such field in specified class
+     */
+    public static <T> Class<T> getFieldType(Class<?> clazz, String field) {
         try {
-            return (Class<T>) clazz.getDeclaredField(property).getType();
+            return (Class<T>) clazz.getDeclaredField(field).getType();
         }
         catch (NoSuchFieldException e) {
-            throw new IllegalStateException("Property '" + property + "' not found in class " + clazz, e);
+            throw new IllegalStateException("Property '" + field + "' not found in class " + clazz, e);
         }
     }
 
+
+    /**
+     * Creates instance of specified class and wraps checked exceptions into unchecked ones.
+     *
+     * <p>Converts checked exceptions to unchecked</p>
+     *
+     * @param clazz Class a class to create instance
+     * @param parameters Class[] array of constructor parameters (parameter types).
+     * @param arguments Object[] an array of constructor arguments.
+     * @return an instance of specified class
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T newInstance(Class<T> clazz, Class[] parameters, Object[] arguments) {
+        try {
+            Argument.checkEqual(parameters.length, arguments.length,
+                getInstanceCreationErrorMessage(clazz, parameters, arguments) +
+                    " Expecting %d parameters but actually got %d.", parameters.length, arguments.length);
+
+            Constructor<T> constructor = clazz.getDeclaredConstructor(parameters);
+            constructor.setAccessible(true);
+            return constructor.newInstance(arguments);
+        }
+        catch (InstantiationException e) {
+            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e);
+        }
+        catch (IllegalAccessException e) {
+            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e);
+        }
+        catch (NoSuchMethodException e) {
+            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e);
+        }
+        catch (InvocationTargetException e) {
+            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e.getCause());
+        }
+    }
+
+    private static String getInstanceCreationErrorMessage(Class<?> clazz, Class<?>[] parameterTypes, Object[] parameters) {
+        return "Instance creation error " + toString(clazz, parameterTypes, parameters);
+    }
+
+    /**
+     * Returns method invocation string including class, parameter parameters and parameter values.
+     *
+     * <p>Used to create diagnostic messages.</p>
+     *
+     * @param clazz Class class
+     * @param parameterTypes Class[] parameter parameters
+     * @param parameters Object[] parameter values
+     * @return String text.
+     */
+    public static String toString(Class<?> clazz, Class<?>[] parameterTypes, Object[] parameters) {
+        return String.format("[class: %s, parameters: %s values: %s].",
+            clazz.getName(), Arrays.toString(parameterTypes), Arrays.toString(parameters));
+    }
+
+    /**
+     * Returns string representation of constructor of specified type and it's parameter parameters.
+     *
+     * <p>Used to create diagnostic messages.</p>
+     *
+     * @param clazz Class class
+     * @param parameterTypes Class[] parameter parameters
+     * @return String text.
+     */
+    public static String toString(Class<?> clazz, Class<?>[] parameterTypes) {
+        return String.format("%s(%s)", clazz.getName(), Arrays.toString(parameterTypes));
+    }
 
     /**
      * Creates instance of specified class and wraps checked exceptions into unchecked ones.
@@ -285,45 +408,9 @@ public class ReflectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> clazz) {
-        try {
-            return clazz.newInstance();
-        }
-        catch (InstantiationException e) {
-            throw new IllegalStateException(String.format("Can't create instance of class '%s'", clazz.getName()), e);
-        }
-        catch (IllegalAccessException e) {
-            throw new IllegalStateException(String.format("Can't create instance of class '%s'", clazz.getName()), e);
-        }
+        return newInstance(clazz, EMPTY_TYPES, EMPTY_ARGUMENTS);
     }
 
-    /**
-     * Creates instance of specified class and wraps checked exceptions into unchecked ones.
-     *
-     * <p>Converts checked exceptions to unchecked</p>
-     *
-     * @param clazz Class a class to create instance
-     * @return an instance of specified class
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T newInstance(Class<T> clazz, Class[] parameterTypes, Object[] parameters) {
-        try {
-            Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
-            constructor.setAccessible(true);
-            return constructor.newInstance(parameters);
-        }
-        catch (InstantiationException e) {
-            throw new IllegalStateException(String.format("Can't create instance of class '%s'", clazz.getName()), e);
-        }
-        catch (IllegalAccessException e) {
-            throw new IllegalStateException(String.format("Can't create instance of class '%s'", clazz.getName()), e);
-        }
-        catch (NoSuchMethodException e) {
-            throw new IllegalStateException(String.format("Can't create instance of class '%s'", clazz.getName()), e);
-        }
-        catch (InvocationTargetException e) {
-            throw new IllegalStateException(String.format("Can't create instance of class '%s'", clazz.getName()), e);
-        }
-    }
 
     /**
      * Creates instance of specified class and wraps checked exceptions into unchecked ones.
@@ -354,37 +441,131 @@ public class ReflectionUtils {
         return properties;
     }
 
+    /**
+     * Checks for constructor existence.
+     *
+     * @return true if specified class has constructor with specified parameter parameters.
+     */
+    public static boolean hasConstructor(Class<?> clazz, Class<?>[] parameterTypes) {
+        try {
+            clazz.getDeclaredConstructor(parameterTypes);
+            return true;
+        }
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
 
+    /**
+     * An alternative to {@link Class#forName(String)} which wraps checked {@link ClassNotFoundException} exception into
+     * unchecked {@link ReflectionException}
+     *
+     * @param className String full class name
+     * @return Class class for specified name
+     * @throws IllegalArgumentException if class name is null.
+     * @throws ReflectionException if reflection API throws {@link ClassNotFoundException}
+     */
     public static <T> Class<T> classForName(String className) {
         try {
-            return (Class<T>)Class.forName(className);
+            Argument.checkNotNull(className, "Can't create class from 'null' class name.");
+
+            return (Class<T>) Class.forName(className);
         }
         catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Class '" + className + "' not found. ", e);
+            throw new ReflectionException(String.format("Class '%s' not found.", className), e);
         }
     }
 
-    public static boolean isCollection(Class<?> clazz) {
-        return clazz.isArray() || Collection.class.isAssignableFrom(clazz);
+    /**
+     * Tests if specified class is an array.
+     *
+     * @param clazz Class a class to test
+     * @return true if class is an array
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
+    public static boolean isArray(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
+        return clazz.isArray();
     }
 
+    /**
+     * Tests if specified class is a collection.
+     *
+     * @param clazz Class a class to test
+     * @return true if class is a collection
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
+    public static boolean isCollection(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
+        return Collection.class.isAssignableFrom(clazz);
+    }
+
+    /**
+     * Tests if specified class is a map.
+     *
+     * @param clazz Class a class to test
+     * @return true if class is a map
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
     public static boolean isMap(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
         return Map.class.isAssignableFrom(clazz);
     }
 
-    public static boolean isComplexType(Class<?> clazz) {
-        return !isSimpleType(clazz);
-    }
-
+    /**
+     * Tests if specified class represents "simple" type.
+     *
+     * <ul>Simple types are:
+     *  <li>classes representing primitives (int.class, long.class, etc.)</li>
+     *  <li>primitive wrapper classes</li>
+     *  <li>String</li>
+     *  <li>Date</li>
+     *  <li>Enum</li>
+     * </ul>
+     *
+     * @param clazz Class a class to test
+     * @return true if class represents simple type
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
     public static boolean isSimpleType(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
         return clazz.isPrimitive() || isPrimitiveWrapper(clazz) || clazz == String.class || clazz == Date.class
             || Enum.class.isAssignableFrom(clazz);
     }
 
-    public static boolean isSyntheticName(String name) {
-        return name.indexOf('$') != -1;
+    /**
+     * Tests if specified class represents "complex" type.
+     *
+     * <p>Complex type is a type which is not simple (see {@link #isSimpleType(Class)}).</p>
+     *
+     * @param clazz Class a class to test
+     * @return true if class is complex class
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
+    public static boolean isComplexType(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
+        return !isSimpleType(clazz);
     }
 
+    /**
+     * Tests if specified name is a synthetic name.
+     *
+     *
+     * @param name String identifier name
+     * @return true if name contains dollar sign, false if null or doesn't contain dollar sign.
+     */
+    public static boolean isSyntheticName(String name) {
+        return name != null && name.indexOf('$') != -1;
+    }
+
+    /**
+     * Tests if specified class is a primitive wrapper.
+     *
+     * <p>Primitive wrappers are listed in {@link #WRAPPERS} set.</p>
+     *
+     * @param clazz Class a class to test
+     * @return true if class is primitive wrapper
+     */
     public static boolean isPrimitiveWrapper(Class<?> clazz) {
         return WRAPPERS.contains(clazz);
     }

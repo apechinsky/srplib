@@ -9,7 +9,7 @@ import org.srplib.support.MapBuilder;
 import static org.hamcrest.CoreMatchers.is;
 
 /**
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class MapValueAdapterTest {
 

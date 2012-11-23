@@ -8,14 +8,18 @@ import java.lang.reflect.Method;
  *
  * <p>The main purpose is easy creation of null value objects.</p>
  *
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class EmptyInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
         // do nothing since this is an empty implementation
-        return null;
+
+        Class returnType = method.getReturnType();
+
+        return ReflectionUtils.getInitValue(returnType);
     }
 
 }

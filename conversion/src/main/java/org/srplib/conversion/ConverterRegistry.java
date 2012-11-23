@@ -120,6 +120,11 @@ public class ConverterRegistry {
             result = 31 * result + target.hashCode();
             return result;
         }
+
+        @Override
+        public String toString() {
+            return "MappingKey [source:" + source + ", target:" + target + ']';
+        }
     }
 
 }

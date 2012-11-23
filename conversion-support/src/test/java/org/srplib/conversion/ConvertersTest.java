@@ -3,7 +3,7 @@ package org.srplib.conversion;
 import org.junit.Test;
 
 /**
- * @author Q-APE
+ * @author Anton Pechinsky
  */
 public class ConvertersTest {
 
