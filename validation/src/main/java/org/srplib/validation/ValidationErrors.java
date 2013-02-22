@@ -35,6 +35,11 @@ import java.util.Set;
  */
 public class ValidationErrors {
 
+    /**
+     * Empty instance of ValidationErrors
+     */
+    public static final ValidationErrors EMPTY = new ValidationErrors();
+
     private List<ValidationError> validationErrors = new LinkedList<ValidationError>();
 
     public ValidationErrors(List<ValidationError> validationErrors) {

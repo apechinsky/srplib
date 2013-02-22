@@ -11,8 +11,23 @@ public class ValidationException extends RuntimeException {
 
     private ValidationErrors validationErrors;
 
+    /**
+     * Creates exception.
+     *
+     * @param message String exception message
+     * @param throwable Throwable an underlying exception (nullable)
+     * @param validationErrors ValidationErrors validation errors object.
+     */
+    public ValidationException(String message, Throwable throwable, ValidationErrors validationErrors) {
+        super(message, throwable);
+
+        this.validationErrors = validationErrors == null
+            ? new ValidationErrors()
+            : validationErrors;
+    }
+
     public ValidationException(ValidationErrors validationErrors) {
-        this.validationErrors = validationErrors;
+        this("Validation error", null, validationErrors);
     }
 
     public ValidationException(ValidationError validationError) {
