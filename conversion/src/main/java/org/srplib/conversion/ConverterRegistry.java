@@ -65,7 +65,7 @@ public class ConverterRegistry {
         MappingKey mappingKey = createKey(source, target);
 
         Assert.checkTrue(!converters.containsKey(mappingKey),
-            String.format("Converter from '%s' to '%s' already registered.", source.getName(), target.getName()));
+            "Converter from '%s' to '%s' already registered.", source.getName(), target.getName());
 
         converters.put(mappingKey, converter);
         return this;
@@ -89,6 +89,7 @@ public class ConverterRegistry {
     }
 
 
+    // TODO: consider replacement to CompositeKey
     private static final class MappingKey {
 
         private Class source;
