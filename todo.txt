@@ -17,4 +17,9 @@
 
 DONE - ConverterRegistry. Add MappingKey.toString() returning source and target class names. For easy debugging.
 
-- ValidationException - add method accepting throwable
+DONE - ValidationException - add method accepting throwable
+
+- ConverterRegistry add method Class getMappedClass(Class)
+    - what if registry contains mappings like this?:
+        (String, Integer, StringToIntegerConverter)
+        (String, Boolean, StringToBooleanConverter)

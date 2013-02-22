@@ -1,4 +1,4 @@
-package org.srplib.support;
+package org.srplib.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -18,6 +18,8 @@ import java.util.Set;
 
 import org.srplib.contract.Argument;
 import org.srplib.contract.Assert;
+import org.srplib.contract.Utils;
+import org.srplib.support.ExceptionUtils;
 
 /**
  * Helper class containing static utility methods.
@@ -43,7 +45,7 @@ public class ReflectionUtils {
 
     static {
         WRAPPERS.addAll(Arrays.<Class<?>>asList(
-            Boolean.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class
+            Boolean.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, Character.class
         ));
     }
 
@@ -51,6 +53,11 @@ public class ReflectionUtils {
      * Map containing init values for primitive classes.
      */
     public static final Map<Class, Object> INIT_VALUES = new HashMap<Class, Object>();
+
+    /**
+     * A name of constructor method. Used for diagnostic purposes.
+     */
+    public static final String CONSTRUCTOR_NAME = "constructor";
 
     static {
         INIT_VALUES.put(boolean.class, false);
@@ -60,6 +67,7 @@ public class ReflectionUtils {
         INIT_VALUES.put(long.class, (long) 0);
         INIT_VALUES.put(float.class, (float) 0.0);
         INIT_VALUES.put(double.class, 0.0);
+        INIT_VALUES.put(char.class, '\u0000');
     }
 
 
@@ -112,16 +120,16 @@ public class ReflectionUtils {
      *
      * @param clazz Class starting class to search method in
      * @param methodName String method name.
-     * @param parameterTypes an array of parameter parameters
+     * @param parameters an array of parameter types
      * @return Method if found, {@code null} otherwise
      * @throws IllegalStateException if no method found
      */
-    public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+    public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
         try {
-            return clazz.getDeclaredMethod(methodName, parameterTypes);
+            return clazz.getDeclaredMethod(methodName, parameters);
         }
         catch (NoSuchMethodException e) {
-            throw new IllegalStateException(e);
+            throw new ReflectionException("No such method " + toString(clazz, methodName, parameters), e);
         }
     }
 
@@ -130,18 +138,18 @@ public class ReflectionUtils {
      *
      * @param clazz Class starting class to search method in
      * @param methodName String method name.
-     * @param parameterTypes an array of parameter parameters
+     * @param parameters an array of parameter types
      * @return Method if found, {@code null} otherwise
      */
-    public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+    public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
         try {
             if (clazz == null) {
                 return null;
             }
-            return clazz.getDeclaredMethod(methodName, parameterTypes);
+            return clazz.getDeclaredMethod(methodName, parameters);
         }
         catch (NoSuchMethodException e) {
-            return findDeclaredMethod(clazz.getSuperclass(), methodName, parameterTypes);
+            return findDeclaredMethod(clazz.getSuperclass(), methodName, parameters);
         }
     }
 
@@ -152,22 +160,21 @@ public class ReflectionUtils {
      *
      * @param method Method to invoke
      * @param object Object the object the underlying method is invoked from
-     * @param args vararg array of method arguments.
+     * @param arguments vararg array of method arguments.
      * @return method invocation result
      */
     @SuppressWarnings("unchecked")
-    public static <T> T invokeMethod(Method method, Object object, Object... args) {
+    public static <T> T invokeMethod(Method method, Object object, Object... arguments) {
         boolean accessible = method.isAccessible();
         try {
             method.setAccessible(true);
-            return (T) method.invoke(object, args);
+            return (T) method.invoke(object, arguments);
         }
         catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
+            throw new ReflectionException("Can't invoke method " + method, e);
         }
         catch (InvocationTargetException e) {
-            ExceptionUtils.rethrow(e.getTargetException());
-            return null;
+            throw ExceptionUtils.asUnchecked(e.getTargetException());
         }
         finally {
             method.setAccessible(accessible);
@@ -185,16 +192,17 @@ public class ReflectionUtils {
      * @param value Object value to set to field
      */
     public static void setFieldValue(Field field, Object object, Object value) {
+        boolean accessible = field.isAccessible();
         try {
-            boolean oldAccessibleStatus = field.isAccessible();
             field.setAccessible(true);
-
             field.set(object, value);
-
-            field.setAccessible(oldAccessibleStatus);
         }
         catch (IllegalAccessException e) {
-            throw new IllegalStateException("Can't access field '" + field + "' of class " + object.getClass(), e);
+            throw new ReflectionException("Can't set value to field '" + field + "'", e);
+
+        }
+        finally {
+            field.setAccessible(accessible);
         }
     }
 
@@ -208,13 +216,15 @@ public class ReflectionUtils {
      * @param value Object value to set to field
      */
     public static void setFieldValue(String fieldName, Object object, Object value) {
+        Argument.checkNotNull(fieldName, "fieldName must not be null!");
+        Argument.checkNotNull(object, "Can't set value to field of null object!");
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
             setFieldValue(field, object, value);
         }
         catch (NoSuchFieldException e) {
-            throw new IllegalStateException("Field '" + fieldName + "' not found in class " + object.getClass(), e);
-
+            throw new ReflectionException(String.format("Can't set value to field '%s'. No such field.",
+                toString(object.getClass(), fieldName)), e);
         }
     }
 
@@ -244,18 +254,16 @@ public class ReflectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T getFieldValue(Field field, Object object) {
+        boolean accessible = field.isAccessible();
         try {
-            boolean oldAccessibleStatus = field.isAccessible();
             field.setAccessible(true);
-
-            T result = (T) field.get(object);
-
-            field.setAccessible(oldAccessibleStatus);
-
-            return result;
+            return (T) field.get(object);
         }
         catch (IllegalAccessException e) {
-            throw new IllegalStateException("Can't access field '" + field + "' of class " + object.getClass(), e);
+            throw new ReflectionException(String.format("Can't get value of field '%s'.", field), e);
+        }
+        finally {
+            field.setAccessible(accessible);
         }
     }
 
@@ -275,7 +283,9 @@ public class ReflectionUtils {
             return (T) getFieldValue(field, object);
         }
         catch (NoSuchFieldException e) {
-            throw new IllegalStateException("Field '" + fieldName + "' not found in class " + object.getClass(), e);
+            throw new ReflectionException(String.format("Can't get value of field '%s'. No such field.",
+                toString(object.getClass(), fieldName)), e);
+
         }
     }
 
@@ -317,16 +327,16 @@ public class ReflectionUtils {
      * Returns field type.
      *
      * @param clazz Class a class where field is declared
-     * @param field String field name
+     * @param fieldName String field name
      * @return Class return field type
      * @throws IllegalStateException if no such field in specified class
      */
-    public static <T> Class<T> getFieldType(Class<?> clazz, String field) {
+    public static <T> Class<T> getFieldType(Class<?> clazz, String fieldName) {
         try {
-            return (Class<T>) clazz.getDeclaredField(field).getType();
+            return (Class<T>) clazz.getDeclaredField(fieldName).getType();
         }
         catch (NoSuchFieldException e) {
-            throw new IllegalStateException("Property '" + field + "' not found in class " + clazz, e);
+            throw new ReflectionException(String.format("No such field '%s'.", toString(clazz, fieldName)), e);
         }
     }
 
@@ -367,35 +377,7 @@ public class ReflectionUtils {
     }
 
     private static String getInstanceCreationErrorMessage(Class<?> clazz, Class<?>[] parameterTypes, Object[] parameters) {
-        return "Instance creation error " + toString(clazz, parameterTypes, parameters);
-    }
-
-    /**
-     * Returns method invocation string including class, parameter parameters and parameter values.
-     *
-     * <p>Used to create diagnostic messages.</p>
-     *
-     * @param clazz Class class
-     * @param parameterTypes Class[] parameter parameters
-     * @param parameters Object[] parameter values
-     * @return String text.
-     */
-    public static String toString(Class<?> clazz, Class<?>[] parameterTypes, Object[] parameters) {
-        return String.format("[class: %s, parameters: %s values: %s].",
-            clazz.getName(), Arrays.toString(parameterTypes), Arrays.toString(parameters));
-    }
-
-    /**
-     * Returns string representation of constructor of specified type and it's parameter parameters.
-     *
-     * <p>Used to create diagnostic messages.</p>
-     *
-     * @param clazz Class class
-     * @param parameterTypes Class[] parameter parameters
-     * @return String text.
-     */
-    public static String toString(Class<?> clazz, Class<?>[] parameterTypes) {
-        return String.format("%s(%s)", clazz.getName(), Arrays.toString(parameterTypes));
+        return "Instance creation error " + toString(clazz, CONSTRUCTOR_NAME, parameterTypes, parameters);
     }
 
     /**
@@ -429,17 +411,37 @@ public class ReflectionUtils {
      * Returns list of declared fields of specified class.
      *
      * @param clazz Class class to introspect.
-     * @return List of property names
+     * @return List of Field
      */
-    public static List<String> getDeclaredFields(Class<?> clazz) {
-        List<String> properties = new LinkedList<String>();
+    public static List<Field> getDeclaredFields(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't get fields from null class.");
+
+        List<Field> fields = new LinkedList<Field>();
         for (Field field : clazz.getDeclaredFields()) {
             if (!isSyntheticName(field.getName())) {
-                properties.add(field.getName());
+                fields.add(field);
             }
         }
-        return properties;
+        return fields;
     }
+
+    /**
+     * Returns list of declared fields of specified class including fields of superclasses.
+     *
+     * @param clazz Class class to introspect.
+     * @return List of Field
+     */
+    public static List<Field> getDeclaredFieldsRecursively(Class<?> clazz) {
+        return getDeclaredFieldsRecursively(clazz, new LinkedList<Field>());
+    }
+
+    private static List<Field> getDeclaredFieldsRecursively(Class<?> type, List<Field> fields) {
+        if (type != null) {
+            fields.addAll(getDeclaredFields(type));
+        }
+        return fields;
+    }
+
 
     /**
      * Checks for constructor existence.
@@ -569,4 +571,104 @@ public class ReflectionUtils {
     public static boolean isPrimitiveWrapper(Class<?> clazz) {
         return WRAPPERS.contains(clazz);
     }
+
+    /**
+     * Returns string representation of method or constructor invocation.
+     *
+     * <p>Used to create diagnostic messages.</p>
+     *
+     * @param clazz Class a class (non-null)
+     * @param methodName String method name. If {@code null} then 'constructor' will be used.
+     * @param parameters Class[] parameter parameters (non-null)
+     * @param arguments Object[] parameter values (nullable)
+     * @return String text.
+     */
+    public static String toString(Class<?> clazz, String methodName, Class<?>[] parameters, Object[] arguments) {
+        Argument.checkNotNull(clazz, "clazz must not be null!");
+        Argument.checkNotNull(parameters, "parameters must not be null!");
+
+        String result = String.format("%s.%s(%s)",
+            clazz.getName(), Utils.getDefaultIfNull(methodName, "constructor"), joinClassNames(",", parameters));
+
+        if (arguments != null) {
+            result += " arguments: [" + join(",", arguments) + "]";
+
+            if (parameters.length != arguments.length) {
+                result += " Number of arguments doesn't match number of parameters.";
+            }
+        }
+
+
+        return result;
+    }
+
+    /**
+     * Returns string representation of method or constructor signature.
+     *
+     * <p>
+     *     Call to this method is equivalent to:
+     * <pre>
+     *     toString(clazz, methodName, parameterTypes, null);
+     * </pre>
+     *
+     * </p>
+     *
+     * @param clazz Class class
+     * @param methodName String method name. If {@code null} then 'constructor' will be used.
+     * @param parameters Class[] parameter types
+     * @return String text.
+     */
+    public static String toString(Class<?> clazz, String methodName, Class<?>[] parameters) {
+        return toString(clazz, methodName, parameters, null);
+    }
+
+
+    /**
+     * Returns string representation of field.
+     *
+     * @param declaringClass Class class
+     * @param fieldName String field name.
+     * @return String field full name
+     */
+    private static String toString(Class<?> declaringClass, String fieldName) {
+        return declaringClass.getName() + "." + fieldName;
+    }
+
+
+    /**
+     * Joins class names using specified separator.
+     *
+     * @param separator String separator to use
+     * @param classes vararg array of classes to join.
+     * @return String joined string
+     */
+    public static String joinClassNames(String separator, Class<?>... classes) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < classes.length; i++) {
+            sb.append(classes[i].getName());
+            if (i < classes.length - 1) {
+                sb.append(separator);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Joins object array using specified separator.
+     *
+     * @param separator String separator to use
+     * @param values vararg array of values to join. Method leverages {@link Object#toString()}
+     * @return String joined string
+     */
+    public static String join(String separator, Object... values) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < values.length; i++) {
+            sb.append(values[i]);
+            if (i < values.length - 1) {
+                sb.append(separator);
+            }
+        }
+        return sb.toString();
+    }
+
 }

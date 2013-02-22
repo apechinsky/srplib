@@ -1,7 +1,7 @@
 package org.srplib.model;
 
 import org.srplib.contract.Assert;
-import org.srplib.support.ReflectionUtils;
+import org.srplib.reflection.ReflectionUtils;
 
 /**
  * A value model adapter for java bean property.

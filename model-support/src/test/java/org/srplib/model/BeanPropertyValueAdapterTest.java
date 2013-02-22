@@ -2,6 +2,7 @@ package org.srplib.model;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.srplib.reflection.ReflectionException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -56,7 +57,7 @@ public class BeanPropertyValueAdapterTest {
         Assert.assertThat(testBean.getAge(), is(27));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = ReflectionException.class)
     public void testForBeanUnexistingProperty() throws Exception {
         TestBean testBean = TestBean.create();
 

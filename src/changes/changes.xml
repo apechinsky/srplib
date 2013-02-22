@@ -27,6 +27,19 @@
                 Add ObjectGraph. Encapsulates object graph navigation algorithm. Implements Visitor pattern.
             </action>
 
+            <action dev="Anton Pechinsky" type="change">
+                Methods getDeclaredFields.getDeclaredFields() now returns List of Fields instead of List of Strings
+            </action>
+
+            <action dev="Anton Pechinsky" type="change">
+                Moved classes:
+                org.srplib.support.ReflectionUtils        -> org.srplib.reflection.ReflectionUtils
+                org.srplib.support.ReflectionBeanBuilder  -> org.srplib.reflection.ReflectionBeanBuilder
+                org.srplib.support.ReflectionException    -> org.srplib.reflection.ReflectionException
+                org.srplib.support.ProxyUtils             -> org.srplib.reflection.ProxyUtils
+                org.srplib.support.EmptyInvocationHandler -> org.srplib.reflection.EmptyInvocationHandler
+            </action>
+
         </release>
 
         <release version="0.3.2" date="2012-09-18">
