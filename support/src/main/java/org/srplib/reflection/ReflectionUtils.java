@@ -122,9 +122,26 @@ public class ReflectionUtils {
      * @param methodName String method name.
      * @param parameters an array of parameter types
      * @return Method if found, {@code null} otherwise
-     * @throws IllegalStateException if no method found
      */
-    public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
+    public static Method findMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
+        try {
+            return clazz.getDeclaredMethod(methodName, parameters);
+        }
+        catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Searches and returns specified method in specified class. Non recursive.
+     *
+     * @param clazz Class starting class to search method in
+     * @param methodName String method name.
+     * @param parameters an array of parameter types
+     * @return Method if found, {@code null} otherwise
+     * @throws ReflectionException if no method found
+     */
+    public static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
         try {
             return clazz.getDeclaredMethod(methodName, parameters);
         }
@@ -132,6 +149,7 @@ public class ReflectionUtils {
             throw new ReflectionException("No such method " + toString(clazz, methodName, parameters), e);
         }
     }
+
 
     /**
      * Searches and returns specified method recursively.
@@ -141,7 +159,7 @@ public class ReflectionUtils {
      * @param parameters an array of parameter types
      * @return Method if found, {@code null} otherwise
      */
-    public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
+    public static Method findMethodRecursively(Class<?> clazz, String methodName, Class<?>... parameters) {
         try {
             if (clazz == null) {
                 return null;
@@ -149,8 +167,25 @@ public class ReflectionUtils {
             return clazz.getDeclaredMethod(methodName, parameters);
         }
         catch (NoSuchMethodException e) {
-            return findDeclaredMethod(clazz.getSuperclass(), methodName, parameters);
+            return getMethodRecursively(clazz.getSuperclass(), methodName, parameters);
         }
+    }
+
+    /**
+     * Searches and returns specified method recursively.
+     *
+     * @param clazz Class starting class to search method in
+     * @param methodName String method name.
+     * @param parameters an array of parameter types
+     * @return Method by specified parameters
+     * @throws ReflectionException if no method found.
+     */
+    public static Method getMethodRecursively(Class<?> clazz, String methodName, Class<?>... parameters) {
+        Method method = findMethodRecursively(clazz, methodName, parameters);
+        if (method == null) {
+            throw new ReflectionException("No such method " + toString(clazz, methodName, parameters));
+        }
+        return method;
     }
 
     /**
@@ -162,13 +197,29 @@ public class ReflectionUtils {
      * @param object Object the object the underlying method is invoked from
      * @param arguments vararg array of method arguments.
      * @return method invocation result
+     * @deprecated use invokeMethod(Object, Method, Object...)
      */
     @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Method method, Object object, Object... arguments) {
+        return invokeMethod(object, method, arguments);
+    }
+
+    /**
+     * Invokes specified method of specified target using reflection.
+     *
+     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
+     *
+     * @param method Method to invoke
+     * @param target Object the target the underlying method is invoked from
+     * @param arguments vararg array of method arguments.
+     * @return method invocation result
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeMethod(Object target, Method method, Object... arguments) {
         boolean accessible = method.isAccessible();
         try {
             method.setAccessible(true);
-            return (T) method.invoke(object, arguments);
+            return (T) method.invoke(target, arguments);
         }
         catch (IllegalAccessException e) {
             throw new ReflectionException("Can't invoke method " + method, e);
@@ -183,19 +234,123 @@ public class ReflectionUtils {
 
 
     /**
+     * Returns declared field of specified class.
+     *
+     * @param clazz Class class to introspect.
+     * @return Field or {@code null} if no such field in specified class.
+     */
+    public static Field findField(Class<?> clazz, String fieldName) {
+        Argument.checkNotNull(clazz, "Can't get field from null class.");
+        Argument.checkNotNull(fieldName, "Can't get field with null name.");
+
+        try {
+            return clazz.getDeclaredField(fieldName);
+        }
+        catch (NoSuchFieldException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns declared field of specified class.
+     *
+     * @param clazz Class class to introspect.
+     * @return Field
+
+     */
+    public static Field getField(Class<?> clazz, String fieldName) {
+        Field field = findField(clazz, fieldName);
+        if (field == null)  {
+            throw new ReflectionException("No such field " + toString(clazz, fieldName));
+        }
+        return field;
+    }
+
+    /**
+     * Searches recursively and returns declared field with specified name.
+     *
+     * @param clazz Class class to start search from
+     * @param fieldName String field name
+     * @return Field field name or {@code null} if field was not found in class or superclasses
+     */
+    public static Field findFieldRecursively(Class<?> clazz, String fieldName) {
+        Field field = getField(clazz, fieldName);
+
+        if (field == null && clazz.getSuperclass() != null) {
+            field = getFieldRecursively(clazz.getSuperclass(), fieldName);
+        }
+
+        return field;
+    }
+
+    /**
+     * Searches recursively and returns declared field with specified name.
+     *
+     * @param clazz Class class to start search from
+     * @param fieldName String field name
+     * @return Field field name or {@code null} if field was not found in class or superclasses
+     * @throws ReflectionException if no such field found
+     */
+    public static Field getFieldRecursively(Class<?> clazz, String fieldName) {
+        Field field = findFieldRecursively(clazz, fieldName);
+        if (field == null)  {
+            throw new ReflectionException("No such field " + toString(clazz, fieldName));
+        }
+        return field;
+    }
+
+    /**
+     * Returns list of declared fields of specified class.
+     *
+     * @param clazz Class class to introspect.
+     * @return List of Field
+     */
+    public static List<Field> getFields(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't get fields from null class.");
+
+        List<Field> fields = new LinkedList<Field>();
+        for (Field field : clazz.getDeclaredFields()) {
+            if (!isSyntheticName(field.getName())) {
+                fields.add(field);
+            }
+        }
+        return fields;
+    }
+
+    /**
+     * Returns list of declared fields of specified class including fields of superclasses.
+     *
+     * @param clazz Class class to introspect.
+     * @return List of Field
+     */
+    public static List<Field> getFieldsRecursively(Class<?> clazz) {
+        LinkedList<Field> fields = new LinkedList<Field>();
+        collectFieldsRecursively(clazz, fields);
+        return fields;
+    }
+
+    private static void collectFieldsRecursively(Class<?> type, List<Field> fields) {
+        if (type != null) {
+            fields.addAll(getFields(type));
+            collectFieldsRecursively(type.getSuperclass(), fields);
+        }
+    }
+
+    /**
      * Set value of specified field of specified object.
      *
      * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
      *
+     * @param target Object the object the underlying method is invoked from
      * @param field Field field to set value to.
-     * @param object Object the object the underlying method is invoked from
      * @param value Object value to set to field
+     * @throws ReflectionException if can't set field value.
      */
-    public static void setFieldValue(Field field, Object object, Object value) {
+    public static void setFieldValue(Object target, Field field, Object value) {
         boolean accessible = field.isAccessible();
         try {
             field.setAccessible(true);
-            field.set(object, value);
+            field.set(target, value);
         }
         catch (IllegalAccessException e) {
             throw new ReflectionException("Can't set value to field '" + field + "'", e);
@@ -211,53 +366,40 @@ public class ReflectionUtils {
      *
      * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
      *
+     * @param target Object target object
      * @param fieldName String field name to set value to.
-     * @param object Object the object the underlying method is invoked from
-     * @param value Object value to set to field
+     * @param value Object value to set to a field
+     * @throws ReflectionException if can't set field value.
      */
-    public static void setFieldValue(String fieldName, Object object, Object value) {
+    public static void setFieldValue(Object target, String fieldName, Object value) {
         Argument.checkNotNull(fieldName, "fieldName must not be null!");
-        Argument.checkNotNull(object, "Can't set value to field of null object!");
+        Argument.checkNotNull(target, "Can't set value to field of null object!");
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            setFieldValue(field, object, value);
+            Field field = target.getClass().getDeclaredField(fieldName);
+            setFieldValue(target, field, value);
         }
         catch (NoSuchFieldException e) {
             throw new ReflectionException(String.format("Can't set value to field '%s'. No such field.",
-                toString(object.getClass(), fieldName)), e);
+                toString(target.getClass(), fieldName)), e);
         }
     }
-
-    /**
-     * Set value of specified property of specified object.
-     *
-     * @param bean Object object to containing property
-     * @param property String property name
-     * @param value Object value to be set as property value
-     * @throws IllegalStateException if underlying reflection subsystem throws exception.
-     * @deprecated use setFieldValue
-     */
-    @Deprecated
-    public static void setField(Object bean, String property, Object value) {
-        setFieldValue(property, bean, value);
-    }
-
 
     /**
      * Set value of specified field of specified object.
      *
      * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
      *
+     * @param target Object target object
      * @param field Field field to set value to.
-     * @param object Object the object the underlying method is invoked from
      * @return value of field
+     * @throws ReflectionException if can't get field value.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getFieldValue(Field field, Object object) {
+    public static <T> T getFieldValue(Object target, Field field) {
         boolean accessible = field.isAccessible();
         try {
             field.setAccessible(true);
-            return (T) field.get(object);
+            return (T) field.get(target);
         }
         catch (IllegalAccessException e) {
             throw new ReflectionException(String.format("Can't get value of field '%s'.", field), e);
@@ -272,54 +414,21 @@ public class ReflectionUtils {
      *
      * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
      *
-     * @param object Object the object the underlying method is invoked from
+     * @param target Object the object the underlying method is invoked from
      * @param fieldName String field name
      * @return value of specified property
+     * @throws ReflectionException if can't get field value.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getFieldValue(Object object, String fieldName) {
+    public static <T> T getFieldValue(Object target, String fieldName) {
         try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            return (T) getFieldValue(field, object);
+            Field field = target.getClass().getDeclaredField(fieldName);
+            return (T) getFieldValue(target, field);
         }
         catch (NoSuchFieldException e) {
             throw new ReflectionException(String.format("Can't get value of field '%s'. No such field.",
-                toString(object.getClass(), fieldName)), e);
+                toString(target.getClass(), fieldName)), e);
 
-        }
-    }
-
-    /**
-     * Returns value of specified property of specified object using reflection.
-     *
-     * @param bean Object object to containing pro
-     * @param property String property name
-     * @return Object value of specified property
-     * @throws IllegalStateException if underlying reflection subsystem throws exception.
-     * @deprecated use getFieldValue
-     */
-    @Deprecated
-    public static Object getField(Object bean, String property) {
-        return getFieldValue(bean, property);
-    }
-
-
-    /**
-     * Searches recursively and returns declared field with specified name.
-     *
-     * @param clazz Class class to start search from
-     * @param fieldName String field name
-     * @return Field field name or {@code null} if field was not found in class or superclasses
-     */
-    public static Field findFieldRecursively(Class<?> clazz, String fieldName) {
-        try {
-            if (clazz == null) {
-                return null;
-            }
-            return clazz.getDeclaredField(fieldName);
-        }
-        catch (NoSuchFieldException e) {
-            return findFieldRecursively(clazz.getSuperclass(), fieldName);
         }
     }
 
@@ -406,42 +515,6 @@ public class ReflectionUtils {
     public static <T> T newInstance(String className) {
         return (T) newInstance(classForName(className));
     }
-
-    /**
-     * Returns list of declared fields of specified class.
-     *
-     * @param clazz Class class to introspect.
-     * @return List of Field
-     */
-    public static List<Field> getDeclaredFields(Class<?> clazz) {
-        Argument.checkNotNull(clazz, "Can't get fields from null class.");
-
-        List<Field> fields = new LinkedList<Field>();
-        for (Field field : clazz.getDeclaredFields()) {
-            if (!isSyntheticName(field.getName())) {
-                fields.add(field);
-            }
-        }
-        return fields;
-    }
-
-    /**
-     * Returns list of declared fields of specified class including fields of superclasses.
-     *
-     * @param clazz Class class to introspect.
-     * @return List of Field
-     */
-    public static List<Field> getDeclaredFieldsRecursively(Class<?> clazz) {
-        return getDeclaredFieldsRecursively(clazz, new LinkedList<Field>());
-    }
-
-    private static List<Field> getDeclaredFieldsRecursively(Class<?> type, List<Field> fields) {
-        if (type != null) {
-            fields.addAll(getDeclaredFields(type));
-        }
-        return fields;
-    }
-
 
     /**
      * Checks for constructor existence.
@@ -671,4 +744,112 @@ public class ReflectionUtils {
         return sb.toString();
     }
 
+
+    // Deprecated methods
+
+    /**
+     * Returns declared field of specified class.
+     *
+     * @param clazz Class class to introspect.
+     * @return Field or {@code null} if no such field in specified class.
+     * @deprecated use getField(). Method made deprecated because word 'declared' seems to be excessive.
+     * Every time we get method via reflection we need declared field.
+     */
+    public static Field getDeclaredField(Class<?> clazz, String fieldName) {
+        return getField(clazz, fieldName);
+    }
+
+    /**
+     * Returns list of declared fields of specified class including fields of superclasses.
+     *
+     * @param clazz Class class to introspect.
+     * @return List of Field
+     * @deprecated use getFieldsRecursively(Class)
+     */
+    public static List<Field> getDeclaredFieldsRecursively(Class<?> clazz) {
+        return getFieldsRecursively(clazz);
+    }
+
+    /**
+     * Returns list of declared fields of specified class.
+     *
+     * @param clazz Class class to introspect.
+     * @return List of Field
+     * @deprecated use getFields(Class)
+     */
+    public static List<Field> getDeclaredFields(Class<?> clazz) {
+        return getFields(clazz);
+    }
+
+
+    /**
+     * Searches and returns specified method in specified class. Non recursive.
+     *
+     * @param clazz Class starting class to search method in
+     * @param methodName String method name.
+     * @param parameters an array of parameter types
+     * @return Method if found, {@code null} otherwise
+     * @throws IllegalStateException if no method found
+     * @deprecated use getMethod(Class, String, Class...)
+     */
+    public static Method getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
+        return getMethod(clazz, methodName, parameters);
+    }
+
+
+    /**
+     * Searches and returns specified method recursively.
+     *
+     * @param clazz Class starting class to search method in
+     * @param methodName String method name.
+     * @param parameters an array of parameter types
+     * @return Method if found, {@code null} otherwise
+     * @deprecated use getMethodRecursively(Class, String, Class...)
+     */
+    public static Method findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
+        return getMethodRecursively(clazz, methodName, parameters);
+    }
+
+    /**
+     * Set value of specified field of specified object.
+     *
+     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
+     *
+     * @param field Field field to set value to.
+     * @param target Object the object the underlying method is invoked from
+     * @param value Object value to set to field
+     * @deprecated use setFieldValue(Object, Field, Object)
+     */
+    public static void setFieldValue(Field field, Object target, Object value) {
+        setFieldValue(target, field, value);
+    }
+
+    /**
+     * Set value of specified field of specified object.
+     *
+     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
+     *
+     * @param fieldName String field name to set value to.
+     * @param target Object target object
+     * @param value Object value to set to a field
+     * @deprecated use setFieldValue(Object, String, Object)
+     */
+    public static void setFieldValue(String fieldName, Object target, Object value) {
+        setFieldValue(target, fieldName, value);
+    }
+
+    /**
+     * Set value of specified field of specified object.
+     *
+     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
+     *
+     * @param field Field field to set value to.
+     * @param target Object target object
+     * @return value of field
+     * @deprecated use getFieldValue(Object, Field)
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getFieldValue(Field field, Object target) {
+        return getFieldValue(target, field);
+    }
 }

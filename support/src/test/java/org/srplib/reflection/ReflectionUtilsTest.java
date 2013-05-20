@@ -1,10 +1,14 @@
 package org.srplib.reflection;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.srplib.reflection.ReflectionUtils;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -45,4 +49,48 @@ public class ReflectionUtilsTest {
     public void testJoin() throws Exception {
         Assert.assertThat(ReflectionUtils.join(",", "1", "2"), is("1,2"));
     }
+
+    @Test
+    public void testgetDeclaredFieldsRecursively() {
+        List<Field> fields = ReflectionUtils.getDeclaredFieldsRecursively(Child.class);
+
+        Assert.assertThat(asSet(fields), is(asSet(
+            field(Parent.class, "field"),
+            field(Parent.class, "parentField"),
+            field(Child.class, "field"),
+            field(Child.class, "childField")
+        )));
+    }
+
+    private <T> Set<T> asSet(List<T> fields) {
+        return new HashSet<T>(fields);
+    }
+
+    private <T> Set<T> asSet(T... fields) {
+        return asSet(Arrays.asList(fields));
+    }
+
+    private Field field(Class type, String field) {
+        return ReflectionUtils.getDeclaredField(type, field);
+    }
+
+
+    private static class Parent {
+
+        private String field;
+
+        private String parentField;
+
+    }
+
+    private static class Child extends Parent {
+
+        private String field;
+
+        private String childField;
+
+    }
+
 }
+
+

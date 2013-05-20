@@ -6,6 +6,12 @@
 
     <body>
 
+        <release version="0.3.4">
+            <action dev="Anton Pechinsky" type="remove">
+                Remove deprecated methods ReflectionUtils.getField(), ReflectionUtils.setField().
+            </action>
+        </release>
+
         <release version="0.3.3" date="2012-10-19">
             <action dev="Anton Pechinsky" type="add">
                 Add Converters.choice() method.
