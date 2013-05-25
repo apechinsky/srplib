@@ -20,8 +20,7 @@ public class ReflectionInvokerTest {
 
     @Test
     public void testCreateWithConstructor() throws Exception {
-        TestBean bean = ReflectionInvoker.constructor(TestBean.class)
-            .parameters(String.class, String.class, int.class)
+        TestBean bean = ReflectionInvoker.constructor(TestBean.class).parameters(String.class, String.class, int.class)
             .invoke("1", "2", 3);
 
         Assert.assertThat(bean, instanceOf(TestBean.class));
@@ -32,9 +31,9 @@ public class ReflectionInvokerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testArgumentDontMatchParametersConstructor() throws Exception {
-        ReflectionInvoker.constructor(TestBean.class)
-            .parameters()
-            .invoke("redundant parameter");
+        TestBean bean = ReflectionInvoker.constructor(TestBean.class).parameters().invoke("redundant parameter");
+
+        Assert.assertThat(bean, instanceOf(TestBean.class));
     }
 
     @Test

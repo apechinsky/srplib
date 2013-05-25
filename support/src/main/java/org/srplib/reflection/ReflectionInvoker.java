@@ -6,16 +6,15 @@ import java.util.List;
 import org.srplib.contract.Argument;
 
 /**
- * Simplifies object creation via reflection.
+ * Simplifies class method invocation via reflection.
  *
  * <ul>
- *  <li>Encapsulates constructor signature: class, parameter parameters. So builder may be reused to create multiple instances.</li>
+ *  <li>Encapsulates method signature: class, parameter parameters. So invoker may be reused to create multiple instances.</li>
  *  <li>Wraps checked exception into unchecked.</li>
  *  <li>Provides very detailed error message.</li>
- *  <li>Clarify and simplify instance creation.</li>
  * </ul>
  *
- * <p>Client should specify parameters for constructor invocation.</p>
+ * <p>Client should specify parameters for a method invocation.</p>
  *
  * <pre>
  *      // Using ReflectionUtils
@@ -23,10 +22,13 @@ import org.srplib.contract.Argument;
  *          new Class[] {String.class, String.class, int.class},
  *          new Object[] {"John", "Smith", 35})
  *
- *      // Using ReflectionBeanBuilder
- *      Person person = ReflectionBeanBuilder.create(Person.class)
+ *      // Using ReflectionInvoker
+ *      Person person = ReflectionInvoker.constructor(Person.class)
  *          .parameters(String.class, String.class, int.class)
  *          .newInstance("John", "Smith", 35);
+ *
+ *      // Invoke constructor without parameters
+ *      ReflectionInvoker.constructor(Person.class).invoke();
  * </pre>
  *
  * @author Anton Pechinsky
@@ -49,21 +51,18 @@ public class ReflectionInvoker<T, V> {
      * Create constructor invoker.
      *
      * @param clazz Class a class to create instance of
-     * @param parameters vararg array of constructor parameters
      * @return ReflectionInvoker
      */
-    public static <T> ReflectionInvoker<T, T> constructor(Class<T> clazz, Class<?>... parameters) {
+    public static <T> ReflectionInvoker<T, T> constructor(Class<T> clazz) {
         Argument.checkNotNull(clazz, "Can't create object with 'null' class!");
 
-        ReflectionInvoker<T, T> builder = new ReflectionInvoker<T, T>(clazz, null);
-        builder.parameters(parameters);
-        return builder;
+        return new ReflectionInvoker<T, T>(clazz, null);
     }
 
     /**
      * Create method invoker for specified class and method name.
      *
-     * <p>This method is used if target object isn't known and should be provided later with {@link #setTarget} method.</p>
+     * <p>This method is used if target object isn't known and should be provided later with {@link #target} method.</p>
      *
      * @param clazz Class a class of target object
      * @param methodName String name of method to invoke
@@ -76,11 +75,10 @@ public class ReflectionInvoker<T, V> {
     }
 
     /**
-     * Create method invoker for specified target object.
+     * An alternative to constructor.
      *
-     * @param target Object target object
-     * @param methodName String name of method to invoke
-     * @return ReflectionInvoker
+     * @param target Class a class to create instance of
+     * @return ReflectionBeanBuilder
      */
     public static <T, V> ReflectionInvoker<T, V> method(T target, String methodName) {
         ReflectionInvoker<T, V> invoker = method((Class<T>) target.getClass(), methodName);
@@ -93,17 +91,18 @@ public class ReflectionInvoker<T, V> {
      *
      * @param clazz Class a class to create instance of
      */
-    public ReflectionInvoker(Class<T> clazz, String methodName) {
+    public ReflectionInvoker(Class<T> clazz, String methodName, Class<?>... parameters) {
         Argument.checkNotNull(clazz, "Can't create object with 'null' class!");
         this.clazz = clazz;
         this.methodName = methodName;
+        this.parameters = parameters;
     }
 
 
     /**
      * Specify parameter parameters as list.
      *
-     * @param types List constructor parameter parameters.
+     * @param target Object set target object to invoke methods on
      * @return this
      */
     public ReflectionInvoker<T, V> target(T target) {
@@ -130,6 +129,7 @@ public class ReflectionInvoker<T, V> {
      * @return this
      */
     public ReflectionInvoker<T, V> parameters(Class<?>... parameters) {
+        // fail fast checks
         if (isConstructorInvoker()) {
             Argument.checkTrue(ReflectionUtils.hasConstructor(clazz, parameters),
                 "No constructor " + ReflectionUtils.toString(clazz, null, parameters));
