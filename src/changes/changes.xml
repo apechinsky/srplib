@@ -10,6 +10,14 @@
             <action dev="Anton Pechinsky" type="remove">
                 Remove deprecated methods ReflectionUtils.getField(), ReflectionUtils.setField().
             </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add ReflectionInvoker - a replacement for ReflectionBeanBuilder with ability to invoke methods.
+                ReflectionBeanBuilder made deprecated.
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                ReflectionUtils method refactoring. Unified parameter order. Improve method naming consistency.
+                Now findXXXX methods returns null, getXXXX methods throws exception if field/method not found.
+            </action>
         </release>
 
         <release version="0.3.3" date="2012-10-19">

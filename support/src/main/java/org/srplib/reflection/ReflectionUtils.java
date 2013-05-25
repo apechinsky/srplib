@@ -167,7 +167,7 @@ public class ReflectionUtils {
             return clazz.getDeclaredMethod(methodName, parameters);
         }
         catch (NoSuchMethodException e) {
-            return getMethodRecursively(clazz.getSuperclass(), methodName, parameters);
+            return findMethodRecursively(clazz.getSuperclass(), methodName, parameters);
         }
     }
 

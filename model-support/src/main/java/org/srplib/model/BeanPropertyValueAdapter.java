@@ -79,7 +79,7 @@ public class BeanPropertyValueAdapter<B, T> extends AbstractValueModel<T> implem
     @Override
     public void setValue(T value) {
         Assert.checkNotNull(context, "Context object isn't set!");
-        ReflectionUtils.setField(context, property, value);
+        ReflectionUtils.setFieldValue(context, property, value);
     }
 
     /**
@@ -91,7 +91,7 @@ public class BeanPropertyValueAdapter<B, T> extends AbstractValueModel<T> implem
     @Override
     public T getValue() {
         Assert.checkNotNull(context, "Context object was not set!");
-        return (T) ReflectionUtils.getField(context, property);
+        return (T) ReflectionUtils.getFieldValue(context, property);
     }
 
     @Override

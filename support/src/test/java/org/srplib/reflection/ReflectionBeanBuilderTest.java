@@ -32,9 +32,6 @@ public class ReflectionBeanBuilderTest {
             .newInstance("redundant parameter");
     }
 
-//"CustomMessage(parameter). Instance creation error [class: org.srplib.reflection.ReflectionBeanBuilderTest$TestBean, parameters: [class java.lang.String] values: [ConstructorExceptionMessage.]]. ConstructorExceptionMessage."
-//"CustomMessage(parameter). Instance creation error [class: org.srplib.reflection.ReflectionBeanBuilderTest$TestBean, parameters: [class java.lang.String] values: [ConstructorExceptionMessage.]]."
-
     @Test
     public void testConstructorException() throws Exception {
         try {
@@ -47,7 +44,7 @@ public class ReflectionBeanBuilderTest {
         }
         catch (ReflectionException e) {
             String expectedErrorMessage = "CustomMessage(parameter). Instance creation error " +
-                "org.srplib.reflection.ReflectionBeanBuilderTest$TestBean.constructor(java.lang.String) " +
+                "org.srplib.reflection.TestBean.constructor(java.lang.String) " +
                 "arguments: [ConstructorExceptionMessage.]";
             Assert.assertThat(e.getMessage(), is(expectedErrorMessage));
         }

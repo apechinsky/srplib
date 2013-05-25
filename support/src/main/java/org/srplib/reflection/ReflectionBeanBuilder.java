@@ -29,7 +29,9 @@ import org.srplib.contract.Argument;
  * </pre>
  *
  * @author Anton Pechinsky
+ * @deprecated use ReflectionInvoker. In addition to constructor invocation it's able to invoke methods
  */
+@Deprecated
 public class ReflectionBeanBuilder<T> {
 
     private Class<T> clazz;
