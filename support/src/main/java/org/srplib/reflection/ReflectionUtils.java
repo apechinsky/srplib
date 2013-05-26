@@ -82,8 +82,11 @@ public class ReflectionUtils {
         Object result = null;
 
         if (type.isPrimitive() && !void.class.equals(type)) {
-//            result = Array.get(Array.newInstance(type, 1), 0);
             result = INIT_VALUES.get(type);
+
+            // Another implementation without predefined map.
+            // Works but requires array instance creation.
+            // result = Array.get(Array.newInstance(type, 1), 0);
         }
 
         return result;
@@ -96,9 +99,46 @@ public class ReflectionUtils {
      * @param clazz Class source class
      * @return Class class of type parameters, <code>null</code> if class has no type parameters.
      */
+    public static List<Class> getTypeParameters(Class<?> clazz) {
+        if (!isParameterizedType(clazz.getGenericSuperclass())) {
+            return null;
+        }
+        Type[] typeArguments = (asParameterizedType(clazz)).getActualTypeArguments();
+        List types = Arrays.asList(typeArguments);
+        return (List<Class>) types;
+    }
+
+    /**
+     * Returns first generic type parameter of specified class.
+     *
+     * @param clazz Class source class
+     * @return Class class of type parameters, <code>null</code> if class has no type parameters.
+     */
     public static <T> Class<T> getTypeParameter(Class<?> clazz) {
-        Type[] typeArguments = ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments();
-        return typeArguments.length > 0 ? (Class<T>) typeArguments[0] : null;
+
+        if (!isParameterizedType(clazz.getGenericSuperclass())) {
+            return null;
+        }
+
+        Type[] typeArguments = asParameterizedType(clazz).getActualTypeArguments();
+
+        if (typeArguments.length == 0)  {
+            return null;
+        }
+
+        Type firstTypeArgument = typeArguments[0];
+
+        return isParameterizedType(firstTypeArgument)
+            ? (Class<T>)((ParameterizedType)firstTypeArgument).getRawType()
+            : (Class<T>)firstTypeArgument;
+    }
+
+    private static boolean isParameterizedType(Type type) {
+        return type instanceof ParameterizedType;
+    }
+
+    private static ParameterizedType asParameterizedType(Class<?> clazz) {
+        return (ParameterizedType) clazz.getGenericSuperclass();
     }
 
     /**
@@ -114,6 +154,7 @@ public class ReflectionUtils {
         Assert.checkNotNull(type, message, parameters);
         return type;
     }
+
 
     /**
      * Searches and returns specified method in specified class. Non recursive.
@@ -188,50 +229,6 @@ public class ReflectionUtils {
         return method;
     }
 
-    /**
-     * Invokes specified method of specified object using reflection.
-     *
-     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
-     *
-     * @param method Method to invoke
-     * @param object Object the object the underlying method is invoked from
-     * @param arguments vararg array of method arguments.
-     * @return method invocation result
-     * @deprecated use invokeMethod(Object, Method, Object...)
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T invokeMethod(Method method, Object object, Object... arguments) {
-        return invokeMethod(object, method, arguments);
-    }
-
-    /**
-     * Invokes specified method of specified target using reflection.
-     *
-     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
-     *
-     * @param method Method to invoke
-     * @param target Object the target the underlying method is invoked from
-     * @param arguments vararg array of method arguments.
-     * @return method invocation result
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T invokeMethod(Object target, Method method, Object... arguments) {
-        boolean accessible = method.isAccessible();
-        try {
-            method.setAccessible(true);
-            return (T) method.invoke(target, arguments);
-        }
-        catch (IllegalAccessException e) {
-            throw new ReflectionException("Can't invoke method " + method, e);
-        }
-        catch (InvocationTargetException e) {
-            throw ExceptionUtils.asUnchecked(e.getTargetException());
-        }
-        finally {
-            method.setAccessible(accessible);
-        }
-    }
-
 
     /**
      * Returns declared field of specified class.
@@ -274,7 +271,7 @@ public class ReflectionUtils {
      * @return Field field name or {@code null} if field was not found in class or superclasses
      */
     public static Field findFieldRecursively(Class<?> clazz, String fieldName) {
-        Field field = getField(clazz, fieldName);
+        Field field = findField(clazz, fieldName);
 
         if (field == null && clazz.getSuperclass() != null) {
             field = getFieldRecursively(clazz.getSuperclass(), fieldName);
@@ -446,6 +443,50 @@ public class ReflectionUtils {
         }
         catch (NoSuchFieldException e) {
             throw new ReflectionException(String.format("No such field '%s'.", toString(clazz, fieldName)), e);
+        }
+    }
+
+    /**
+     * Invokes specified method of specified object using reflection.
+     *
+     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
+     *
+     * @param method Method to invoke
+     * @param object Object the object the underlying method is invoked from
+     * @param arguments vararg array of method arguments.
+     * @return method invocation result
+     * @deprecated use invokeMethod(Object, Method, Object...)
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeMethod(Method method, Object object, Object... arguments) {
+        return invokeMethod(object, method, arguments);
+    }
+
+    /**
+     * Invokes specified method of specified target using reflection.
+     *
+     * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
+     *
+     * @param method Method to invoke
+     * @param target Object the target the underlying method is invoked from
+     * @param arguments vararg array of method arguments.
+     * @return method invocation result
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeMethod(Object target, Method method, Object... arguments) {
+        boolean accessible = method.isAccessible();
+        try {
+            method.setAccessible(true);
+            return (T) method.invoke(target, arguments);
+        }
+        catch (IllegalAccessException e) {
+            throw new ReflectionException("Can't invoke method " + method, e);
+        }
+        catch (InvocationTargetException e) {
+            throw ExceptionUtils.asUnchecked(e.getTargetException());
+        }
+        finally {
+            method.setAccessible(accessible);
         }
     }
 

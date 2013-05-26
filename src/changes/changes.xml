@@ -18,6 +18,12 @@
                 ReflectionUtils method refactoring. Unified parameter order. Improve method naming consistency.
                 Now findXXXX methods returns null, getXXXX methods throws exception if field/method not found.
             </action>
+            <action dev="Anton Pechinsky" type="fix">
+                ReflectionUtils.getTypeParameter fail with exception if no type parameter in type or nested type parameter.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add more tests for ReflectionUtils
+            </action>
         </release>
 
         <release version="0.3.3" date="2012-10-19">
