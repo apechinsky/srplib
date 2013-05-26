@@ -31,7 +31,7 @@ public class ObjectGraph implements Element {
 
     private Object root;
 
-    private Set<Object> visited = new HashSet<Object>();
+    private Set<Integer> visitedIdentities = new HashSet<Integer>();
 
     /**
      * Creates object graph with specified root.
@@ -78,11 +78,17 @@ public class ObjectGraph implements Element {
     }
 
     private void rememberVisited(Object object) {
-        visited.add(object);
+        int identity = identity(object);
+        visitedIdentities.add(identity);
     }
 
     private boolean isVisited(Object object) {
-        return visited.contains(object);
+        int identity = identity(object);
+        return visitedIdentities.contains(identity);
+    }
+
+    private int identity(Object object) {
+        return System.identityHashCode(object);
     }
 
     private void traverseMap(Map map, Visitor visitor) {
