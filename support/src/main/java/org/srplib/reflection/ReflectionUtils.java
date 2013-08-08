@@ -271,10 +271,42 @@ public class ReflectionUtils {
      * @return Field field name or {@code null} if field was not found in class or superclasses
      */
     public static Field findFieldRecursively(Class<?> clazz, String fieldName) {
-        Field field = findField(clazz, fieldName);
 
-        if (field == null && clazz.getSuperclass() != null) {
-            field = getFieldRecursively(clazz.getSuperclass(), fieldName);
+        Field field;
+
+        if (Path.isComplex(fieldName)) {
+            Path path = Path.parse(fieldName);
+            field = findFieldRecursively(clazz, path);
+        }
+        else {
+            field = findField(clazz, fieldName);
+
+            if (field == null && clazz.getSuperclass() != null) {
+                field = getFieldRecursively(clazz.getSuperclass(), fieldName);
+            }
+        }
+
+        return field;
+    }
+
+    /**
+     * Возвращает поле, путь к которому задан параметром 'path'.
+     *
+     * @param clazz Class класс
+     * @return path Path путь к полю
+     * @throws IllegalArgumentException если имя свойства {@code null}
+     * @throws ReflectionException если произошла ошибка reflection
+     */
+    public static Field findFieldRecursively(Class<?> clazz, Path path) {
+        Assert.checkNotNull(path, "Property name must not be null!");
+
+        String fieldName = path.getFirst();
+
+        Field field = findFieldRecursively(clazz, fieldName);
+        Assert.checkNotNull(field, "Can't find field '%s'. No field '%s' in class '%s'", path.toString(), fieldName, clazz);
+
+        if (path.isComplex()) {
+            field = findFieldRecursively(field.getType(), path.getChild());
         }
 
         return field;
@@ -381,6 +413,31 @@ public class ReflectionUtils {
         }
     }
 
+
+    /**
+     * Set value of specified field of specified object.
+     *
+     * @param target Object target object
+     * @param path Path field path
+     * @param value Object value to set to field
+     * @throws IllegalArgumentException if target of path are null
+     * @throws ReflectionException in case of reflection error
+     */
+    public static void setFieldValue(Object target, Path path, Object value) {
+        Argument.checkNotNull(target, "Can't value of field '%s' of null target.", path);
+        Argument.checkNotNull(path, "path must not be null.");
+
+        try {
+            Object lastContainer = getFieldValue(target, path.getParent());
+
+            setFieldValue(lastContainer, path.getLast(), value);
+        }
+        catch (ReflectionException e) {
+            throw new ReflectionException(
+                String.format("Can't set value of field for path '%s' in target of class '%s'", path, target.getClass()), e);
+        }
+    }
+
     /**
      * Set value of specified field of specified object.
      *
@@ -406,27 +463,59 @@ public class ReflectionUtils {
         }
     }
 
+
     /**
      * Returns value of specified property of specified object.
      *
      * <p>Method wraps all checked exceptions into unchecked exceptions.</p>
      *
-     * @param target Object the object the underlying method is invoked from
+     * @param target Object target object
      * @param fieldName String field name
      * @return value of specified property
      * @throws ReflectionException if can't get field value.
      */
     @SuppressWarnings("unchecked")
     public static <T> T getFieldValue(Object target, String fieldName) {
-        try {
-            Field field = target.getClass().getDeclaredField(fieldName);
-            return (T) getFieldValue(target, field);
-        }
-        catch (NoSuchFieldException e) {
-            throw new ReflectionException(String.format("Can't get value of field '%s'. No such field.",
-                toString(target.getClass(), fieldName)), e);
+        Path path = Path.parse(fieldName);
+        return getFieldValue(target, path);
+    }
 
+    /**
+     * Returns value of nested field specified as path.
+     *
+     * @param target Object target object.
+     * @param path Path field path
+     * @return Object field value
+     * @throws IllegalArgumentException if target or path are null
+     * @throws ReflectionException if case of reflection error
+     */
+    public static <T> T getFieldValue(Object target, Path path) {
+        Argument.checkNotNull(target, "Can't get value of field '%s' of null object.", path);
+        Argument.checkNotNull(path, "path must not be null.");
+
+        Object fieldValue = target;
+
+        for (int i = 0; i < path.getSize(); i++) {
+            String fieldName = path.get(i);
+
+            if (fieldValue == null) {
+                throw new ReflectionException(
+                    String.format("Can't get value of field '%s'. Object for path '%s' is null.",
+                        path, path.subpath(0, i)));
+            }
+
+            Field field = findFieldRecursively(fieldValue.getClass(), fieldName);
+
+            if (field == null) {
+                throw new ReflectionException(
+                    String.format("Can't get value of field '%s'. No field '%s' (path '%s') in class '%s'. ",
+                        path, fieldName, path.subpath(0, i + 1), target.getClass()));
+            }
+
+            fieldValue = getFieldValue(fieldValue, field);
         }
+
+        return (T) fieldValue;
     }
 
     /**
@@ -480,10 +569,12 @@ public class ReflectionUtils {
             return (T) method.invoke(target, arguments);
         }
         catch (IllegalAccessException e) {
-            throw new ReflectionException("Can't invoke method " + method, e);
+            throw new ReflectionException(getMethodInvocationErrorMessage(
+                target.getClass(), method.getName(), method.getParameterTypes(), arguments), e);
         }
         catch (InvocationTargetException e) {
-            throw ExceptionUtils.asUnchecked(e.getTargetException());
+            throw new ReflectionException(getMethodInvocationErrorMessage(
+                target.getClass(), method.getName(), method.getParameterTypes(), arguments), e.getCause());
         }
         finally {
             method.setAccessible(accessible);
@@ -491,6 +582,11 @@ public class ReflectionUtils {
     }
 
 
+    private static String getMethodInvocationErrorMessage(Class<?> clazz, String methodName, Class<?>[] parameterTypes,
+        Object[] parameters) {
+
+        return "Method invocation error " + toString(clazz, methodName, parameterTypes, parameters);
+    }
     /**
      * Creates instance of specified class and wraps checked exceptions into unchecked ones.
      *

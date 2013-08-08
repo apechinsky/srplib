@@ -6,7 +6,7 @@ import java.util.List;
 import org.srplib.contract.Argument;
 
 /**
- * Simplifies class method invocation via reflection.
+ * Simplifies method invocation via reflection.
  *
  * <ul>
  *  <li>Encapsulates method signature: class, parameter parameters. So invoker may be reused to create multiple instances.</li>
@@ -44,6 +44,7 @@ public class ReflectionInvoker<T, V> {
     private Class<?>[] parameters = {};
 
     private String errorMessagePattern;
+
     private Object[] errorMessageParameters;
 
 
@@ -75,9 +76,10 @@ public class ReflectionInvoker<T, V> {
     }
 
     /**
-     * An alternative to constructor.
+     * Create method invoker for specified method of target object.
      *
      * @param target Class a class to create instance of
+     * @param methodName String name of method to invoke
      * @return ReflectionBeanBuilder
      */
     public static <T, V> ReflectionInvoker<T, V> method(T target, String methodName) {

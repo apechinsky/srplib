@@ -210,6 +210,16 @@ public class ReflectionUtilsTest {
         Assert.assertThat(((Parent)child).parentField, is("value"));
     }
 
+    @Test
+    public void testInvokeMethod() {
+        Child child = new Child();
+
+        Method method = ReflectionUtils.getMethod(Child.class, "childMethod", String.class);
+        String value = ReflectionUtils.invokeMethod(child, method, "value");
+
+        Assert.assertThat(value, is("value"));
+    }
+
 
     private <T> Set<T> asSet(List<T> fields) {
         return new HashSet<T>(fields);
@@ -237,6 +247,10 @@ public class ReflectionUtilsTest {
 
         }
 
+        private String parentMethod(String string) {
+            return string;
+        }
+
         private void method() {
 
         }
@@ -252,9 +266,14 @@ public class ReflectionUtilsTest {
         private void childMethod() {
 
         }
+        private String childMethod(String string) {
+            return string;
+        }
+
         private void method() {
 
         }
+
 
     }
 
