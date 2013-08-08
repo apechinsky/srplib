@@ -1,8 +1,6 @@
 package org.srplib.reflection;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -18,8 +16,7 @@ import java.util.Set;
 
 import org.srplib.contract.Argument;
 import org.srplib.contract.Assert;
-import org.srplib.contract.Utils;
-import org.srplib.support.ExceptionUtils;
+import org.srplib.support.Path;
 
 /**
  * Helper class containing static utility methods.
@@ -54,10 +51,6 @@ public class ReflectionUtils {
      */
     public static final Map<Class, Object> INIT_VALUES = new HashMap<Class, Object>();
 
-    /**
-     * A name of constructor method. Used for diagnostic purposes.
-     */
-    public static final String CONSTRUCTOR_NAME = "constructor";
 
     static {
         INIT_VALUES.put(boolean.class, false);
@@ -99,13 +92,13 @@ public class ReflectionUtils {
      * @param clazz Class source class
      * @return Class class of type parameters, <code>null</code> if class has no type parameters.
      */
-    public static List<Class> getTypeParameters(Class<?> clazz) {
+    public static List<Class<?>> getTypeParameters(Class<?> clazz) {
         if (!isParameterizedType(clazz.getGenericSuperclass())) {
             return null;
         }
         Type[] typeArguments = (asParameterizedType(clazz)).getActualTypeArguments();
         List types = Arrays.asList(typeArguments);
-        return (List<Class>) types;
+        return (List<Class<?>>) types;
     }
 
     /**
@@ -122,15 +115,15 @@ public class ReflectionUtils {
 
         Type[] typeArguments = asParameterizedType(clazz).getActualTypeArguments();
 
-        if (typeArguments.length == 0)  {
+        if (typeArguments.length == 0) {
             return null;
         }
 
         Type firstTypeArgument = typeArguments[0];
 
         return isParameterizedType(firstTypeArgument)
-            ? (Class<T>)((ParameterizedType)firstTypeArgument).getRawType()
-            : (Class<T>)firstTypeArgument;
+            ? (Class<T>) ((ParameterizedType) firstTypeArgument).getRawType()
+            : (Class<T>) firstTypeArgument;
     }
 
     private static boolean isParameterizedType(Type type) {
@@ -142,11 +135,11 @@ public class ReflectionUtils {
     }
 
     /**
-     * Returns first generic type parameter of specified class.
+     * Returns first generic type parameter of specified class with specific error message.
      *
      * @param clazz Class source class
-     * @param message
-     * @param parameters
+     * @param message String error message pattern, Message will be used to construct exception text.
+     * @param parameters Object vararg. parameter for message pattern.
      * @return Class class of type parameters, <code>null</code> if class has no type parameters.
      */
     public static <T> Class<T> getTypeParameter(Class<?> clazz, String message, Object... parameters) {
@@ -187,7 +180,7 @@ public class ReflectionUtils {
             return clazz.getDeclaredMethod(methodName, parameters);
         }
         catch (NoSuchMethodException e) {
-            throw new ReflectionException("No such method " + toString(clazz, methodName, parameters), e);
+            throw new ReflectionException("No such method " + ToStringHelper.toString(clazz, methodName, parameters), e);
         }
     }
 
@@ -224,7 +217,7 @@ public class ReflectionUtils {
     public static Method getMethodRecursively(Class<?> clazz, String methodName, Class<?>... parameters) {
         Method method = findMethodRecursively(clazz, methodName, parameters);
         if (method == null) {
-            throw new ReflectionException("No such method " + toString(clazz, methodName, parameters));
+            throw new ReflectionException("No such method " + ToStringHelper.toString(clazz, methodName, parameters));
         }
         return method;
     }
@@ -253,12 +246,11 @@ public class ReflectionUtils {
      *
      * @param clazz Class class to introspect.
      * @return Field
-
      */
     public static Field getField(Class<?> clazz, String fieldName) {
         Field field = findField(clazz, fieldName);
-        if (field == null)  {
-            throw new ReflectionException("No such field " + toString(clazz, fieldName));
+        if (field == null) {
+            throw new ReflectionException("No such field " + ToStringHelper.toString(clazz, fieldName));
         }
         return field;
     }
@@ -322,8 +314,8 @@ public class ReflectionUtils {
      */
     public static Field getFieldRecursively(Class<?> clazz, String fieldName) {
         Field field = findFieldRecursively(clazz, fieldName);
-        if (field == null)  {
-            throw new ReflectionException("No such field " + toString(clazz, fieldName));
+        if (field == null) {
+            throw new ReflectionException("No such field " + ToStringHelper.toString(clazz, fieldName));
         }
         return field;
     }
@@ -409,7 +401,7 @@ public class ReflectionUtils {
         }
         catch (NoSuchFieldException e) {
             throw new ReflectionException(String.format("Can't set value to field '%s'. No such field.",
-                toString(target.getClass(), fieldName)), e);
+                ToStringHelper.toString(target.getClass(), fieldName)), e);
         }
     }
 
@@ -429,7 +421,6 @@ public class ReflectionUtils {
 
         try {
             Object lastContainer = getFieldValue(target, path.getParent());
-
             setFieldValue(lastContainer, path.getLast(), value);
         }
         catch (ReflectionException e) {
@@ -531,7 +522,7 @@ public class ReflectionUtils {
             return (Class<T>) clazz.getDeclaredField(fieldName).getType();
         }
         catch (NoSuchFieldException e) {
-            throw new ReflectionException(String.format("No such field '%s'.", toString(clazz, fieldName)), e);
+            throw new ReflectionException(String.format("No such field '%s'.", ToStringHelper.toString(clazz, fieldName)), e);
         }
     }
 
@@ -546,6 +537,7 @@ public class ReflectionUtils {
      * @return method invocation result
      * @deprecated use invokeMethod(Object, Method, Object...)
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Method method, Object object, Object... arguments) {
         return invokeMethod(object, method, arguments);
@@ -563,30 +555,10 @@ public class ReflectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Object target, Method method, Object... arguments) {
-        boolean accessible = method.isAccessible();
-        try {
-            method.setAccessible(true);
-            return (T) method.invoke(target, arguments);
-        }
-        catch (IllegalAccessException e) {
-            throw new ReflectionException(getMethodInvocationErrorMessage(
-                target.getClass(), method.getName(), method.getParameterTypes(), arguments), e);
-        }
-        catch (InvocationTargetException e) {
-            throw new ReflectionException(getMethodInvocationErrorMessage(
-                target.getClass(), method.getName(), method.getParameterTypes(), arguments), e.getCause());
-        }
-        finally {
-            method.setAccessible(accessible);
-        }
+        return ReflectionInvoker.invokeMethod(target, method, arguments);
     }
 
 
-    private static String getMethodInvocationErrorMessage(Class<?> clazz, String methodName, Class<?>[] parameterTypes,
-        Object[] parameters) {
-
-        return "Method invocation error " + toString(clazz, methodName, parameterTypes, parameters);
-    }
     /**
      * Creates instance of specified class and wraps checked exceptions into unchecked ones.
      *
@@ -599,31 +571,7 @@ public class ReflectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> clazz, Class[] parameters, Object[] arguments) {
-        try {
-            Argument.checkEqual(parameters.length, arguments.length,
-                getInstanceCreationErrorMessage(clazz, parameters, arguments) +
-                    " Expecting %d parameters but actually got %d.", parameters.length, arguments.length);
-
-            Constructor<T> constructor = clazz.getDeclaredConstructor(parameters);
-            constructor.setAccessible(true);
-            return constructor.newInstance(arguments);
-        }
-        catch (InstantiationException e) {
-            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e);
-        }
-        catch (IllegalAccessException e) {
-            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e);
-        }
-        catch (NoSuchMethodException e) {
-            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e);
-        }
-        catch (InvocationTargetException e) {
-            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e.getCause());
-        }
-    }
-
-    private static String getInstanceCreationErrorMessage(Class<?> clazz, Class<?>[] parameterTypes, Object[] parameters) {
-        return "Instance creation error " + toString(clazz, CONSTRUCTOR_NAME, parameterTypes, parameters);
+        return ReflectionInvoker.newInstance(clazz, parameters, arguments);
     }
 
     /**
@@ -728,11 +676,11 @@ public class ReflectionUtils {
      * Tests if specified class represents "simple" type.
      *
      * <ul>Simple types are:
-     *  <li>classes representing primitives (int.class, long.class, etc.)</li>
-     *  <li>primitive wrapper classes</li>
-     *  <li>String</li>
-     *  <li>Date</li>
-     *  <li>Enum</li>
+     * <li>classes representing primitives (int.class, long.class, etc.)</li>
+     * <li>primitive wrapper classes</li>
+     * <li>String</li>
+     * <li>Date</li>
+     * <li>Enum</li>
      * </ul>
      *
      * @param clazz Class a class to test
@@ -762,7 +710,6 @@ public class ReflectionUtils {
     /**
      * Tests if specified name is a synthetic name.
      *
-     *
      * @param name String identifier name
      * @return true if name contains dollar sign, false if null or doesn't contain dollar sign.
      */
@@ -782,105 +729,6 @@ public class ReflectionUtils {
         return WRAPPERS.contains(clazz);
     }
 
-    /**
-     * Returns string representation of method or constructor invocation.
-     *
-     * <p>Used to create diagnostic messages.</p>
-     *
-     * @param clazz Class a class (non-null)
-     * @param methodName String method name. If {@code null} then 'constructor' will be used.
-     * @param parameters Class[] parameter parameters (non-null)
-     * @param arguments Object[] parameter values (nullable)
-     * @return String text.
-     */
-    public static String toString(Class<?> clazz, String methodName, Class<?>[] parameters, Object[] arguments) {
-        Argument.checkNotNull(clazz, "clazz must not be null!");
-        Argument.checkNotNull(parameters, "parameters must not be null!");
-
-        String result = String.format("%s.%s(%s)",
-            clazz.getName(), Utils.getDefaultIfNull(methodName, "constructor"), joinClassNames(",", parameters));
-
-        if (arguments != null) {
-            result += " arguments: [" + join(",", arguments) + "]";
-
-            if (parameters.length != arguments.length) {
-                result += " Number of arguments doesn't match number of parameters.";
-            }
-        }
-
-
-        return result;
-    }
-
-    /**
-     * Returns string representation of method or constructor signature.
-     *
-     * <p>
-     *     Call to this method is equivalent to:
-     * <pre>
-     *     toString(clazz, methodName, parameterTypes, null);
-     * </pre>
-     *
-     * </p>
-     *
-     * @param clazz Class class
-     * @param methodName String method name. If {@code null} then 'constructor' will be used.
-     * @param parameters Class[] parameter types
-     * @return String text.
-     */
-    public static String toString(Class<?> clazz, String methodName, Class<?>[] parameters) {
-        return toString(clazz, methodName, parameters, null);
-    }
-
-
-    /**
-     * Returns string representation of field.
-     *
-     * @param declaringClass Class class
-     * @param fieldName String field name.
-     * @return String field full name
-     */
-    private static String toString(Class<?> declaringClass, String fieldName) {
-        return declaringClass.getName() + "." + fieldName;
-    }
-
-
-    /**
-     * Joins class names using specified separator.
-     *
-     * @param separator String separator to use
-     * @param classes vararg array of classes to join.
-     * @return String joined string
-     */
-    public static String joinClassNames(String separator, Class<?>... classes) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < classes.length; i++) {
-            sb.append(classes[i].getName());
-            if (i < classes.length - 1) {
-                sb.append(separator);
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Joins object array using specified separator.
-     *
-     * @param separator String separator to use
-     * @param values vararg array of values to join. Method leverages {@link Object#toString()}
-     * @return String joined string
-     */
-    public static String join(String separator, Object... values) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < values.length; i++) {
-            sb.append(values[i]);
-            if (i < values.length - 1) {
-                sb.append(separator);
-            }
-        }
-        return sb.toString();
-    }
-
 
     // Deprecated methods
 
@@ -890,7 +738,7 @@ public class ReflectionUtils {
      * @param clazz Class class to introspect.
      * @return Field or {@code null} if no such field in specified class.
      * @deprecated use getField(). Method made deprecated because word 'declared' seems to be excessive.
-     * Every time we get method via reflection we need declared field.
+     *             Every time we get method via reflection we need declared field.
      */
     public static Field getDeclaredField(Class<?> clazz, String fieldName) {
         return getField(clazz, fieldName);

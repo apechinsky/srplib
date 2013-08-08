@@ -24,6 +24,12 @@
             <action dev="Anton Pechinsky" type="add">
                 Add more tests for ReflectionUtils
             </action>
+            <action dev="Anton Pechinsky" type="fix">
+                fix issue #1: org.srplib.reflection.ReflectionUtils#getDeclaredFieldsRecursively(Class) does not return fields from superclass(es).
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add dot syntax support for find/get field method family.
+            </action>
         </release>
 
         <release version="0.3.3" date="2012-10-19">

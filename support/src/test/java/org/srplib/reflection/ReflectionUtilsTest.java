@@ -7,13 +7,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
-import org.hamcrest.CoreMatchers;
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 
@@ -31,34 +29,9 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void testToStringMethodSignature() throws Exception {
-        String signature =
-            ReflectionUtils.toString(getClass(), "test", new Class[] {String.class, Long.class, Serializable.class});
-
-        String expectedSignature =
-            "org.srplib.reflection.ReflectionUtilsTest.test(java.lang.String,java.lang.Long,java.io.Serializable)";
-
-        Assert.assertThat(signature, is(expectedSignature));
-    }
-
-    @Test
-    public void testJoinEmptyValueList() throws Exception {
-        Assert.assertThat(ReflectionUtils.join(","), is(""));
-    }
-
-    @Test
-    public void testJoinSingleValue() throws Exception {
-        Assert.assertThat(ReflectionUtils.join(",", "1"), is("1"));
-    }
-
-    @Test
-    public void testJoin() throws Exception {
-        Assert.assertThat(ReflectionUtils.join(",", "1", "2"), is("1,2"));
-    }
-
-    @Test
     public void testGetTypeParameter() {
-        Object typed = new TypeToken<String>() {};
+        Object typed = new TypeToken<String>() {
+        };
 
         Class parameterType = ReflectionUtils.getTypeParameter(typed.getClass());
 
@@ -66,8 +39,19 @@ public class ReflectionUtilsTest {
     }
 
     @Test
+    public void testGetTypeParameters() {
+        Object typed = new TypeTokenMultiple<String, Integer, Boolean>() {
+        };
+
+        List parameterTypes = ReflectionUtils.getTypeParameters(typed.getClass());
+
+        Assert.assertThat(parameterTypes, IsIterableContainingInOrder.contains(String.class, Integer.class, Boolean.class));
+    }
+
+    @Test
     public void testGetTypeParameterNestedParameter() {
-        Object typed = new TypeToken<List<String>>() {};
+        Object typed = new TypeToken<List<String>>() {
+        };
 
         Class parameterType = ReflectionUtils.getTypeParameter(typed.getClass());
 
@@ -76,7 +60,8 @@ public class ReflectionUtilsTest {
 
     @Test
     public void testGetTypeParameterNoParameter() {
-        Object typed = new TypeToken() {};
+        Object typed = new TypeToken() {
+        };
 
         Class parameterType = ReflectionUtils.getTypeParameter(typed.getClass());
 
@@ -84,6 +69,11 @@ public class ReflectionUtilsTest {
     }
 
     class TypeToken<T> {
+
+    }
+
+    class TypeTokenMultiple<J, A, V> {
+
     }
 
     @Test
@@ -207,7 +197,7 @@ public class ReflectionUtilsTest {
         Field field = ReflectionUtils.getField(Parent.class, "parentField");
         ReflectionUtils.setFieldValue(child, field, "value");
 
-        Assert.assertThat(((Parent)child).parentField, is("value"));
+        Assert.assertThat(((Parent) child).parentField, is("value"));
     }
 
     @Test
@@ -232,6 +222,7 @@ public class ReflectionUtilsTest {
     private Field field(Class type, String field) {
         return ReflectionUtils.getField(type, field);
     }
+
     private Method method(Class type, String field) {
         return ReflectionUtils.getMethod(type, field);
     }
@@ -266,6 +257,7 @@ public class ReflectionUtilsTest {
         private void childMethod() {
 
         }
+
         private String childMethod(String string) {
             return string;
         }

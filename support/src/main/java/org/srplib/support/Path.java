@@ -1,11 +1,10 @@
-package org.srplib.reflection;
+package org.srplib.support;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.srplib.contract.Argument;
-import org.srplib.contract.Assert;
 
 /**
  * Represents property/field path.
@@ -63,6 +62,15 @@ public class Path {
     }
 
     /**
+     * Tests if path is empty (size == 0)
+     *
+     * @return true if no segments in path
+     */
+    public boolean isEmpty() {
+        return getSize() == 0;
+    }
+
+    /**
      * Tests if path is complex (has two or more segments).
      *
      * @return true if path has two or more segments.
@@ -84,16 +92,6 @@ public class Path {
     }
 
     /**
-     * Returns parent path (a path without specified number of last segment).
-     *
-     * @param end end segment index (zero-based, exclusive)
-     * @return Path parent path.
-     */
-    public Path getParent(int end) {
-        return subpath(0, end);
-    }
-
-    /**
      * Returns parent path (a path without last segment).
      *
      * <p>For example if source path is 'parent.parent.name' then this method return 'parent.parent'</p>
@@ -101,7 +99,7 @@ public class Path {
      * @return Path parent path.
      */
     public Path getParent() {
-        return getParent(path.size() - 1);
+        return subpath(0, path.size() - 1);
     }
 
     /**

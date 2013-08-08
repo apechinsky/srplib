@@ -1,5 +1,6 @@
 package org.srplib.reflection;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
 /**
@@ -8,6 +9,18 @@ import java.lang.reflect.Proxy;
  * @author Anton Pechinsky
  */
 public class ProxyUtils {
+
+    private static final InvocationHandler EMPTY = new EmptyInvocationHandler();
+
+    /**
+     * Returns invocation handler which does nothing.
+     *
+     * @return EmptyInvocationHandler
+     * @see EmptyInvocationHandler
+     */
+    public static InvocationHandler getEmpty() {
+        return EMPTY;
+    }
 
     /**
      * Creates an empty implementation of specified interface. In newly created object all all methods do nothing.
