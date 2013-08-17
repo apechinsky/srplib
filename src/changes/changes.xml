@@ -30,6 +30,16 @@
             <action dev="Anton Pechinsky" type="add">
                 Add dot syntax support for find/get field method family.
             </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add support of custom segment separator in Path. Now Path may be used to represent an arbitrary pathes
+                (file system, classpath, url, OS path, etc.).
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add methods getSibling(), getChild(), getParent() to Path class.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add PathUtils for URI/URL/File manipulation.
+            </action>
         </release>
 
         <release version="0.3.3" date="2012-10-19">

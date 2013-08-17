@@ -1,21 +1,67 @@
 package org.srplib.support;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.srplib.contract.Argument;
+import org.srplib.contract.Assert;
 
 /**
- * Represents property/field path.
+ * Represents general purpose path.
+ *
+ * <ul>Use cases:
+ *      <li>file system path manipulation.</li>
+ *      <li>classpath manipulation.</li>
+ *      <li>URL path manipulation.</li>
+ * </ul>
+ *
+ * <p>
+ *     Implementation trims empty last segment. For example "1/2/3/4" and "1/2/3/4/" are parsed to the same path segmens:
+ *      [1,2,3,4]
+ * </p>
+ *
+ * <p>Thread safety. Class is immutable, so it's thread safe..</p>
  *
  * @author Anton Pechinsky
  */
 public class Path {
 
-    private static final String SEPARATOR = ".";
+    private static final String DEFAULT_SEPARATOR = ".";
 
-    private List<String> path;
+    public static final Path EMPTY = new Path(Collections.<String>emptyList());
+
+    private final String separator;
+
+    private final List<String> path;
+
+    /**
+     * Returns empty path;
+     *
+     * @return Path path with no segments.
+     */
+    public static Path empty() {
+        return EMPTY;
+    }
+
+    /**
+     * Parses dot separated string to path..
+     *
+     * @param string String dot separated path.
+     * @return Path path
+     */
+    public static Path parse(String string, String separator) {
+        Argument.checkNotNull(separator, "separator must not be null.");
+
+        if (string == null) {
+            return EMPTY;
+        }
+        String[] segments = string.split(Pattern.quote(separator));
+
+        return new Path(Arrays.asList(segments), separator);
+    }
 
     /**
      * Parses dot separated string to path..
@@ -24,21 +70,32 @@ public class Path {
      * @return Path path
      */
     public static Path parse(String string) {
-        Argument.checkNotNull(string, "string path must not be null.");
-
-        String[] path = string.split("\\.");
-        return new Path(Arrays.asList(path));
+        return parse(string, DEFAULT_SEPARATOR);
     }
 
     /**
      * Tests if string path is complex.
      *
+     * TODO: since path supports different separators it make sense to move this method out of here
+     *
      * @param path String path
      * @return true if path contains two or more segments.
      */
-
     public static boolean isComplex(String path) {
-        return path.contains(SEPARATOR);
+        return path.contains(DEFAULT_SEPARATOR);
+    }
+
+    /**
+     * Creates path from list of path segments.
+     *
+     * @param path List of path segments
+     */
+    public Path(List<String> path, String separator) {
+        Argument.checkNotNull(path, "Can't create path from null list.");
+        Argument.checkNotNull(separator, "Can't create path with null separator.");
+
+        this.path = Collections.unmodifiableList(path);
+        this.separator = separator;
     }
 
     /**
@@ -47,9 +104,7 @@ public class Path {
      * @param path List of path segments
      */
     public Path(List<String> path) {
-        Argument.checkNotNull(path, "path");
-
-        this.path = Collections.unmodifiableList(path);
+        this(path, DEFAULT_SEPARATOR);
     }
 
     /**
@@ -57,7 +112,7 @@ public class Path {
      *
      * @return number of path segments.
      */
-    public int getSize() {
+    public int size() {
         return path.size();
     }
 
@@ -67,7 +122,7 @@ public class Path {
      * @return true if no segments in path
      */
     public boolean isEmpty() {
-        return getSize() == 0;
+        return size() == 0;
     }
 
     /**
@@ -76,7 +131,7 @@ public class Path {
      * @return true if path has two or more segments.
      */
     public boolean isComplex() {
-        return getSize() > 1;
+        return size() > 1;
     }
 
     /**
@@ -88,7 +143,24 @@ public class Path {
      */
     public Path subpath(int start, int end) {
         List<String> newPath = path.subList(start, end);
-        return new Path(newPath);
+        return new Path(newPath, separator);
+    }
+
+    /**
+     * Returns subpath (a path without first segment)
+     *
+     * <p>For example if source path is 'grand.parent.name' then this method return 'parent.name'</p>
+     *
+     * <p>Call to this method equivalent to:
+     *  <pre>
+     *      subpath(1, size());
+     *  </pre>
+     * </p>
+     *
+     * @return Path child path
+     */
+    public Path subpath() {
+        return subpath(1, size());
     }
 
     /**
@@ -98,19 +170,41 @@ public class Path {
      *
      * @return Path parent path.
      */
-    public Path getParent() {
+    public Path parent() {
         return subpath(0, path.size() - 1);
     }
 
     /**
-     * Returns child path (a path without first segment)
+     * Returns child path.
      *
-     * <p>For example if source path is 'parent.parent.name' then this method return 'parent.name'</p>
+     * <p>For example if source path is 'grand.parent' then following code return 'grand.parent.name':
+     *  <pre>
+     *      sibling('name')
+     *  </pre>
+     * </p>
      *
      * @return Path child path
      */
-    public Path getChild() {
-        return subpath(1, getSize());
+    public Path child(String segment) {
+        ArrayList<String> segments = new ArrayList<String>(path);
+        segments.add(segment);
+
+        return new Path(segments, separator);
+    }
+
+    /**
+     * Returns sibling path (a path to segment on the same level as current)
+     *
+     * <p>For example if source path is 'grand.parent.name' then following code return 'grand.parent.surname':
+     *  <pre>
+     *      sibling('surname')
+     *  </pre>
+     * </p>
+     *
+     * @return Path child path
+     */
+    public Path sibling(String segment) {
+        return parent().child(segment);
     }
 
     /**
@@ -120,7 +214,7 @@ public class Path {
      * @return String path segment
      */
     public String get(int index) {
-        Argument.checkFalse(path.isEmpty(), "Can't get item of empty path.");
+        Assert.checkFalse(path.isEmpty(), "Can't get item of empty path.");
 
         return path.get(index);
     }
@@ -132,7 +226,7 @@ public class Path {
      * @throws IllegalStateException if path is empty
      */
     public String getFirst() {
-        Argument.checkFalse(path.isEmpty(), "Can't get first item of empty path.");
+        Assert.checkFalse(path.isEmpty(), "Can't get first item of empty path.");
 
         return path.get(0);
     }
@@ -144,13 +238,13 @@ public class Path {
      * @throws IllegalStateException if path is empty
      */
     public String getLast() {
-        Argument.checkFalse(path.isEmpty(), "Can't get last item of empty path.");
+        Assert.checkFalse(path.isEmpty(), "Can't get last item of empty path.");
 
         return get(path.size() - 1);
     }
 
     public String toString() {
-        return join(path, 0, getSize(), SEPARATOR);
+        return join(path, 0, size(), separator);
     }
 
     private String join(List<String> path, int startIndex, int endIndex, String separator) {

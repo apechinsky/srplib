@@ -19,7 +19,7 @@ import org.srplib.contract.Assert;
 import org.srplib.support.Path;
 
 /**
- * Helper class containing static utility methods.
+ * Helper class containing static utility methods for simplifying reflection API.
  *
  * @author Anton Pechinsky
  */
@@ -298,7 +298,7 @@ public class ReflectionUtils {
         Assert.checkNotNull(field, "Can't find field '%s'. No field '%s' in class '%s'", path.toString(), fieldName, clazz);
 
         if (path.isComplex()) {
-            field = findFieldRecursively(field.getType(), path.getChild());
+            field = findFieldRecursively(field.getType(), path.subpath());
         }
 
         return field;
@@ -420,7 +420,7 @@ public class ReflectionUtils {
         Argument.checkNotNull(path, "path must not be null.");
 
         try {
-            Object lastContainer = getFieldValue(target, path.getParent());
+            Object lastContainer = getFieldValue(target, path.parent());
             setFieldValue(lastContainer, path.getLast(), value);
         }
         catch (ReflectionException e) {
@@ -486,7 +486,7 @@ public class ReflectionUtils {
 
         Object fieldValue = target;
 
-        for (int i = 0; i < path.getSize(); i++) {
+        for (int i = 0; i < path.size(); i++) {
             String fieldName = path.get(i);
 
             if (fieldValue == null) {
