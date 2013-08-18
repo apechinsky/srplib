@@ -1,4 +1,3 @@
-
 # SRPLIB
 
   A collection of highly specialized libraries. Each library is designed with Single Responsiblity Principle 
@@ -8,15 +7,16 @@
   
   Each library includes main module and optional support module. 
   
-  Main module:
-    - defines core interfaces and classes
-    - does not provide "useful" implementaions 
-    - does not provide helper classes, factories, syntax sugar, etc.
+Main module:
+  
+  - defines core interfaces and classes
+  - does not provide "useful" implementaions 
+  - does not provide helper classes, factories, syntax sugar, etc.
     
-    
-  Optional moudle:
-    - provides useful implementations
-    - privides factories and helper classes
+Optional moudle:
+
+  - provides useful implementations
+  - privides factories and helper classes
 
 ## Modules
 
