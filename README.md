@@ -29,13 +29,29 @@ Optional moudle:
   
 ### Contract
   
-  Contains helper classes for checking method arguments and class internal state. 
+  Contains helper classes for checking method arguments and class internal state. Encourages contract programming and 
+fail-fast support. Designed as single line replacement for if/condition/throw code. 
 
-#### Features
+#### Key features
+
+  - lightweight
+  - string formatting
+  - expressive and concise
   
-  - very lightweight. Exports few public classes. Have no external dependencies.
-  - supports string formatting.
-  - more expressive and concise than standard if/condition/throw code.
+##### Lightweight
+
+  Extremely lightweight library. Exports few public classes. Have no external dependencies. Suitable for small mobile 
+  as well as large enterprise applications.
+  
+##### String formatting
+
+  String formatting simplifies error message creation and helps to avoid unneeded string contatenation.
+  
+    Argument.checkTrue(file.exist(), "File '%s' not found.", file.getAbsolutePath());
+    
+##### Expressive and concise
+
+  More expressive and concise than standard if/condition/throw code.
 
 Just compare:
   
