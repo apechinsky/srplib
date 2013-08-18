@@ -13,7 +13,7 @@ Main module:
   - does not provide "useful" implementaions 
   - does not provide helper classes, factories, syntax sugar, etc.
     
-Optional moudle:
+Optional module:
 
   - provides useful implementations
   - privides factories and helper classes
@@ -32,12 +32,26 @@ Optional moudle:
   Contains helper classes for checking method arguments and class internal state. Encourages contract programming and 
 fail-fast support. Designed as single line replacement for if/condition/throw code. 
 
+      // standard check
+      if (!file.exist()) {
+          throw new IllegalStateException(String.format("File '%s' should exist.", file));
+      }
+
+      // check with Assert
+      Assert.checkTrue(file.exist(), "File '%s' should exist.", file);
+  
+  Argument - class is used to check method arguments (throws IllegalArgumentException).
+  Assert - class is used to check state (throws IllegalStateException).
+
 #### Key features
 
+  - encourages good practices
   - lightweight
   - string formatting
   - expressive and concise
-  
+
+##### 
+
 ##### Lightweight
 
   Extremely lightweight library. Exports few public classes. Have no external dependencies. Suitable for small mobile 
