@@ -5,7 +5,7 @@
 
 ## Modules
 
-  - contract - method and class contract support
+  - [contract](contract) - method and class contract support
   - conversion - general purpose converter interface and infrastructure
   - support  - support library for other modules
   - model - general purpose model
@@ -28,7 +28,7 @@ Optional module:
   - privides factories and helper classes
 
   
-### Contract
+### [contract]: Contract
   
   Contains helper classes for checking method arguments and class internal state. Encourages contract programming and 
 fail-fast support. Designed as single line replacement for if/condition/throw code. 
