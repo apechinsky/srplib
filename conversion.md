@@ -6,23 +6,23 @@
 
 ## Use cases
 
-    - simple object conversion
-    - adapter implementations. Library helps to structure and simplify type mapping and value conversion code. 
-    - binding implementations. Converter infrastructure may minimize handwritten value conversion code.
+  - simple object conversion
+  - adapter implementations. Library helps to structure and simplify type mapping and value conversion code. 
+  - binding implementations. Converter infrastructure may minimize handwritten value conversion code.
 
 ## Core classes
  
-    - Converter - core converter interface
-    - ConverterException - base module exception
-    - ConverterRegistry - converter registryfor.
+  - Converter - core converter interface.
+  - ConverterException - base module exception.
+  - ConverterRegistry - converter registry.
 
 ## Support classes
  
-    - set of basic converters
-    - null-value converter (EmptyConverter)
-    - logic converters (IfConverter, SwitchConverter)
-    - composite converter (ChainConverter)
-    - factory of basic converters
+  - set of basic converters
+  - null-value converter (EmptyConverter)
+  - logic converters (IfConverter, SwitchConverter)
+  - composite converter (ChainConverter)
+  - factory of basic converters
   
 ## Known alternatives
 
