@@ -3,6 +3,15 @@
   A collection of highly specialized libraries. Each library is designed with Single Responsiblity Principle 
   (http://en.wikipedia.org/wiki/Single_responsibility_principle) in mind. 
 
+## Modules
+
+  - contract - method and class contract support
+  - conversion - general purpose converter interface and infrastructure
+  - support  - support library for other modules
+  - model - general purpose model
+  - binding - general purpose binding (experimental)
+  - validation - genral purpose validation (experimental)
+
 ## Structure
   
   Each library includes main module and optional support module. 
@@ -18,14 +27,6 @@ Optional module:
   - provides useful implementations
   - privides factories and helper classes
 
-## Modules
-
-  - contract - method and class contract support
-  - conversion - general purpose converter interface and infrastructure
-  - support  - support library for other modules
-  - model - general purpose model
-  - binding - general purpose binding (experimental)
-  - validation - genral purpose validation (experimental)
   
 ### Contract
   
@@ -89,3 +90,8 @@ Just compare:
 
       Assert.checkTrue(file.exist(), "File '%s' should exist.", file);
 
+#### Known alternatives
+
+  - Apache commons-lang [Validate](http://code.google.com/p/guava-libraries/source/browse/guava/src/com/google/common/base/Preconditions.java)
+  - Springframework [Assert](https://github.com/SpringSource/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/Assert.java)
+  - Google Guava [Preconditions](http://code.google.com/p/guava-libraries/source/browse/guava/src/com/google/common/base/Preconditions.java)
