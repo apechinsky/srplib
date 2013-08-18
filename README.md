@@ -40,8 +40,8 @@ fail-fast support. Designed as single line replacement for if/condition/throw co
       // check with Assert
       Assert.checkTrue(file.exist(), "File '%s' should exist.", file);
   
-  Argument - class is used to check method arguments (throws IllegalArgumentException).
-  Assert - class is used to check state (throws IllegalStateException).
+  - Argument - class is used to check method arguments (throws IllegalArgumentException).
+  - Assert - class is used to check state (throws IllegalStateException).
 
 #### Key features
 
@@ -50,7 +50,11 @@ fail-fast support. Designed as single line replacement for if/condition/throw co
   - string formatting
   - expressive and concise
 
-##### 
+##### Encourages good practices
+  
+  - fail-fast code (http://en.wikipedia.org/wiki/Fail-fast)   
+  - contract programming (http://en.wikipedia.org/wiki/Design_by_contract)
+  - informative error messages. No more empty or mesleading error messages. 
 
 ##### Lightweight
 
