@@ -28,7 +28,7 @@ Optional module:
   - privides factories and helper classes
 
   
-### [contract]: Contract
+### Contract
   
   Contains helper classes for checking method arguments and class internal state. Encourages contract programming and 
 fail-fast support. Designed as single line replacement for if/condition/throw code. 
