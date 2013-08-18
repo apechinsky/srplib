@@ -6,7 +6,7 @@
 ## Modules
 
   - [contract](contract.md) - method and class contract support
-  - conversion - general purpose converter interface and infrastructure
+  - [conversion](conversion.md) - general purpose converter interface and infrastructure
   - support  - support library for other modules
   - model - general purpose model
   - binding - general purpose binding (experimental)
