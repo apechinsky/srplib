@@ -9,8 +9,8 @@
 ## Libraries
 
   - [contract](contract.md) - method and class contract support (Assert/Argument)
-  - [conversion](conversion.md) - general purpose converter interface and infrastructure
-  - [reflection](reflection.md) - 
+  - [conversion](conversion.md) - general purpose converter interface and it's infrastructure
+  - [reflection](reflection.md) - simplify reflection API usage
   - support  - support library for other modules
   - model - general purpose model
   - binding - general purpose binding (experimental)
