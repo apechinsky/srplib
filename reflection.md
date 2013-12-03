@@ -1,6 +1,6 @@
 # Reflection
   
-  Very lightweight library reflection API.
+  Very lightweight library for reflection API.
   
 ## Key features
   - use of dedicated unchecked exception class ReflectionException
