@@ -274,7 +274,7 @@ public class ReflectionUtils {
             field = findField(clazz, fieldName);
 
             if (field == null && clazz.getSuperclass() != null) {
-                field = getFieldRecursively(clazz.getSuperclass(), fieldName);
+                field = findFieldRecursively(clazz.getSuperclass(), fieldName);
             }
         }
 
