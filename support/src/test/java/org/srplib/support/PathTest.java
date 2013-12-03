@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
+ * Test class for Path
+ *
  * @author Anton Pechinsky
  */
 public class PathTest {
@@ -90,14 +92,6 @@ public class PathTest {
         assertThat(subpath.toString(), is("2.3.4"));
     }
 
-    public void testSubpathCustom() throws Exception {
-        Path path = Path.parse("1.2.3.4");
-
-        assertThat(path.subpath(1, 2).toString(), is("2.3.4"));
-        assertThat(path.subpath(1, 1).toString(), is(""));
-        assertThat(path.subpath(0, 1).toString(), is("1"));
-    }
-
     @Test
     public void testSubpathOfSimplePath() throws Exception {
         Path path = Path.parse("1");
@@ -105,6 +99,38 @@ public class PathTest {
         Path subpath = path.subpath();
 
         assertThat(subpath.isEmpty(), is(true));
+    }
+
+    @Test
+    public void testSubpathNormal() throws Exception {
+        Path path = Path.parse("1.2.3.4");
+
+        assertThat(path.subpath(1, 3).toString(), is("2.3"));
+    }
+
+    @Test
+    public void testSubpathEqualStartAndEndIndexes() throws Exception {
+        Path path = Path.parse("1.2.3.4");
+
+        assertThat(path.subpath(1, 1).toString(), is(""));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSubpathStartIndexIsNegative() throws Exception {
+        Path path = Path.parse("1");
+        path.subpath(-1, 1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSubpathEndIndexGreaterThanSize() throws Exception {
+        Path path = Path.parse("1");
+        path.subpath(0, 2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSubpathStartIndexGreaterThanEndIndex() throws Exception {
+        Path path = Path.parse("1");
+        path.subpath(1, 0);
     }
 
     @Test
