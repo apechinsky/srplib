@@ -1,33 +1,28 @@
 # Reflection
   
-  Very lightweight library declaring general purpose converter. Converter is used to encapsulate object conversion algorithm.
+  Very lightweight library reflection API.
   
-  Exports few public classes. Have single dependency (srp-contract). Suitable for small mobile as well as large enterprise applications.  
-
+## Key features
+  - use of dedicated unchecked exception class ReflectionException
+  - complex method/field names support via dot-syntax
+  - very detailed exception messages
+  
 ## Use cases
 
-  - simple object conversion
-  - adapter implementations. Library helps to structure and simplify type mapping and value conversion code. 
-  - binding implementations. Converter infrastructure may minimize handwritten value conversion code.
 
 ## Core classes
  
-  - Converter - core converter interface.
-  - ConverterException - base module exception.
-  - ConverterRegistry - converter registry.
+  - ReflectionException - dedicated class for reflection API errors
+  - ReflectionInvoker - simple and clean reflection method invocation.
+  - ReflectionUtils - reflection utilities.
 
 ## Support classes
  
-  - set of basic converters
-  - null-value converter (EmptyConverter)
-  - logic converters (IfConverter, SwitchConverter)
-  - composite converter (ChainConverter)
-  - factory of basic converters
+  - ObjectGraph - object graph traverser. Employs visitor pattern.
   
 ## Known alternatives
 
-  - Apache commons-collections [Transformer](http://svn.apache.org/viewvc/commons/proper/collections/trunk/src/main/java/org/apache/commons/collections4/Transformer.java)
-  - Apache commons-beanutils [Converter](http://svn.apache.org/viewvc/commons/proper/beanutils/trunk/src/main/java/org/apache/commons/beanutils/Converter.java)
-  - Google Guava [Function](http://code.google.com/p/guava-libraries/source/browse/guava/src/com/google/common/base/Function.java)
-  - Transmorph [IConverter](https://github.com/cchabanois/transmorph/blob/master/src/main/java/net/entropysoft/transmorph/IConverter.java)
+  - Springframework spring-lang [ReflectionUtils](http://springframework.org)
+  - Apache commons-lang [ReflectionUtils](http://svn.apache.org)
+  - Google Guava [ReflectionUtils](http://code.google.com/p/reflections/source/browse/trunk/reflections/src/main/java/org/reflections/ReflectionUtils.java)
 
