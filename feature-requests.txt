@@ -9,3 +9,11 @@
 - Interface for ConverterRegistry
 
 - TypeReference class.http://gafter.blogspot.com/2006/12/super-type-tokens.html
+
+- CompositeKey.getComponents(),
+
+- findXXXX should differ dot syntax support and recursive search
+    currently findXXXX use nor dot syntax neither recursive search
+    while findXXXRecursively use both
+
+- Rename Path.parse to Path.parseDot (or similar).
