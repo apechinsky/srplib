@@ -106,15 +106,15 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void testGetMethodRecursively() {
-        Method method = ReflectionUtils.findMethodRecursively(Child.class, "parentMethod");
-        Assert.assertThat(method, is(method(Parent.class, "parentMethod")));
+    public void testFindMethodRecursivelyNonExisting() {
+        Method method = ReflectionUtils.findMethodRecursively(Child.class, "nonExistingMethod");
+        Assert.assertThat(method, nullValue());
     }
 
     @Test
-    public void testFindMethodNonExistingRecursively() {
-        Method method = ReflectionUtils.findMethodRecursively(Child.class, "nonExistingMethod");
-        Assert.assertThat(method, nullValue());
+    public void testGetMethodRecursively() {
+        Method method = ReflectionUtils.findMethodRecursively(Child.class, "parentMethod");
+        Assert.assertThat(method, is(method(Parent.class, "parentMethod")));
     }
 
     @Test(expected = ReflectionException.class)
@@ -128,9 +128,15 @@ public class ReflectionUtilsTest {
         Assert.assertThat(field, is(field(Child.class, "field")));
     }
 
-    @Test(expected = ReflectionException.class)
+    @Test
     public void testGetFieldNonExisting() {
-        ReflectionUtils.getField(Child.class, "nonExistingfield");
+        try {
+            ReflectionUtils.getField(Child.class, "nonExistingField");
+        }
+        catch (ReflectionException e) {
+            Assert.assertThat(e.getMessage(), is("No declared field 'nonExistingField' in class " +
+                "'org.srplib.reflection.ReflectionUtilsTest$Child'."));
+        }
     }
 
     @Test
@@ -141,7 +147,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void testFindFieldNonExisting() {
-        Field field = ReflectionUtils.findField(Child.class, "nonExistingfield");
+        Field field = ReflectionUtils.findField(Child.class, "nonExistingField");
         Assert.assertThat(field, nullValue());
     }
 
@@ -152,13 +158,26 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void testFindFieldRecursivelyNotExisting() {
+    public void tesGetFieldRecursivelyNotExisting() {
         try {
-            ReflectionUtils.getFieldRecursively(Child.class, "nonExistingfield");
+            ReflectionUtils.getFieldRecursively(Child.class, "nonExistingField");
         }
         catch (ReflectionException e) {
-            e.printStackTrace();
+            Assert.assertThat(e.getMessage(), is("No declared field 'nonExistingField' in class " +
+                "'org.srplib.reflection.ReflectionUtilsTest$Child' or its superclasses."));
         }
+    }
+
+    @Test
+    public void testFindFieldRecursively() {
+        Field field = ReflectionUtils.findFieldRecursively(Child.class, "parentField");
+        Assert.assertThat(field, is(field(Parent.class, "parentField")));
+    }
+
+    @Test
+    public void tesFindFieldRecursivelyNotExisting() {
+        Field field = ReflectionUtils.findFieldRecursively(Child.class, "nonExistingField");
+        Assert.assertThat(field, nullValue());
     }
 
     @Test

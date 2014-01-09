@@ -93,6 +93,8 @@ public class ReflectionUtils {
      * @return Class class of type parameters, <code>null</code> if class has no type parameters.
      */
     public static List<Class<?>> getTypeParameters(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "'clazz' must not be null!");
+
         if (!isParameterizedType(clazz.getGenericSuperclass())) {
             return null;
         }
@@ -108,6 +110,7 @@ public class ReflectionUtils {
      * @return Class class of type parameters, <code>null</code> if class has no type parameters.
      */
     public static <T> Class<T> getTypeParameter(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "'clazz' must not be null!");
 
         if (!isParameterizedType(clazz.getGenericSuperclass())) {
             return null;
@@ -131,6 +134,8 @@ public class ReflectionUtils {
     }
 
     private static ParameterizedType asParameterizedType(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "'clazz' must not be null!");
+
         return (ParameterizedType) clazz.getGenericSuperclass();
     }
 
@@ -143,6 +148,8 @@ public class ReflectionUtils {
      * @return Class class of type parameters, <code>null</code> if class has no type parameters.
      */
     public static <T> Class<T> getTypeParameter(Class<?> clazz, String message, Object... parameters) {
+        Argument.checkNotNull(clazz, "'clazz' must not be null!");
+
         Class<T> type = getTypeParameter(clazz);
         Assert.checkNotNull(type, message, parameters);
         return type;
@@ -159,6 +166,9 @@ public class ReflectionUtils {
      */
     public static Method findMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
         try {
+            Argument.checkNotNull(clazz, "'clazz' must not be null!");
+            Argument.checkNotNull(clazz, "'methodName' must not be null!");
+
             return clazz.getDeclaredMethod(methodName, parameters);
         }
         catch (NoSuchMethodException e) {
@@ -177,6 +187,8 @@ public class ReflectionUtils {
      */
     public static Method getMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
         try {
+            Argument.checkNotNull(clazz, "'clazz' must not be null!");
+
             return clazz.getDeclaredMethod(methodName, parameters);
         }
         catch (NoSuchMethodException e) {
@@ -188,21 +200,23 @@ public class ReflectionUtils {
     /**
      * Searches and returns specified method recursively.
      *
-     * @param clazz Class starting class to search method in
-     * @param methodName String method name.
+     * @param clazz Class starting class to search method in.
+     * @param methodName String method name (non-null).
      * @param parameters an array of parameter types
-     * @return Method if found, {@code null} otherwise
+     * @return Method if found, {@code null} otherwise. Returns {@code null} if clazz is {@code null}.
      */
     public static Method findMethodRecursively(Class<?> clazz, String methodName, Class<?>... parameters) {
-        try {
-            if (clazz == null) {
-                return null;
-            }
-            return clazz.getDeclaredMethod(methodName, parameters);
+        Argument.checkNotNull(methodName, "'methodName' must not be null!");
+
+        if (clazz == null) {
+            return null;
         }
-        catch (NoSuchMethodException e) {
-            return findMethodRecursively(clazz.getSuperclass(), methodName, parameters);
+        Method method = findMethod(clazz, methodName, parameters);
+
+        if (method == null) {
+            method = findMethodRecursively(clazz.getSuperclass(), methodName, parameters);
         }
+        return method;
     }
 
     /**
@@ -250,7 +264,7 @@ public class ReflectionUtils {
     public static Field getField(Class<?> clazz, String fieldName) {
         Field field = findField(clazz, fieldName);
         if (field == null) {
-            throw new ReflectionException("No such field " + ToStringHelper.toString(clazz, fieldName));
+            throw new ReflectionException(String.format("No declared field '%s' in class '%s'.", fieldName, clazz.getName()));
         }
         return field;
     }
