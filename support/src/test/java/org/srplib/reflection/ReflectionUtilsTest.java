@@ -106,19 +106,19 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void testGetMethodNonExistinRecursively() {
+    public void testGetMethodRecursively() {
         Method method = ReflectionUtils.findMethodRecursively(Child.class, "parentMethod");
         Assert.assertThat(method, is(method(Parent.class, "parentMethod")));
     }
 
     @Test
-    public void testFindMethodNonExistinRecursively() {
+    public void testFindMethodNonExistingRecursively() {
         Method method = ReflectionUtils.findMethodRecursively(Child.class, "nonExistingMethod");
         Assert.assertThat(method, nullValue());
     }
 
     @Test(expected = ReflectionException.class)
-    public void testGetMethodRecursively() {
+    public void testGetMethodRecursivelyNotExisting() {
         ReflectionUtils.getMethodRecursively(Child.class, "nonExistingMethod");
     }
 
@@ -149,6 +149,16 @@ public class ReflectionUtilsTest {
     public void testGetFieldRecursively() {
         Field field = ReflectionUtils.getFieldRecursively(Child.class, "parentField");
         Assert.assertThat(field, is(field(Parent.class, "parentField")));
+    }
+
+    @Test
+    public void testFindFieldRecursivelyNotExisting() {
+        try {
+            ReflectionUtils.getFieldRecursively(Child.class, "nonExistingfield");
+        }
+        catch (ReflectionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

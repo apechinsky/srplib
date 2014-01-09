@@ -274,7 +274,7 @@ public class ReflectionUtils {
             field = findField(clazz, fieldName);
 
             if (field == null && clazz.getSuperclass() != null) {
-                field = getFieldRecursively(clazz.getSuperclass(), fieldName);
+                field =findFieldRecursively(clazz.getSuperclass(), fieldName);
             }
         }
 
@@ -315,7 +315,8 @@ public class ReflectionUtils {
     public static Field getFieldRecursively(Class<?> clazz, String fieldName) {
         Field field = findFieldRecursively(clazz, fieldName);
         if (field == null) {
-            throw new ReflectionException("No such field " + ToStringHelper.toString(clazz, fieldName));
+            throw new ReflectionException(
+                String.format("No declared field '%s' in class '%s' or its superclasses.", fieldName, clazz.getName()));
         }
         return field;
     }
