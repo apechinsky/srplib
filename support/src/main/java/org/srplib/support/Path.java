@@ -140,8 +140,15 @@ public class Path {
      * @param start start segment index (zero-based, inclusive)
      * @param end end segment index (zero-based, exclusive)
      * @return Path subpath
+     * @throws IndexOutOfBoundsException for an illegal endpoint index value
+     *         (<tt>fromIndex &lt; 0 || toIndex &gt; size ||
+     *         fromIndex &gt; toIndex</tt>)
      */
     public Path subpath(int start, int end) {
+        Argument.checkTrue(start >= 0, "Start index should be >= 0. Got: %d", start);
+        Argument.checkTrue(end <= path.size(), "End index should be <= than path size. Got: %d", end);
+        Argument.checkTrue(start <= end, "Start index should be <= than end index. Got start: %d end: %d", start, end);
+
         List<String> newPath = path.subList(start, end);
         return new Path(newPath, separator);
     }

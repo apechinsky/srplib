@@ -10,6 +10,7 @@
   - ReflectionUtils - a collection of helper methods.
   - Detailed error messages.
   - ObjectGraph - gives an ability to traverse object graph.
+  - complex method/field names support via dot-syntax
 
 ## Reflection code with no checked exception hassle
 
@@ -61,4 +62,9 @@ show some popular exception handling "methods".
   - method/field getters, unlike finders getters throw exception if search unsuccessful
   - field setters - set field value
   - field getters - get field value
+  
+## Known alternatives
 
+  - Springframework spring-lang [ReflectionUtils](http://springframework.org)
+  - Apache commons-lang [ReflectionUtils](http://svn.apache.org)
+  - Google Guava [ReflectionUtils](http://code.google.com/p/reflections/source/browse/trunk/reflections/src/main/java/org/reflections/ReflectionUtils.java)

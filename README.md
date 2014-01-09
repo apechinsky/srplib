@@ -1,17 +1,37 @@
 # SRPLIB
 
-  A collection of highly specialized libraries. Each library is designed with Single Responsiblity Principle 
-  (http://en.wikipedia.org/wiki/Single_responsibility_principle) in mind. 
+  A collection of lightweight and highly specialized libraries for java. 
+  
+## Primary goal
 
-## Modules
+  Continue "mission" of SLF4J. Provide the same service for other development aspects.     
 
-  - [contract](contract.md) - method and class contract support
-  - [conversion](conversion.md) - general purpose object conversion
-  - [reflection](reflection.md) - simplifies reflection API usage
-  - [support  - support library for other modules
+## Libraries
+
+  - [contract](contract.md) - method and class contract support (Assert/Argument)
+  - [conversion](conversion.md) - general purpose converter interface and it's infrastructure
+  - [reflection](reflection.md) - simplify reflection API usage
+  - support  - support library for other modules
   - model - general purpose model
   - binding - general purpose binding (experimental)
   - validation - genral purpose validation (experimental)
+  
+## Design principles  
+  
+### Single Responsibility Principle (SRP) 
+  
+  Each library has clear focus on particular aspect. Library evolution should not change this.
+  
+###  20-80 rule
+ 
+  Provide only essential functionality.    
+
+### Context independence
+
+  Libraries shold not depend on particular context (framework, other library, UI technology, etc.) and should be 
+  suitable for mobile as well as large enterprise applications.  
+
+
 
 ## Structure
   
