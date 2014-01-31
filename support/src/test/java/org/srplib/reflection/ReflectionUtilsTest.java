@@ -12,6 +12,7 @@ import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;
+import org.srplib.support.Path;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 
@@ -163,8 +164,9 @@ public class ReflectionUtilsTest {
             ReflectionUtils.getFieldRecursively(Child.class, "nonExistingField");
         }
         catch (ReflectionException e) {
-            Assert.assertThat(e.getMessage(), is("No declared field 'nonExistingField' in class " +
-                "'org.srplib.reflection.ReflectionUtilsTest$Child' or its superclasses."));
+            Assert.assertThat(e.getMessage(), is("Can't find field path 'nonExistingField'. " +
+                "No declared field 'nonExistingField' in class 'class org.srplib.reflection.ReflectionUtilsTest$Child' or " +
+                "its superclasses."));
         }
     }
 
@@ -193,6 +195,30 @@ public class ReflectionUtilsTest {
     }
 
     @Test
+    public void testGetFieldValue() throws Exception {
+        Child child = new Child();
+        child.childField = "childField";
+        child.field = "field";
+
+        Assert.assertThat((String)ReflectionUtils.getFieldValue(child, "childField"), is("childField"));
+        Assert.assertThat((String)ReflectionUtils.getFieldValue(child, "field"), is("field"));
+    }
+
+    @Test(expected = ReflectionException.class)
+    public void testGetFieldValueNoField() throws Exception {
+        Child child = new Child();
+
+        ReflectionUtils.getFieldValue(child, "missingField");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetFieldValueWithEmptyPath() throws Exception {
+        Child child = new Child();
+
+        ReflectionUtils.getFieldValue(child, Path.empty());
+    }
+
+    @Test
     public void testSetFieldValue() {
         Child child = new Child();
 
@@ -211,11 +237,13 @@ public class ReflectionUtilsTest {
         Assert.assertThat(child.childField, is("value"));
     }
 
-    @Test(expected = ReflectionException.class)
+    @Test
     public void testSetFieldValueParent() {
         Child child = new Child();
 
         ReflectionUtils.setFieldValue(child, "parentField", "value");
+
+        Assert.assertThat(child.parentField, is("value"));
     }
 
 
@@ -226,7 +254,7 @@ public class ReflectionUtilsTest {
         Field field = ReflectionUtils.getField(Parent.class, "parentField");
         ReflectionUtils.setFieldValue(child, field, "value");
 
-        Assert.assertThat(((Parent) child).parentField, is("value"));
+        Assert.assertThat(child.parentField, is("value"));
     }
 
     @Test
@@ -261,7 +289,7 @@ public class ReflectionUtilsTest {
 
         private String field;
 
-        private String parentField;
+        public String parentField;
 
         private void parentMethod() {
 

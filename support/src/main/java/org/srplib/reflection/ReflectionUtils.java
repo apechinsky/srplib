@@ -18,6 +18,8 @@ import org.srplib.contract.Argument;
 import org.srplib.contract.Assert;
 import org.srplib.support.Path;
 
+import sun.reflect.Reflection;
+
 /**
  * Helper class containing static utility methods for simplifying reflection API.
  *
@@ -296,22 +298,24 @@ public class ReflectionUtils {
     }
 
     /**
-     * Возвращает поле, путь к которому задан параметром 'path'.
+     * Searches field specified as {@link Path}.
      *
-     * @param clazz Class класс
-     * @return path Path путь к полю
-     * @throws IllegalArgumentException если имя свойства {@code null}
-     * @throws ReflectionException если произошла ошибка reflection
+     * TODO: finder should not throw exception
+     *
+     * @param clazz Class class
+     * @return path Path field path
+     * @throws IllegalArgumentException if class or path is {@code null}
+     * @throws ReflectionException if intermediate field is not found
      */
     public static Field findFieldRecursively(Class<?> clazz, Path path) {
+        Assert.checkNotNull(clazz, "class must not be null!");
         Assert.checkNotNull(path, "Property name must not be null!");
 
         String fieldName = path.getFirst();
 
         Field field = findFieldRecursively(clazz, fieldName);
-        Assert.checkNotNull(field, "Can't find field '%s'. No field '%s' in class '%s'", path.toString(), fieldName, clazz);
 
-        if (path.isComplex()) {
+        if (field != null && path.isComplex()) {
             field = findFieldRecursively(field.getType(), path.subpath());
         }
 
@@ -322,17 +326,42 @@ public class ReflectionUtils {
      * Searches recursively and returns declared field with specified name.
      *
      * @param clazz Class class to start search from
+     * @param path Path field path
+     * @return Field field name or {@code null} if field was not found in class or superclasses
+     * @throws ReflectionException if no such field found
+     */
+    public static Field getFieldRecursively(Class<?> clazz, Path path) {
+        Assert.checkNotNull(clazz, "class must not be null!");
+        Assert.checkNotNull(path, "Property name must not be null!");
+
+        String fieldName = path.getFirst();
+
+        Field field = findFieldRecursively(clazz, fieldName);
+
+        if (field != null && path.isComplex()) {
+            field = findFieldRecursively(field.getType(), path.subpath());
+        }
+
+        if (field == null) {
+            throw new ReflectionException(
+                String.format("Can't find field path '%s'. No declared field '%s' in class '%s' or its superclasses.",
+                    path.toString(), fieldName, clazz));
+        }
+
+        return field;
+    }
+    /**
+     * Searches recursively and returns declared field with specified name.
+     *
+     * @param clazz Class class to start search from
      * @param fieldName String field name
      * @return Field field name or {@code null} if field was not found in class or superclasses
      * @throws ReflectionException if no such field found
      */
     public static Field getFieldRecursively(Class<?> clazz, String fieldName) {
-        Field field = findFieldRecursively(clazz, fieldName);
-        if (field == null) {
-            throw new ReflectionException(
-                String.format("No declared field '%s' in class '%s' or its superclasses.", fieldName, clazz.getName()));
-        }
-        return field;
+        Assert.checkNotNull(fieldName, "Field name must not be null!");
+
+        return getFieldRecursively(clazz, Path.parse(fieldName));
     }
 
     /**
@@ -408,18 +437,12 @@ public class ReflectionUtils {
      * @throws ReflectionException if can't set field value.
      */
     public static void setFieldValue(Object target, String fieldName, Object value) {
-        Argument.checkNotNull(fieldName, "fieldName must not be null!");
-        Argument.checkNotNull(target, "Can't set value to field of null object!");
-        try {
-            Field field = target.getClass().getDeclaredField(fieldName);
-            setFieldValue(target, field, value);
-        }
-        catch (NoSuchFieldException e) {
-            throw new ReflectionException(String.format("Can't set value to field '%s'. No such field.",
-                ToStringHelper.toString(target.getClass(), fieldName)), e);
-        }
-    }
+        Argument.checkNotNull(target, "'target' must not be null!");
+        Argument.checkNotNull(fieldName, "'fieldName' must not be null!");
 
+        Path path = Path.parse(fieldName);
+        setFieldValue(target, path, value);
+    }
 
     /**
      * Set value of specified field of specified object.
@@ -430,17 +453,63 @@ public class ReflectionUtils {
      * @throws IllegalArgumentException if target of path are null
      * @throws ReflectionException in case of reflection error
      */
+//    public static void setFieldValue(Object target, Path path, Object value) {
+//        Argument.checkNotNull(target, "Can't set value to field '%s' of null object.", path);
+//        Argument.checkNotNull(path, "path must not be null.");
+//
+//        try {
+//            Field field = getFieldRecursively(target.getClass(), path);
+//            setFieldValue(target, field, value);
+//        }
+//        catch (ReflectionException e) {
+//            throw new ReflectionException(
+//                String.format("Can't set value of field for path '%s' in target of class '%s'", path, target.getClass()), e);
+//        }
+//    }
     public static void setFieldValue(Object target, Path path, Object value) {
-        Argument.checkNotNull(target, "Can't value of field '%s' of null target.", path);
+        Argument.checkNotNull(target, "Can't set value to field '%s' of null object.", path);
         Argument.checkNotNull(path, "path must not be null.");
 
-        try {
-            Object lastContainer = getFieldValue(target, path.parent());
-            setFieldValue(lastContainer, path.getLast(), value);
+        Object parentObject = target;
+
+        for (int i = 0; i < path.size() - 1; i++) {
+            String fieldName = path.get(i);
+
+            if (parentObject == null) {
+                throw new ReflectionException(
+                    String.format("Can't set value to field '%s'. Object for path '%s' is null.",
+                        path, path.subpath(0, i)));
+            }
+
+            Field field = findFieldRecursively(parentObject.getClass(), fieldName);
+
+            if (field == null) {
+                throw new ReflectionException(
+                    String.format("Can't set value to field '%s'. No field '%s' (full path '%s') in class '%s'. ",
+                        path, fieldName, path.subpath(0, i + 1), target.getClass()));
+            }
+
+            parentObject = getFieldValue(parentObject, field);
         }
-        catch (ReflectionException e) {
+
+        if (parentObject == null) {
             throw new ReflectionException(
-                String.format("Can't set value of field for path '%s' in target of class '%s'", path, target.getClass()), e);
+                String.format("Can't set value to field '%s'. Parent object (%s) is null", path, path.parent()));
+        }
+
+        Field field = getFieldRecursively(parentObject.getClass(), path.getLast());
+        setFieldValue(parentObject, field, value);
+    }
+
+
+    private static void setFieldValueInternal(Object target, String fieldName, Object value) {
+        try {
+            Field field = target.getClass().getDeclaredField(fieldName);
+            setFieldValue(target, field, value);
+        }
+        catch (NoSuchFieldException e) {
+            throw new ReflectionException(String.format("Can't set value to field '%s'. No such field.",
+                ToStringHelper.toString(target.getClass(), fieldName)), e);
         }
     }
 
@@ -498,6 +567,7 @@ public class ReflectionUtils {
     public static <T> T getFieldValue(Object target, Path path) {
         Argument.checkNotNull(target, "Can't get value of field '%s' of null object.", path);
         Argument.checkNotNull(path, "path must not be null.");
+        Argument.checkFalse(path.isEmpty(), "path must not be empty.");
 
         Object fieldValue = target;
 
@@ -514,7 +584,7 @@ public class ReflectionUtils {
 
             if (field == null) {
                 throw new ReflectionException(
-                    String.format("Can't get value of field '%s'. No field '%s' (path '%s') in class '%s'. ",
+                    String.format("Can't get value of field '%s'. No field '%s' (full path '%s') in class '%s'. ",
                         path, fieldName, path.subpath(0, i + 1), target.getClass()));
             }
 
