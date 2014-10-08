@@ -1,5 +1,7 @@
 package org.srplib.support;
 
+import java.lang.reflect.UndeclaredThrowableException;
+
 /**
  * @author Anton Pechinsky
  */
@@ -30,7 +32,8 @@ public class ExceptionUtils {
      *
      * @param throwable Throwable
      * @return RuntimeException if throwable is {@link RuntimeException} it's returned as is, if throwable is an
-     * {@link Error} it's rethrown, otherwise exception is wrapped into {@link RuntimeException} and rethrown.
+     * {@link Error} it's rethrown, otherwise (checked) exception is wrapped into {@link UndeclaredThrowableException}
+     * and rethrown.
      */
     public static RuntimeException asUnchecked(Throwable throwable) {
         if (throwable instanceof RuntimeException) {
@@ -40,7 +43,7 @@ public class ExceptionUtils {
             throw (Error)throwable;
         }
         else {
-            return new RuntimeException(throwable);
+            return new UndeclaredThrowableException(throwable);
         }
     }
 

@@ -6,6 +6,13 @@
 
     <body>
 
+        <release version="0.4.0">
+            <action dev="Anton Pechinsky" type="change">
+                #6 ExceptionUtils.asUnchecked() wraps checked exception to generic RuntimeException.
+                Now method throws UndeclaredThrowableException.
+            </action>
+        </release>
+
         <release version="0.3.4">
             <action dev="Anton Pechinsky" type="remove">
                 Remove deprecated methods ReflectionUtils.getField(), ReflectionUtils.setField().
