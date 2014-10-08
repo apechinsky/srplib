@@ -11,12 +11,26 @@
                 #6 ExceptionUtils.asUnchecked() wraps checked exception to generic RuntimeException.
                 Now method throws UndeclaredThrowableException.
             </action>
+
             <action dev="Anton Pechinsky" type="remove">
                 Remove deprecated class ReflectionBeanBuilder. Use ReflectionInvoker instead.
             </action>
+
             <action dev="Anton Pechinsky" type="change">
                 #7 ReflectionInvoker.invoke() wraps InvocationTargetException into RuntimeException.
                 Now method throws InvocationTargetException.getCause().
+            </action>
+
+            <action dev="Anton Pechinsky" type="remove">
+                Deprecated methods removed:
+                Field getDeclaredField(Class<?> clazz, String fieldName) {
+                getDeclaredFieldsRecursively(Class<?> clazz) {
+                getDeclaredFields(Class<?> clazz) {
+                getDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
+                findDeclaredMethod(Class<?> clazz, String methodName, Class<?>... parameters) {
+                setFieldValue(Field field, Object target, Object value) {
+                setFieldValue(String fieldName, Object target, Object value) {
+                getFieldValue(Field field, Object target) {
             </action>
 
         </release>

@@ -120,7 +120,7 @@ public class ObjectGraph implements Element {
             if (ReflectionUtils.isSyntheticName(field.getName())) {
                 continue;
             }
-            Object fieldValue = ReflectionUtils.getFieldValue(field, object);
+            Object fieldValue = ReflectionUtils.getFieldValue(object, field);
             traverse(fieldValue, visitor);
         }
 
