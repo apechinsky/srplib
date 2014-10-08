@@ -11,6 +11,9 @@
                 #6 ExceptionUtils.asUnchecked() wraps checked exception to generic RuntimeException.
                 Now method throws UndeclaredThrowableException.
             </action>
+            <action dev="Anton Pechinsky" type="remove">
+                Remove deprecated class ReflectionBeanBuilder. Use ReflectionInvoker instead.
+            </action>
         </release>
 
         <release version="0.3.4">
