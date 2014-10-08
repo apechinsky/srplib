@@ -3,9 +3,12 @@ package org.srplib.reflection;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import org.srplib.contract.Argument;
+import org.srplib.contract.Assert;
+import org.srplib.support.ExceptionUtils;
 
 /**
  * Simplifies method invocation via reflection.
@@ -216,6 +219,11 @@ public class ReflectionInvoker<T, V> {
      */
     @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Object target, Method method, Object... arguments) {
+        Argument.checkNotNull(method, "Argument 'method' must not be null!");
+
+        Assert.checkTrue(Modifier.isStatic(method.getModifiers()) || target != null,
+            "Argument 'target' must not be null for non-static method.");
+
         boolean accessible = method.isAccessible();
         try {
             method.setAccessible(true);
@@ -226,8 +234,7 @@ public class ReflectionInvoker<T, V> {
                 target.getClass(), method.getName(), method.getParameterTypes(), arguments), e);
         }
         catch (InvocationTargetException e) {
-            throw new ReflectionException(getMethodInvocationErrorMessage(
-                target.getClass(), method.getName(), method.getParameterTypes(), arguments), e.getCause());
+            throw ExceptionUtils.asUnchecked(e.getCause());
         }
         finally {
             method.setAccessible(accessible);
@@ -271,7 +278,7 @@ public class ReflectionInvoker<T, V> {
             throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e);
         }
         catch (InvocationTargetException e) {
-            throw new ReflectionException(getInstanceCreationErrorMessage(clazz, parameters, arguments), e.getCause());
+            throw ExceptionUtils.asUnchecked(e.getCause());
         }
     }
 

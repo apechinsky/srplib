@@ -14,6 +14,11 @@
             <action dev="Anton Pechinsky" type="remove">
                 Remove deprecated class ReflectionBeanBuilder. Use ReflectionInvoker instead.
             </action>
+            <action dev="Anton Pechinsky" type="change">
+                #7 ReflectionInvoker.invoke() wraps InvocationTargetException into RuntimeException.
+                Now method throws InvocationTargetException.getCause().
+            </action>
+
         </release>
 
         <release version="0.3.4">

@@ -1,5 +1,7 @@
 package org.srplib.reflection;
 
+import java.lang.reflect.UndeclaredThrowableException;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +21,7 @@ public class ReflectionInvokerTest {
     }
 
     @Test
-    public void testCreateWithConstructor() throws Exception {
+    public void testConstructor() throws Exception {
         TestBean bean = ReflectionInvoker.constructor(TestBean.class).parameters(String.class, String.class, int.class)
             .invoke("1", "2", 3);
 
@@ -29,9 +31,30 @@ public class ReflectionInvokerTest {
         Assert.assertThat(bean.getParam3(), is(3));
     }
 
+    @Test(expected = TestBeanRuntimeException.class)
+    public void testConstructorThrowingUncheckedException() throws Exception {
+
+        ReflectionInvoker.constructor(TestBean.class)
+            .parameters(String.class, boolean.class)
+            .invoke("message", true);
+    }
+
+    @Test
+    public void testConstructorThrowingCheckedException() throws Exception {
+
+        try {
+            ReflectionInvoker.constructor(TestBean.class)
+                .parameters(String.class, boolean.class)
+                .invoke("message", false);
+        }
+        catch (UndeclaredThrowableException e) {
+            Assert.assertThat(e.getCause(), instanceOf(TestBeanException.class));
+        }
+    }
+
     @Test(expected = IllegalArgumentException.class)
-    public void testArgumentDontMatchParametersConstructor() throws Exception {
-        TestBean bean = ReflectionInvoker.constructor(TestBean.class).parameters().invoke("redundant parameter");
+    public void testConstructorArgumentDontMatchParameter() throws Exception {
+        TestBean bean = ReflectionInvoker.constructor(TestBean.class).parameters().invoke("redundant argument");
 
         Assert.assertThat(bean, instanceOf(TestBean.class));
     }
@@ -57,7 +80,7 @@ public class ReflectionInvokerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testArgumentDontMatchParametersMethod() throws Exception {
+    public void testMethodArgumentDontMatchParameters() throws Exception {
         TestBean testBean = new TestBean("1", "2", 3);
 
         ReflectionInvoker.<TestBean, String>method(testBean, "setParam1")
@@ -65,4 +88,46 @@ public class ReflectionInvokerTest {
             .invoke("11", "excessiveArgument");
     }
 
+    @Test(expected = TestBeanRuntimeException.class)
+    public void testMethodThrowingUncheckedException() throws Exception {
+
+        ReflectionInvoker.method(new TestBean(), "throwException")
+            .parameters(String.class, boolean.class)
+            .invoke("message", true);
+    }
+
+    @Test
+    public void testMethodThrowingCheckedException() throws Exception {
+
+        try {
+            ReflectionInvoker.method(new TestBean(), "throwException")
+                .parameters(String.class, boolean.class)
+                .invoke("message", false);
+        }
+        catch (UndeclaredThrowableException e) {
+            Assert.assertThat(e.getCause(), instanceOf(TestBeanException.class));
+        }
+    }
+
+    @Test(expected = TestBeanRuntimeException.class)
+    public void testStaticMethodThrowingUncheckedException() throws Exception {
+
+        ReflectionInvoker.method(TestBean.class, "throwExceptionStatic")
+
+            .parameters(String.class, boolean.class)
+            .invoke("message", true);
+    }
+
+    @Test
+    public void testStaticMethodThrowingCheckedException() throws Exception {
+
+        try {
+            ReflectionInvoker.method(TestBean.class, "throwExceptionStatic")
+                .parameters(String.class, boolean.class)
+                .invoke("message", false);
+        }
+        catch (UndeclaredThrowableException e) {
+            Assert.assertThat(e.getCause(), instanceOf(TestBeanException.class));
+        }
+    }
 }

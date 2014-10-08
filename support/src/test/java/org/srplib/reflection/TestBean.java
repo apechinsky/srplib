@@ -15,10 +15,8 @@ public class TestBean {
     public TestBean() {
     }
 
-    public TestBean(String exceptionMessage) {
-        if (exceptionMessage != null) {
-            throw new IllegalStateException(exceptionMessage);
-        }
+    public TestBean(String exceptionMessage, boolean runtime) throws TestBeanException {
+        throwExceptionStatic(exceptionMessage, runtime);
     }
 
     public TestBean(String param1, String param2, int param3) {
@@ -50,4 +48,21 @@ public class TestBean {
     public void setParam3(int param3) {
         this.param3 = param3;
     }
+
+    public void throwException(String exceptionMessage, boolean runtime) throws TestBeanException {
+        throwExceptionStatic(exceptionMessage, runtime);
+    }
+
+    public static void throwExceptionStatic(String exceptionMessage, boolean runtime) throws TestBeanException {
+        if (exceptionMessage != null) {
+
+            if (runtime) {
+                throw new TestBeanRuntimeException(exceptionMessage);
+            }
+            else {
+                throw new TestBeanException(exceptionMessage);
+            }
+        }
+    }
+
 }
