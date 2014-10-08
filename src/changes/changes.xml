@@ -33,6 +33,10 @@
                 getFieldValue(Field field, Object target) {
             </action>
 
+            <action dev="Anton Pechinsky" type="fix">
+                #3 ReflectionUtils.setFieldValue doesn't support dot syntax for field name.
+            </action>
+
         </release>
 
         <release version="0.3.4">

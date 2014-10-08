@@ -453,19 +453,6 @@ public class ReflectionUtils {
      * @throws IllegalArgumentException if target of path are null
      * @throws ReflectionException in case of reflection error
      */
-//    public static void setFieldValue(Object target, Path path, Object value) {
-//        Argument.checkNotNull(target, "Can't set value to field '%s' of null object.", path);
-//        Argument.checkNotNull(path, "path must not be null.");
-//
-//        try {
-//            Field field = getFieldRecursively(target.getClass(), path);
-//            setFieldValue(target, field, value);
-//        }
-//        catch (ReflectionException e) {
-//            throw new ReflectionException(
-//                String.format("Can't set value of field for path '%s' in target of class '%s'", path, target.getClass()), e);
-//        }
-//    }
     public static void setFieldValue(Object target, Path path, Object value) {
         Argument.checkNotNull(target, "Can't set value to field '%s' of null object.", path);
         Argument.checkNotNull(path, "path must not be null.");

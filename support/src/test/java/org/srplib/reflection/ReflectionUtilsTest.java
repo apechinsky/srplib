@@ -189,6 +189,7 @@ public class ReflectionUtilsTest {
         Assert.assertThat(asSet(fields), is(asSet(
             field(Parent.class, "field"),
             field(Parent.class, "parentField"),
+            field(Parent.class, "friend"),
             field(Child.class, "field"),
             field(Child.class, "childField")
         )));
@@ -258,6 +259,16 @@ public class ReflectionUtilsTest {
     }
 
     @Test
+    public void testSetFieldValueDotSyntax() {
+        Parent parent = new Parent();
+        parent.setFriend(new Parent());
+
+        ReflectionUtils.setFieldValue(parent, "friend.parentField", "value");
+
+        Assert.assertThat(parent.friend.parentField, is("value"));
+    }
+
+    @Test
     public void testInvokeMethod() {
         Child child = new Child();
 
@@ -291,6 +302,8 @@ public class ReflectionUtilsTest {
 
         public String parentField;
 
+        public Parent friend;
+
         private void parentMethod() {
 
         }
@@ -303,6 +316,13 @@ public class ReflectionUtilsTest {
 
         }
 
+        public Parent getFriend() {
+            return friend;
+        }
+
+        public void setFriend(Parent friend) {
+            this.friend = friend;
+        }
     }
 
     private static class Child extends Parent {
