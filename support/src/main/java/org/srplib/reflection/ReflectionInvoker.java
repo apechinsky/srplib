@@ -260,9 +260,10 @@ public class ReflectionInvoker<T, V> {
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> clazz, Class[] parameters, Object[] arguments) {
         try {
-            Argument.checkEqual(parameters.length, arguments.length,
-                getInstanceCreationErrorMessage(clazz, parameters, arguments) +
-                    " Expecting %d parameters but actually got %d.", parameters.length, arguments.length);
+            if (parameters.length != arguments.length) {
+                Argument.fail(getInstanceCreationErrorMessage(clazz, parameters, arguments) +
+                    " Expecting %d arguments but actually got %d.", parameters.length, arguments.length);
+            }
 
             Constructor<T> constructor = clazz.getDeclaredConstructor(parameters);
             constructor.setAccessible(true);
