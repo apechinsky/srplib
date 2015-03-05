@@ -30,11 +30,11 @@ public class PathUtils {
      * <p>Method leverages {@link URI#resolve(String)} method and supports back directory references.</p>
      *
      * @param uri URI base uri
-     * @param ralativePath String relative path
+     * @param relativePath String relative path
      * @return relative URI
      */
-    public static URI getRelative(URI uri, String ralativePath) {
-        return uri.resolve(ralativePath);
+    public static URI getRelative(URI uri, String relativePath) {
+        return uri.resolve(relativePath);
     }
 
     /**
@@ -43,11 +43,11 @@ public class PathUtils {
      * <p>Method leverages {@link URI#resolve(String)} method and supports back directory references.</p>
      *
      * @param url URL base uri
-     * @param ralativePath String relative path
+     * @param relativePath String relative path
      * @return relative URL
      */
-    public static URL getRelative(URL url, String ralativePath) {
-        URI resolved = toURI(url).resolve(ralativePath);
+    public static URL getRelative(URL url, String relativePath) {
+        URI resolved = toURI(url).resolve(relativePath);
         return toURL(resolved);
     }
 
