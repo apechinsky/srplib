@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
@@ -46,7 +47,8 @@ public class ReflectionUtilsTest {
 
         List parameterTypes = ReflectionUtils.getTypeParameters(typed.getClass());
 
-        Assert.assertThat(parameterTypes, IsIterableContainingInOrder.contains(String.class, Integer.class, Boolean.class));
+        Class[] classes = {String.class, Integer.class, Boolean.class};
+        Assert.assertThat((List<Class>)parameterTypes, Matchers.contains(classes));
     }
 
     @Test
