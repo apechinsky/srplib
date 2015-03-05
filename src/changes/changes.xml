@@ -6,6 +6,21 @@
 
     <body>
 
+        <release version="0.5.0">
+            <action dev="Anton Pechinsky" type="add">
+                #8 ReflectionInvoker.newInstance() calls toString() of all constructor arguments.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                #9 Add object representation of semantic versioning (org.srplib.support.Version)
+            </action>
+            <action dev="Anton Pechinsky" type="fix">
+                Add method Argument.fail(). Throws IllegalArgumentException unconditionally.
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add method Path.newWithSeparator(). Create new path with specified separator.
+            </action>
+        </release>
+
         <release version="0.4.0">
             <action dev="Anton Pechinsky" type="change">
                 #6 ExceptionUtils.asUnchecked() wraps checked exception to generic RuntimeException.
