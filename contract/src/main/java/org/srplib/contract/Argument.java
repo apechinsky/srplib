@@ -16,7 +16,7 @@ public class Argument {
      * @param expression boolean expression
      * @param messageFormat String representing message format
      * @param arguments vararg array of message format parameters.
-     * @throws IllegalStateException if object is false.
+     * @throws IllegalArgumentException if object is false.
      */
     public static void checkTrue(boolean expression, String messageFormat, Object... arguments) {
         if (!expression) {
@@ -30,7 +30,7 @@ public class Argument {
      * @param expression boolean expression
      * @param messageFormat String representing message format
      * @param arguments vararg array of message format parameters.
-     * @throws IllegalStateException if object is false.
+     * @throws IllegalArgumentException if object is false.
      */
     public static void checkFalse(boolean expression, String messageFormat, Object... arguments) {
         checkTrue(!expression, messageFormat, arguments);
@@ -42,7 +42,7 @@ public class Argument {
      * @param object Object to test
      * @param messageFormat String representing messageFormat to pass to exception.
      * @param arguments vararg array of messageFormat format parameters.
-     * @throws IllegalStateException if object is not null.
+     * @throws IllegalArgumentException if object is not null.
      */
     public static void checkNull(Object object, String messageFormat, Object... arguments) {
         checkTrue(object == null, messageFormat, arguments);
@@ -54,7 +54,7 @@ public class Argument {
      * @param object Object to test
      * @param messageFormat String representing messageFormat to pass to exception.
      * @param arguments vararg array of messageFormat format parameters.
-     * @throws IllegalStateException if object null.
+     * @throws IllegalArgumentException if object null.
      */
     public static void checkNotNull(Object object, String messageFormat, Object... arguments) {
         checkTrue(object != null, messageFormat, arguments);
@@ -69,7 +69,7 @@ public class Argument {
      *
      * @param object Object to test
      * @param argument String argument name.
-     * @throws IllegalStateException if object null.
+     * @throws IllegalArgumentException if object null.
      */
     public static void checkNotNullWithGenericMessage(Object object, String argument) {
         checkNotNull(object, "Argument '%s' must not be null!", argument);
@@ -81,7 +81,7 @@ public class Argument {
      * @param string String to check
      * @param messageFormat String representing messageFormat to pass to exception.
      * @param arguments vararg array of messageFormat format parameters.
-     * @throws IllegalStateException if object is not null.
+     * @throws IllegalArgumentException if object is not null.
      */
     public static void checkBlank(String string, String messageFormat, Object... arguments) {
         checkTrue(Utils.isBlank(string), messageFormat, arguments);
@@ -93,7 +93,7 @@ public class Argument {
      * @param string String to check
      * @param messageFormat String representing messageFormat to pass to exception.
      * @param arguments vararg array of messageFormat format parameters.
-     * @throws IllegalStateException if object is not null.
+     * @throws IllegalArgumentException if object is not null.
      */
     public static void checkNotBlank(String string, String messageFormat, Object... arguments) {
         checkTrue(!Utils.isBlank(string), messageFormat, arguments);
@@ -106,7 +106,7 @@ public class Argument {
      * @param object2 Object second object
      * @param messageFormat String representing messageFormat to pass to exception.
      * @param arguments vararg array of messageFormat format parameters.
-     * @throws IllegalStateException if object1 is not null.
+     * @throws IllegalArgumentException if object1 is not null.
      */
     public static void checkEqual(Object object1, Object object2, String messageFormat, Object... arguments) {
         checkTrue(Utils.equals(object1, object2), messageFormat, arguments);
@@ -119,10 +119,21 @@ public class Argument {
      * @param object2 Object second object
      * @param messageFormat String representing messageFormat to pass to exception.
      * @param arguments vararg array of messageFormat format parameters.
-     * @throws IllegalStateException if object1 is not null.
+     * @throws IllegalArgumentException if object1 is not null.
      */
     public static void checkNotEqual(Object object1, Object object2, String messageFormat, Object... arguments) {
         checkTrue(!Utils.equals(object1, object2), messageFormat, arguments);
+    }
+
+    /**
+     * Throws <code>IllegalArgumentException</code> unconditionally.
+     *
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @throws IllegalArgumentException
+     */
+    public static void fail(String messageFormat, Object... arguments) {
+        checkTrue(false, messageFormat, arguments);
     }
 
 }
