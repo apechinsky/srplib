@@ -108,6 +108,17 @@ public class Path {
     }
 
     /**
+     * Creates new Path containing the same path segments but with specified separator.
+     *
+     * @param separator String new path separator.
+     * @return Path new path
+     */
+    public Path newWithSeparator(String separator) {
+        // path is unmodifiable, so it's safe to pass it to new Path
+        return new Path(path, separator);
+    }
+
+    /**
      * Returns path size.
      *
      * @return number of path segments.
