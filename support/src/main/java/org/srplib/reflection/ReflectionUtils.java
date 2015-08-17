@@ -18,8 +18,6 @@ import org.srplib.contract.Argument;
 import org.srplib.contract.Assert;
 import org.srplib.support.Path;
 
-import sun.reflect.Reflection;
-
 /**
  * Helper class containing static utility methods for simplifying reflection API.
  *
@@ -801,6 +799,29 @@ public class ReflectionUtils {
         return WRAPPERS.contains(clazz);
     }
 
+    /**
+     * Tests if specified class is an array of primitives.
+     *
+     * @param clazz Class a class to test
+     * @return true if class is an array of primitives
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
+    public static boolean isPrimitiveArray(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
+        return isArray(clazz) && clazz.getComponentType().isPrimitive();
+    }
+
+    /**
+     * Tests if specified class is an array of primitive wrapper.
+     *
+     * @param clazz Class a class to test
+     * @return true if class is an array
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
+    public static boolean isPrimitiveWrapperArray(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
+        return isArray(clazz) && isPrimitiveWrapper(clazz.getComponentType());
+    }
 
 }
 

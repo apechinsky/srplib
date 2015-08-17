@@ -5,6 +5,11 @@
     </properties>
 
     <body>
+        <release version="0.6.0">
+            <action dev="Anton Pechinsky" type="add">
+                #12  Add methods ReflectionUtils.isPrimitiveArray(), ReflectionUtils.isPrimitiveWrapperArray()
+            </action>
+        </release>
 
         <release version="0.5.0">
             <action dev="Anton Pechinsky" type="add">
