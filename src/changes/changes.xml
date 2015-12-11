@@ -9,6 +9,24 @@
             <action dev="Anton Pechinsky" type="add">
                 #12  Add methods ReflectionUtils.isPrimitiveArray(), ReflectionUtils.isPrimitiveWrapperArray()
             </action>
+            <action dev="Anton Pechinsky" type="change">
+                Upgrade commons-collections dependency to 3.2.2
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                Make commons-collections family optional in srp-conversion-support.
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                Rename org.srplib.conversion.adapters.TransformerAdapter to org.srplib.conversion.adapters.collections.TransformerAdapter
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                Rename org.srplib.conversion.adapters.Transformer15Adapter to org.srplib.conversion.adapters.collections15.TransformerAdapter
+            </action>
+            <action dev="Anton Pechinsky" type="change">
+                Rename org.srplib.conversion.adapters.FunctionAdapter to org.srplib.conversion.adapters.guava.TransformerAdapter
+            </action>
+            <action dev="Anton Pechinsky" type="add">
+                Add new adapter org.srplib.conversion.adapters.collections4.TransformerAdapter
+            </action>
         </release>
 
         <release version="0.5.0">
