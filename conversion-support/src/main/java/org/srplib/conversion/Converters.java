@@ -54,8 +54,8 @@ public class Converters {
      * @return EmptyConverter an empty converter
      * @see EmptyConverter
      */
-    public static <I, O> Converter<I, O> empty() {
-        return (Converter<I, O>)EmptyConverter.instance();
+    public static <I, O> TwoWayConverter<I, O> empty() {
+        return (TwoWayConverter<I, O>)EmptyConverter.instance();
     }
 
     /**
