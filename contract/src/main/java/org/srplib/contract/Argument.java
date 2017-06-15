@@ -126,6 +126,30 @@ public class Argument {
     }
 
     /**
+     * Returns <code>IllegalArgumentException</code> unconditionally.
+     *
+     * <p>Used in scenarios where compiler forces to return some value (e.g. if/else chain or switch).
+     * To avoid returning a null use {@code throw Argument.failure()} construct.</p>
+     *
+     * <pre>
+     *  switch (value) {
+     *      case A:
+     *          return valueA;
+     *      ...
+     *      default:
+     *          throw Argument.failure(...)
+     *  }
+     * </pre>
+     *
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @return IllegalArgumentException
+     */
+    public static RuntimeException failure(String messageFormat, Object... arguments) {
+        return new IllegalArgumentException(Utils.format(messageFormat, arguments));
+    }
+
+    /**
      * Throws <code>IllegalArgumentException</code> unconditionally.
      *
      * @param messageFormat String representing messageFormat to pass to exception.
@@ -133,7 +157,7 @@ public class Argument {
      * @throws IllegalArgumentException
      */
     public static void fail(String messageFormat, Object... arguments) {
-        checkTrue(false, messageFormat, arguments);
+        throw failure(messageFormat, arguments);
     }
 
 }

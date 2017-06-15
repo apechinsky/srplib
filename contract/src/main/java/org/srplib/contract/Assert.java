@@ -116,6 +116,30 @@ public class Assert {
     }
 
     /**
+     * Returns <code>IllegalStateException</code> unconditionally.
+     *
+     * <p>Used in scenarios where compiler forces to return some value (e.g. if/else chain or switch). 
+     * To avoid returning a null use {@code throw Assert.failure()} construct.</p>
+     *
+     * <pre>
+     *  switch (value) {
+     *      case A:
+     *          return valueA;
+     *      ...
+     *      default:
+     *          throw Assert.failure(...)
+     *  }
+     * </pre>
+     *
+     * @param messageFormat String representing messageFormat to pass to exception.
+     * @param arguments vararg array of messageFormat format parameters.
+     * @return IllegalStateException
+     */
+    public static RuntimeException failure(String messageFormat, Object... arguments) {
+        return new IllegalStateException(Utils.format(messageFormat, arguments));
+    }
+
+    /**
      * Throws <code>IllegalStateException</code> unconditionally.
      *
      * @param messageFormat String representing messageFormat to pass to exception.
@@ -123,7 +147,6 @@ public class Assert {
      * @throws IllegalStateException
      */
     public static void fail(String messageFormat, Object... arguments) {
-        checkTrue(false, messageFormat, arguments);
+        throw failure(messageFormat, arguments);
     }
-
 }

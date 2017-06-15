@@ -17,3 +17,26 @@
     while findXXXRecursively use both
 
 - Rename Path.parse to Path.parseDot (or similar).
+
+
+- Alternative to Assert.fail returning generic value or special method returning an exception
+
+Useful in if/else or switch scenarios:
+Instead of
+        switch (value) {
+            case A:
+                return valueA;
+
+            case B:
+                return valueB;
+
+            default:
+                Assert.fail("message");
+                return null;
+ 
+will be:
+            default:
+                return Assert.fail("message");
+or               
+            default:
+                throw Assert.failure("message");

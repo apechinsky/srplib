@@ -1,6 +1,9 @@
 package org.srplib.contract;
 
 import org.junit.Test;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test class for Argument.
@@ -97,5 +100,13 @@ public class ArgumentTest {
     public void testcheckNotEqualFail() {
         Argument.checkNotEqual(null, null, "message");
         Argument.checkNotEqual("1", "1", "message");
+    }
+
+    @Test
+    public void failure() throws Exception {
+        RuntimeException exception = Argument.failure("message");
+
+        assertThat(exception, instanceOf(IllegalArgumentException.class));
+        assertThat(exception.getMessage(), is("message"));
     }
 }

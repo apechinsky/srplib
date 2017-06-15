@@ -5,6 +5,19 @@
     </properties>
 
     <body>
+        <release version="0.7.0">
+            <action dev="Anton Pechinsky" type="add">
+                Add methods Argument.failure(), Assert.failure(). Unlike method fail() these new methods return an exceptionы
+                instead of throwing it. See javadocs for details.
+            </action>
+        </release>
+
+        <release version="0.6.0">
+            <action dev="Anton Pechinsky" type="add">
+                Converters.empty() now returns TwoWayConverter.
+            </action>
+        </release>
+
         <release version="0.6.0">
             <action dev="Anton Pechinsky" type="add">
                 #12  Add methods ReflectionUtils.isPrimitiveArray(), ReflectionUtils.isPrimitiveWrapperArray()
