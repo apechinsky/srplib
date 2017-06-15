@@ -1,0 +1,57 @@
+
+group = 'org.srplib'
+version = '0.7.1-SNAPSHOT'
+
+//    Single Responsibility Principle libraries
+//
+//    Single Responsibility Principle (SRP) libraries collection
+//
+//    https://github.com/apechinsky/srplib
+//    
+//    The Apache Software License, Version 2.0
+//    http://www.apache.org/licenses/LICENSE-2.0.txt
+//
+//    scm:git:git@github.com:apechinsky/srplib.git
+//    scm:git:git@github.com:apechinsky/srplib.git
+//    git@github.com:apechinsky/srplib.git
+//
+//    apechinsky
+//    Anton Pechinsky
+//    anton@pechinsky.com
+
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    ext.libs = [:]
+
+    libs.guava = 'com.google.guava:guava:14.0'
+
+    libs.junit = 'junit:junit:4.11'
+
+    libs.mockito = 'org.mockito:mockito-core:1.9.5'
+
+    libs.hamcrest_all = [
+        libs.hamcrest_core = 'org.hamcrest:hamcrest-core:1.3',
+        libs.hamcrest_library = 'org.hamcrest:hamcrest-library:1.3'
+    ]
+
+    libs.test = [
+        libs.junit,
+        libs.mockito,
+        libs.hamcrest_core,
+        libs.hamcrest_library
+    ]
+}
+
+
+
+  
+

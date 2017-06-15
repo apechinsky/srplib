@@ -1,0 +1,11 @@
+dependencies {
+    compile project(':srp-support')
+    compile project(':srp-contract')
+    compile project(':srp-model')
+    compile project(':srp-model-support')
+    compile project(':srp-conversion')
+    compile project(':srp-conversion-support')
+    compile project(':srp-validation')
+
+    testCompile libs.test
+}

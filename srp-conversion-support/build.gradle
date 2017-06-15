@@ -1,0 +1,12 @@
+dependencies {
+    compile project(':srp-contract')
+    compile project(':srp-conversion')
+
+    compile 'net.sourceforge.collections:collections-generic:4.01'
+    compile 'commons-collections:commons-collections:3.2.2'
+    compile 'org.apache.commons:commons-collections4:4.1'
+    compile libs.guava
+
+    testCompile libs.test
+}
+

@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':srp-contract')
+
+    testCompile libs.test
+}

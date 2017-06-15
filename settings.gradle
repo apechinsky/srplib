@@ -1,0 +1,12 @@
+rootProject.name = 'srplib'
+
+include "srp-support"
+include "srp-contract"
+include "srp-conversion"
+include "srp-conversion-support"
+include "srp-model"
+include "srp-model-support"
+include "srp-validation"
+include "srp-validation-support"
+include "srp-binding"
+include "srp-criteria"
