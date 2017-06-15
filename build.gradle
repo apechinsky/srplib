@@ -1,30 +1,9 @@
 
-group = 'org.srplib'
-version = '0.7.1-SNAPSHOT'
 
-//    Single Responsibility Principle libraries
-//
-//    Single Responsibility Principle (SRP) libraries collection
-//
-//    https://github.com/apechinsky/srplib
-//    
-//    The Apache Software License, Version 2.0
-//    http://www.apache.org/licenses/LICENSE-2.0.txt
-//
-//    scm:git:git@github.com:apechinsky/srplib.git
-//    scm:git:git@github.com:apechinsky/srplib.git
-//    git@github.com:apechinsky/srplib.git
-//
-//    apechinsky
-//    Anton Pechinsky
-//    anton@pechinsky.com
+allprojects {
+    group = 'org.srplib'
+    version = '0.7.1'
 
-repositories {
-    mavenCentral()
-}
-
-subprojects {
-    apply plugin: 'java'
 
     repositories {
         mavenCentral()
@@ -50,6 +29,79 @@ subprojects {
         libs.hamcrest_library
     ]
 }
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+  
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from 'build/docs/javadoc'
+    }
+     
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
+    artifacts {
+        archives jar
+        archives javadocJar
+        archives sourcesJar
+    }
+
+    signing {
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+     
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
+     
+                pom.project {
+                   name 'srplib'
+                   packaging 'jar'
+                   description 'Single Responsibility Principle (SRP) libraries collection'
+                   url 'https://github.com/apechinsky/srplib'
+     
+                   scm {
+                       url 'scm:git:git@github.com:apechinsky/srplib.git'
+                       connection 'scm:git:git@github.com:apechinsky/srplib.git'
+                       developerConnection 'git@github.com:apechinsky/srplib.git'
+                   }
+     
+                   licenses {
+                       license {
+                           name 'The Apache Software License, Version 2.0'
+                           url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                           distribution 'repo'
+                       }
+                   }
+     
+                   developers {
+                       developer {
+                           id 'apechinsky'
+                           name 'Anton Pechinsky'
+                       }
+                   }
+               }
+            }
+        }
+    }
+}
+
 
 
 
