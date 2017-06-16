@@ -65,13 +65,17 @@ subprojects {
         repositories {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-                
-                repository(url: getRepositoryUrl(pom.version)) {
-                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
                 }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }               
      
                 pom.project {
-                   name 'srplib'
+                   name 'Single Responsibility Principle library'
                    packaging 'jar'
                    description 'Single Responsibility Principle (SRP) libraries collection'
                    url 'https://github.com/apechinsky/srplib'
@@ -86,7 +90,6 @@ subprojects {
                        license {
                            name 'The Apache Software License, Version 2.0'
                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                           distribution 'repo'
                        }
                    }
      
@@ -100,14 +103,6 @@ subprojects {
             }
         }
     }
-}
-
-String getRepositoryUrl(String version) {
-    boolean isSnapshot = version.endsWith('-SNAPSHOT')                                                                         
-
-    return isSnapshot 
-        ? 'https://oss.sonatype.org/content/repositories/snapshots'
-        : 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
 }
 
 
