@@ -1,9 +1,7 @@
 
-
 allprojects {
     group = 'org.srplib'
     version = '0.7.1'
-
 
     repositories {
         mavenCentral()
@@ -66,12 +64,14 @@ subprojects {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
+                def credentials = Credentials.fromProject(project)
+
                 repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                    authentication(userName: credentials.ossrhUsername, password: credentials.ossrhPassword)
                 }
 
                 snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                    authentication(userName: credentials.ossrhUsername, password: credentials.ossrhPassword)
                 }               
      
                 pom.project {
@@ -107,4 +107,17 @@ subprojects {
 
 
   
+class Credentials {
 
+    String ossrhUsername
+
+    String ossrhPassword
+
+    static Credentials fromProject(Project project) {
+        new Credentials(
+            ossrhUsername: project.hasProperty('ossrhUsername') ? project.ossrhUsername : 'undefined',
+            ossrhPassword: project.hasProperty('ossrhPassword') ? project.ossrhPassword : 'undefined'
+        )
+    }
+
+}
