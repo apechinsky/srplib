@@ -65,8 +65,8 @@ subprojects {
         repositories {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-     
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                
+                repository(url: getRepositoryUrl(pom.version)) {
                     authentication(userName: sonatypeUsername, password: sonatypePassword)
                 }
      
@@ -102,7 +102,13 @@ subprojects {
     }
 }
 
+String getRepositoryUrl(String version) {
+    boolean isSnapshot = version.endsWith('-SNAPSHOT')                                                                         
 
+    return isSnapshot 
+        ? 'https://oss.sonatype.org/content/repositories/snapshots'
+        : 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+}
 
 
   
