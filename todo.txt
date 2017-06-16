@@ -23,3 +23,46 @@ DONE - ValidationException - add method accepting throwable
     - what if registry contains mappings like this?:
         (String, Integer, StringToIntegerConverter)
         (String, Boolean, StringToBooleanConverter)
+
+- BindException - binding subsystem top level exception
+- Convert bind()/unbind() throw ConverterException. Solution:
+    - bind() wrap it to BindException ValidationException instead
+    - unbind() create ValidationError based on ConverterException
+
+- Converter adapters
+    Lambdaj Converter adapter
+
+- Interface for ConverterRegistry
+
+- TypeReference class.http://gafter.blogspot.com/2006/12/super-type-tokens.html
+
+- CompositeKey.getComponents(),
+
+- findXXXX should differ dot syntax support and recursive search
+    currently findXXXX use nor dot syntax neither recursive search
+    while findXXXRecursively use both
+
+- Rename Path.parse to Path.parseDot (or similar).
+
+
+- Alternative to Assert.fail returning generic value or special method returning an exception
+
+Useful in if/else or switch scenarios:
+Instead of
+        switch (value) {
+            case A:
+                return valueA;
+
+            case B:
+                return valueB;
+
+            default:
+                Assert.fail("message");
+                return null;
+ 
+will be:
+            default:
+                return Assert.fail("message");
+or               
+            default:
+                throw Assert.failure("message");
