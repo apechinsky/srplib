@@ -3,6 +3,8 @@ allprojects {
     group = 'org.srplib'
     version = '0.7.1'
 
+    ext.isReleaseVersion = !version.endsWith("-SNAPSHOT")
+
     repositories {
         mavenCentral()
     }
@@ -56,6 +58,9 @@ subprojects {
     }
 
     signing {
+        required { 
+            isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") 
+        }
         sign configurations.archives
     }
 
