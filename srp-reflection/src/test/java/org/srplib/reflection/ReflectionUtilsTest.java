@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.hamcrest.Matchers;
-import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.hamcrest.core.IsEqual;
 import org.junit.Assert;
 import org.junit.Test;

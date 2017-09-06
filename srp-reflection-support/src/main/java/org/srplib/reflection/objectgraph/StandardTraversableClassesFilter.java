@@ -1,13 +1,10 @@
-package org.srplib.reflection.classgraph;
+package org.srplib.reflection.objectgraph;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import static java.util.Arrays.asList;
 
-import org.srplib.reflection.ReflectionUtils;
 import org.srplib.reflection.Types;
 import org.srplib.support.Predicate;
 
@@ -16,7 +13,7 @@ import org.srplib.support.Predicate;
  *
  * @author Anton Pechinsky
  */
-public class TraversableClassesFilter implements Predicate<ClassGraphNode> {
+public class StandardTraversableClassesFilter implements Predicate<Class<?>> {
 
     private static final Set<Class<?>> PROHIBITED_TYPES = new HashSet<>(asList(
         Object.class,
@@ -27,13 +24,8 @@ public class TraversableClassesFilter implements Predicate<ClassGraphNode> {
     ));
 
     @Override
-    public boolean test(ClassGraphNode value) {
-        return !isProhibited(value.getType()) && !isProhibited(value.getField());
-    }
-
-    private boolean isProhibited(Field field) {
-        return field != null && (ReflectionUtils.isSyntheticName(field.getName()) || Modifier.isStatic(field.getModifiers()));
-
+    public boolean test(Class<?> value) {
+        return !isProhibited(value);
     }
 
     private boolean isProhibited(Class type) {

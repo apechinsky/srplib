@@ -4,7 +4,9 @@ package org.srplib.reflection.objectgraph;
  * An interface of visitable structure in Visitor pattern.
  *
  * @author Anton Pechinsky
+ * @deprecated use org.srplib.visitor package
  */
+@Deprecated
 public interface Element {
 
     /**

@@ -40,7 +40,7 @@ public class ClassGraph<N extends ClassGraphNode, V extends ClassGraphVisitor<N>
      * @param root Object root object.
      */
     public ClassGraph(Class root) {
-        this(root, new TraversableClassesFilter());
+        this(root, new TraversableNodesFilter());
     }
 
     @Override

@@ -7,7 +7,6 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,42 +46,13 @@ public class ReflectionUtils {
     }
 
     /**
-     * Map containing init values for primitive classes.
-     */
-    public static final Map<Class, Object> INIT_VALUES = new HashMap<Class, Object>();
-
-
-    static {
-        INIT_VALUES.put(boolean.class, false);
-        INIT_VALUES.put(byte.class, (byte) 0);
-        INIT_VALUES.put(short.class, (short) 0);
-        INIT_VALUES.put(int.class, 0);
-        INIT_VALUES.put(long.class, (long) 0);
-        INIT_VALUES.put(float.class, (float) 0.0);
-        INIT_VALUES.put(double.class, 0.0);
-        INIT_VALUES.put(char.class, '\u0000');
-    }
-
-
-    /**
      * Returns init value for specified class (including classes representing primitives).
      *
      * @param type Class class
      * @return null for reference types, for primitives returns their init values.
      */
     public static Object getInitValue(Class<?> type) {
-
-        Object result = null;
-
-        if (type.isPrimitive() && !void.class.equals(type)) {
-            result = INIT_VALUES.get(type);
-
-            // Another implementation without predefined map.
-            // Works but requires array instance creation.
-            // result = Array.get(Array.newInstance(type, 1), 0);
-        }
-
-        return result;
+        return Types.getDefaultValue(type);
     }
 
 

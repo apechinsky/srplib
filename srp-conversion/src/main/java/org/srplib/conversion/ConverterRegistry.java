@@ -20,7 +20,7 @@ public class ConverterRegistry {
      * Register specified converter in this converter registry.
      *
      * <p>If converter implements {@link TwoWayConverter} interface then two converters are registered: converter itself and
-     * its reverse converter ({@link }):
+     * its reverse converter ({@link ConvertBackConverter}):
      * <pre>
      *     // an invocation with TwoWayConverter
      *     converterRegistry.registerConverter(String.class, Integer.class, new StringToIntTwoWayConverter());

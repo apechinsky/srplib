@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.srplib.contract.Argument;
 import org.srplib.reflection.ReflectionUtils;
+import org.srplib.support.Predicate;
 
 /**
  * Encapsulates object graph navigation algorithm.
@@ -33,13 +35,29 @@ public class ObjectGraph implements Element {
 
     private Set<Integer> visitedIdentities = new HashSet<Integer>();
 
+    private Predicate<Class<?>> filter;
+
+    /**
+     * Creates object graph with specified root and class filter.
+     *
+     * @param root Object root object. {@code null} is supported
+     * @param filter a predicate defining should or not implementation examine class internals.
+     */
+    public ObjectGraph(Object root, Predicate<Class<?>> filter) {
+        Argument.checkNotNull(root, "root must not be null!");
+        Argument.checkNotNull(filter, "filter must not be null!");
+        this.root = root;
+        this.filter = filter;
+    }
+
     /**
      * Creates object graph with specified root.
      *
      * @param root Object root object. {@code null} is supported.
      */
     public ObjectGraph(Object root) {
-        this.root = root;
+        this(root, new StandardTraversableClassesFilter());
+
     }
 
     @Override
@@ -128,6 +146,6 @@ public class ObjectGraph implements Element {
     }
 
     private boolean isTraversable(Object object) {
-        return object != null && object.getClass() != Object.class && ReflectionUtils.isComplexType(object.getClass());
+        return object != null && filter.test(object.getClass());
     }
 }

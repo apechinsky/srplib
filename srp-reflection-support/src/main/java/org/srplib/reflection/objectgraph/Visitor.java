@@ -4,7 +4,9 @@ package org.srplib.reflection.objectgraph;
  * Generic visitor interface.
  *
  * @author Anton Pechinsky
+ * @deprecated use org.srplib.visitor package
  */
+@Deprecated
 public interface Visitor {
 
     /**
