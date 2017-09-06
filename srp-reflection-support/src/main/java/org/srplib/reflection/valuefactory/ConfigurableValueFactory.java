@@ -47,7 +47,7 @@ public class ConfigurableValueFactory implements ValueFactory {
         }
 
         public <T> Builder register(Class<T> type, ValueFactory<T> valueFactory) {
-            register(Matchers.sameInstance((Class)type), valueFactory);
+            register(Matchers.<Class<?>>sameInstance(type), valueFactory);
             return this;
         }
 

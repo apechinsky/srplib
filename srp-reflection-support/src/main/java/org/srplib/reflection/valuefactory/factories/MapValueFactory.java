@@ -1,7 +1,6 @@
 package org.srplib.reflection.valuefactory.factories;
 
 import java.util.Map;
-import static java.util.stream.IntStream.range;
 
 import org.srplib.reflection.ReflectionUtils;
 import org.srplib.reflection.objectfactory.ClassGraphFactory;
@@ -31,12 +30,11 @@ public class MapValueFactory<T extends Map> implements ValueFactory<T> {
 
     private void createEntries(T map, MapTypeMeta meta) {
 
-        range(0, ELEMENT_COUNT).forEach((i) -> {
-
+        for (int i = 0; i < ELEMENT_COUNT; i++) {
             Object key = ClassGraphFactory.newInstance(meta.getKeyType(), meta.getNodeValueFactory());
             Object value = ClassGraphFactory.newInstance(meta.getValueType(), meta.getNodeValueFactory());
 
             map.put(key, value);
-        });
+        }
     }
 }

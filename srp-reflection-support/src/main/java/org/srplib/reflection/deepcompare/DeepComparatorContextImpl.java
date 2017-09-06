@@ -24,7 +24,7 @@ public class DeepComparatorContextImpl implements DeepComparatorContext {
     }
 
     public DeepComparatorContextImpl(DeepComparator rootComparator) {
-        this(rootComparator, new NodePath<>("root"), new ArrayList<>());
+        this(rootComparator, new NodePath<>("root"), new ArrayList<String>());
     }
 
     private void compare(Object object1, Object object2, NodePath<String> path) {

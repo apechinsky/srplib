@@ -1,7 +1,6 @@
 package org.srplib.reflection.valuefactory.factories;
 
 import java.lang.reflect.Array;
-import static java.util.stream.IntStream.range;
 
 import org.srplib.reflection.objectfactory.ClassGraphFactory;
 import org.srplib.reflection.objectfactory.ConfigurableNodeValueFactory;
@@ -35,11 +34,11 @@ public class ArrayValueFactory<T> implements ValueFactory<T> {
             ? ((CompositeTypeMeta)meta).getNodeValueFactory()
             : new ConfigurableNodeValueFactory(new NonDefaultValueFactory());
 
-        range(0, ELEMENT_COUNT).forEach((i) -> {
+        for (int i = 0; i < ELEMENT_COUNT; i++) {
 
             Object element = ClassGraphFactory.newInstance(meta.getType().getComponentType(), nodeValueFactory);
 
             Array.set(array, i, element);
-        });
+        }
     }
 }

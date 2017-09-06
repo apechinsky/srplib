@@ -1,7 +1,6 @@
 package org.srplib.reflection.valuefactory.factories;
 
 import java.util.Collection;
-import static java.util.stream.IntStream.range;
 
 import org.srplib.reflection.ReflectionUtils;
 import org.srplib.reflection.objectfactory.ClassGraphFactory;
@@ -30,13 +29,13 @@ public class CollectionValueFactory<T extends Collection> implements ValueFactor
 
     private void createElements(T collection, CollectionTypeMeta meta) {
 
-        range(0, ELEMENT_COUNT).forEach((i) -> {
+        for (int i = 0; i < ELEMENT_COUNT; i++) {
 
             Object element = ClassGraphFactory.newInstance(meta.getElementType(), meta.getNodeValueFactory());
 
             collection.add(element);
 
-        });
+        }
     }
 
 }

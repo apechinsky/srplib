@@ -37,6 +37,9 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'signing'
 
+    sourceCompatibility = '1.7'
+    targetCompatibility = '1.7'
+
     if (JavaVersion.current().isJava8Compatible()) {
         tasks.withType(Javadoc) {
             options.addStringOption('Xdoclint:none', '-quiet')
