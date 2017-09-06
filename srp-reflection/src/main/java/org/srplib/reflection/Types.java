@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.srplib.contract.Argument;
 
-import static jdk.nashorn.internal.runtime.ScriptObject.isArray;
-
 /**
  * Collection of utilities for java types.
  *
@@ -106,6 +104,18 @@ public class Types {
     public static boolean isWrapperArray(Class<?> type) {
         Argument.checkNotNull(type, "'type' must not be null!");
         return isArray(type) && isWrapper(type.getComponentType());
+    }
+
+    /**
+     * Tests if specified class is an array.
+     *
+     * @param clazz Class a class to test
+     * @return true if class is an array
+     * @throws IllegalArgumentException if the specified Class parameter is null.
+     */
+    public static boolean isArray(Class<?> clazz) {
+        Argument.checkNotNull(clazz, "Can't examine 'null' class.");
+        return clazz.isArray();
     }
 
     /**

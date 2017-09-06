@@ -682,6 +682,7 @@ public class ReflectionUtils {
      * @param clazz Class a class to test
      * @return true if class is an array
      * @throws IllegalArgumentException if the specified Class parameter is null.
+     * @deprecated use Types class
      */
     public static boolean isArray(Class<?> clazz) {
         Argument.checkNotNull(clazz, "Can't examine 'null' class.");
@@ -764,6 +765,7 @@ public class ReflectionUtils {
      *
      * @param clazz Class a class to test
      * @return true if class is primitive wrapper
+     * @deprecated use Types class
      */
     public static boolean isPrimitiveWrapper(Class<?> clazz) {
         return WRAPPERS.contains(clazz);
@@ -775,6 +777,7 @@ public class ReflectionUtils {
      * @param clazz Class a class to test
      * @return true if class is an array of primitives
      * @throws IllegalArgumentException if the specified Class parameter is null.
+     * @deprecated use Types class
      */
     public static boolean isPrimitiveArray(Class<?> clazz) {
         Argument.checkNotNull(clazz, "Can't examine 'null' class.");
@@ -787,6 +790,7 @@ public class ReflectionUtils {
      * @param clazz Class a class to test
      * @return true if class is an array
      * @throws IllegalArgumentException if the specified Class parameter is null.
+     * @deprecated use Types class
      */
     public static boolean isPrimitiveWrapperArray(Class<?> clazz) {
         Argument.checkNotNull(clazz, "Can't examine 'null' class.");
