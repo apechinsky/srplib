@@ -22,6 +22,8 @@ allprojects {
         libs.hamcrest_library = 'org.hamcrest:hamcrest-library:1.3'
     ]
 
+    libs.objenesis = 'org.objenesis:objenesis:2.6'
+
     libs.test = [
         libs.junit,
         libs.mockito,

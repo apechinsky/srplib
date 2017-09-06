@@ -1,0 +1,12 @@
+dependencies {
+    compile project(':srp-contract')
+    compile project(':srp-support')
+    compile project(':srp-conversion')
+    compile project(':srp-conversion-support')
+
+    compile libs.hamcrest_all
+
+    compile libs.objenesis
+
+    testCompile libs.test
+}

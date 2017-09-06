@@ -6,6 +6,7 @@ dependencies {
     compile 'commons-collections:commons-collections:3.2.2'
     compile 'org.apache.commons:commons-collections4:4.1'
     compile libs.guava
+    compile libs.hamcrest_all
 
     testCompile libs.test
 }

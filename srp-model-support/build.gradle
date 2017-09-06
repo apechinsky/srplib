@@ -3,6 +3,7 @@ dependencies {
     compile project(':srp-contract')
     compile project(':srp-model')
     compile project(':srp-conversion')
+    compile project(':srp-reflection')
 
     testCompile libs.test
 }
