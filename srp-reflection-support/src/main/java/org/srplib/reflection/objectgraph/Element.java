@@ -1,4 +1,4 @@
-package org.srplib.objectgraph;
+package org.srplib.reflection.objectgraph;
 
 /**
  * An interface of visitable structure in Visitor pattern.

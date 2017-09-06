@@ -1,4 +1,4 @@
-package org.srplib.objectgraph;
+package org.srplib.reflection.objectgraph;
 
 import java.util.Arrays;
 import java.util.HashSet;

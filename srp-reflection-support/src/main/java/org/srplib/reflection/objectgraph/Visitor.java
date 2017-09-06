@@ -1,4 +1,4 @@
-package org.srplib.objectgraph;
+package org.srplib.reflection.objectgraph;
 
 /**
  * Generic visitor interface.

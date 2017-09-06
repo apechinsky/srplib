@@ -1,4 +1,4 @@
-package org.srplib.objectgraph;
+package org.srplib.reflection.objectgraph;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
