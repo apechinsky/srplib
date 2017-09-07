@@ -23,29 +23,4 @@ public class ClassGraphTest {
         graph.accept(new PrintClassGraphVisitor());
     }
 
-    @Test
-    public void testCreate() throws Exception {
-
-        ConfigurableNodeValueFactory nodeValueFactory = new ConfigurableNodeValueFactory(new NonDefaultValueFactory());
-
-        nodeValueFactory.add(ClassGraphNode.create(TestObject.class, "listField"),
-            new CollectionTypeMeta(ArrayList.class, String.class, nodeValueFactory));
-
-        nodeValueFactory.add(ClassGraphNode.create(TestObject.class, "mapField"),
-            new MapTypeMeta(HashMap.class, String.class, Integer.class, nodeValueFactory));
-
-        TestObject result1 = ClassGraphFactory.newInstance(TestObject.class, nodeValueFactory);
-        TestObject result2 = ClassGraphFactory.newInstance(TestObject.class, nodeValueFactory);
-
-        new ConfigurableDeepComparator(new StandardComparators()).compare(result1, result2);
-    }
-
-
-
-    @Test
-    public void testCompare() throws Exception {
-
-    }
-
-
 }

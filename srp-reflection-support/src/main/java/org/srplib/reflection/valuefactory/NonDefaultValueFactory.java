@@ -12,6 +12,7 @@ import org.srplib.reflection.valuefactory.factories.DateValueFactory;
 import org.srplib.reflection.valuefactory.factories.EnumValueFactory;
 import org.srplib.reflection.valuefactory.factories.MapValueFactory;
 import org.srplib.reflection.valuefactory.factories.ReflectionValueFactory;
+import org.srplib.reflection.valuefactory.factories.StringValueFactory;
 import static org.hamcrest.object.IsCompatibleType.typeCompatibleWith;
 import static org.srplib.reflection.valuefactory.factories.IsArrayMatcher.isArray;
 
@@ -45,7 +46,7 @@ public class NonDefaultValueFactory implements ValueFactory {
             .register(Long.class, 1L)
             .register(Float.class, 1f)
             .register(Double.class, 1d)
-            .register(String.class, "string")
+            .register(String.class, new StringValueFactory("string"))
 
             .register(BigDecimal.class, BigDecimal.ONE)
 

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.srplib.contract.Argument;
 import org.srplib.conversion.Converter;
 import org.srplib.reflection.deepcompare.comparators.ReferenceComparatorDecorator;
+import org.srplib.support.CompositeKey;
 
 /**
  * Implements deep object comparison logic.
@@ -15,7 +16,7 @@ import org.srplib.reflection.deepcompare.comparators.ReferenceComparatorDecorato
  */
 public class ConfigurableDeepComparator implements DeepComparator {
 
-    private Set<Integer> processedIdentities = new HashSet<>();
+    private Set<CompositeKey> processedIdentities = new HashSet<>();
 
     private Converter<Class, DeepComparator> comparators;
 
@@ -48,10 +49,10 @@ public class ConfigurableDeepComparator implements DeepComparator {
     @SuppressWarnings("unchecked")
     public void compare(Object object1, Object object2, DeepComparatorContext context) {
 
-        if (alreadyProcessed(object1)) {
+        if (alreadyProcessed(object1, object2)) {
             return;
         }
-        rememberProcessed(object1);
+        rememberProcessed(object1, object2);
 
         DeepComparator comparator = new ReferenceComparatorDecorator(getComparator(object1.getClass()));
 
@@ -62,14 +63,18 @@ public class ConfigurableDeepComparator implements DeepComparator {
         return comparators.convert(type);
     }
 
-    private void rememberProcessed(Object object) {
-        int identity = identity(object);
-        processedIdentities.add(identity);
+    private void rememberProcessed(Object object1, Object object2) {
+        CompositeKey key = getKey(object1, object2);
+        processedIdentities.add(key);
     }
 
-    private boolean alreadyProcessed(Object object) {
-        int identity = identity(object);
-        return processedIdentities.contains(identity);
+    private boolean alreadyProcessed(Object object1, Object object2) {
+        CompositeKey key = getKey(object1, object2);
+        return processedIdentities.contains(key);
+    }
+
+    private CompositeKey getKey(Object object1, Object object2) {
+        return new CompositeKey(identity(object1), identity(object2));
     }
 
     private int identity(Object object) {
