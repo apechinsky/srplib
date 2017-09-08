@@ -3,6 +3,7 @@ package org.srplib.reflection.objectfactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.srplib.contract.Argument;
 import org.srplib.contract.Utils;
 import org.srplib.reflection.classgraph.ClassGraphNode;
 import org.srplib.support.CompositeKey;
@@ -30,18 +31,45 @@ public class ConfigurableNodeValueFactory implements NodeValueFactory<Object> {
 
     private final ValueFactory defaultValueFactory;
 
+    /**
+     * Create node value factory based on specified generic value factory.
+     *
+     * @param defaultValueFactory {@link ValueFactory} generic value factory
+     */
     public ConfigurableNodeValueFactory(ValueFactory<?> defaultValueFactory) {
+        Argument.checkNotNull(defaultValueFactory, "defaultValueFactory must not be null!");
         this.defaultValueFactory = defaultValueFactory;
     }
 
+    /**
+     * Define type metadata for specified class graph node (Class + field).
+     *
+     * <p>Method may be used to override type metadata obtained via reflection.</p>
+     *
+     * Use cases:
+     * <ul>
+     *     <li>Class defines a field with an interface type (List, Runnable, etc.). Use this method to provide
+     *     implementation class.</li>
+     * </ul>
+     *
+     * @param node ClassGraphNode class graph node
+     * @param typeMeta TypeMeta type metadata
+     */
     public void add(ClassGraphNode node, TypeMeta typeMeta) {
         nodeValueMeta.put(getKey(node), typeMeta);
     }
 
+    /**
+     * Define value factory for specified class graph node (Class + field).
+     *
+     * <p>Method may be used to override value factory provided by default object factory (see constructor).</p>
+     *
+     * @param node ClassGraphNode class graph node
+     * @param valueFactory ValueFactory value factory
+     */
     public void add(ClassGraphNode node, ValueFactory valueFactory) {
         valueFactories.put(getKey(node), valueFactory);
     }
-
 
     @Override
     public Object get(NodePath<? extends ClassGraphNode> path) {
@@ -65,7 +93,6 @@ public class ConfigurableNodeValueFactory implements NodeValueFactory<Object> {
         return Utils.getDefaultIfNull(typeMeta, new TypeMeta(node.getType()));
     }
 
-
     private ValueFactory getValueFactory(ClassGraphNode node) {
         ValueFactory valueFactory = valueFactories.get(getKey(node));
 
@@ -73,8 +100,9 @@ public class ConfigurableNodeValueFactory implements NodeValueFactory<Object> {
     }
 
     private CompositeKey getKey(ClassGraphNode node) {
-        String fieldName = node.getField() != null ? node.getField().getName() : null;
-        return new CompositeKey(node.getType(), fieldName);
+        return node.getField() == null
+            ? new CompositeKey(node.getType())
+            : new CompositeKey(node.getField().getDeclaringClass(), node.getField().getName());
     }
 
 }

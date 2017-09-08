@@ -50,4 +50,9 @@ public class TypeMeta {
     public int hashCode() {
         return Objects.hash(type);
     }
+
+    @Override
+    public String toString() {
+        return String.format("TypeMeta(%s)", type);
+    }
 }

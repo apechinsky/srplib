@@ -54,7 +54,6 @@ public class ConfigurableDeepComparatorTest {
 
     public static TestObject generateTestObject() {
         ConfigurableNodeValueFactory nodeValueFactory = new ConfigurableNodeValueFactory(new NonDefaultValueFactory());
-
         nodeValueFactory.add(ClassGraphNode.create(TestObject.class, "listField"),
             new CollectionTypeMeta(ArrayList.class, String.class, nodeValueFactory));
 

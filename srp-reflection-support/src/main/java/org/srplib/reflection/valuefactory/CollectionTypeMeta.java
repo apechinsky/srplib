@@ -18,4 +18,8 @@ public class CollectionTypeMeta extends CompositeTypeMeta {
         return elementType;
     }
 
+    @Override
+    public String toString() {
+        return String.format("CollectionTypeMeta(type:%s, item:%s)", getType(), getElementType());
+    }
 }

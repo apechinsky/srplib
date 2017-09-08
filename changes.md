@@ -1,6 +1,7 @@
 # 0.8.2
 - Fixed: DeepComparator. IndexOutOfBoundsException if actual collection/array/map length is greater than expected.
 - Fixed: DeepComparator compares arrays with standard equals. Changed to ArrayDeepComparator.
+- Fixed: ConfigurableNodeValueFactory. A collision in type metadata and value factory definition.
 
 # 0.8.1
 - Fixed: DeepComparator doesn't handle interned strings.
