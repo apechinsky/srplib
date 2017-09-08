@@ -1,7 +1,7 @@
 
 allprojects {
     group = 'org.srplib'
-    version = '0.8.2-SNAPSHOT'
+    version = '0.8.2'
 
     ext.isReleaseVersion = !version.endsWith("-SNAPSHOT")
 
