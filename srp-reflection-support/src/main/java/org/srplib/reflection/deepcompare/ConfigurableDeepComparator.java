@@ -54,7 +54,9 @@ public class ConfigurableDeepComparator implements DeepComparator {
         }
         rememberProcessed(object1, object2);
 
-        DeepComparator comparator = new ReferenceComparatorDecorator(getComparator(object1.getClass()));
+        DeepComparator comparator = getComparator(object1.getClass());
+
+        comparator = new ReferenceComparatorDecorator(comparator);
 
         comparator.compare(object1, object2, context);
     }

@@ -27,7 +27,10 @@ public class MapDeepComparator implements DeepComparator<Map> {
     public void compare(Map map1, Map map2, DeepComparatorContext context) {
 
         if (map1.size() != map2.size()) {
-            context.registerMismatch(String.format("Maps have different size. Expected: %d actual: %d", map1.size(), map2.size()));
+            context.registerMismatch(
+                String.format("Maps have different size. Expected: %d actual: %d", map1.size(), map2.size()));
+
+            return;
         }
 
         for (Object key : map1.keySet()) {

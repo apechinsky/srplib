@@ -1,3 +1,7 @@
+# 0.8.2
+- Fixed: DeepComparator. IndexOutOfBoundsException if actual collection/array/map length is greater than expected.
+- Fixed: DeepComparator compares arrays with standard equals. Changed to ArrayDeepComparator.
+
 # 0.8.1
 - Fixed: DeepComparator doesn't handle interned strings.
 

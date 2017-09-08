@@ -8,11 +8,13 @@ import java.util.Set;
 import org.srplib.conversion.Converter;
 import org.srplib.conversion.mapper.MatcherMapBuilder;
 import org.srplib.reflection.deepcompare.DeepComparator;
+import org.srplib.reflection.deepcompare.comparators.ArrayDeepComparator;
 import org.srplib.reflection.deepcompare.comparators.EqualsDeepComparator;
 import org.srplib.reflection.deepcompare.comparators.ListDeepComparator;
 import org.srplib.reflection.deepcompare.comparators.MapDeepComparator;
 import org.srplib.reflection.deepcompare.comparators.ReflectionDeepComparator;
 import static org.hamcrest.Matchers.typeCompatibleWith;
+import static org.srplib.reflection.valuefactory.factories.IsArrayMatcher.isArray;
 
 
 /**
@@ -33,6 +35,8 @@ public class StandardComparators implements Converter<Class, DeepComparator> {
         .map(typeCompatibleWith(Date.class), new EqualsDeepComparator())
 
         .map(typeCompatibleWith(Enum.class), new EqualsDeepComparator())
+
+        .map(isArray(), new ArrayDeepComparator())
 
         .map(typeCompatibleWith(List.class), new ListDeepComparator())
 

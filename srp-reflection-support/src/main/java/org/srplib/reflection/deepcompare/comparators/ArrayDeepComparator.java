@@ -1,5 +1,7 @@
 package org.srplib.reflection.deepcompare.comparators;
 
+import java.lang.reflect.Array;
+
 import org.srplib.reflection.deepcompare.DeepComparator;
 import org.srplib.reflection.deepcompare.DeepComparatorContext;
 
@@ -13,21 +15,29 @@ import org.srplib.reflection.deepcompare.DeepComparatorContext;
  *     <li>Compares array items using context.compare() method.</li>
  * </ul>
  *
+ * <p>Comparator supports object and primitive type arrays.</p>
+ *
  * <p>Note. Comparator doesn't perform null or reference equality check.</p>
  *
  * @author Anton Pechinsky
  */
-public class ArrayDeepComparator implements DeepComparator<Object[]> {
+public class ArrayDeepComparator implements DeepComparator<Object> {
 
     @Override
-    public void compare(Object[] array1, Object[] array2, DeepComparatorContext context) {
+    public void compare(Object array1, Object array2, DeepComparatorContext context) {
 
-        if (array1.length != array2.length) {
-            context.registerMismatch(String.format("Array size mismatch. Expected: %d actual: %d", array1.length, array2.length));
+        if (Array.getLength(array1) != Array.getLength(array2)) {
+            context.registerMismatch(String.format(
+                "Array size mismatch. Expected: %d actual: %d", Array.getLength(array1), Array.getLength(array2)));
+
+            return;
         }
 
-        for (int i = 0; i < array1.length; i++) {
-            context.compareNested(array1[i], array2[i], String.format("[%d]", i));
+        for (int i = 0; i < Array.getLength(array1); i++) {
+            Object value1 = Array.get(array1, i);
+            Object value2 = Array.get(array2, i);
+
+            context.compareNested(value1, value2, String.format("[%d]", i));
         }
     }
 
