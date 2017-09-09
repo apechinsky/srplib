@@ -25,8 +25,7 @@ public class ListDeepComparator implements DeepComparator<List> {
     public void compare(List list1, List list2, DeepComparatorContext context) {
 
         if (list1.size() != list2.size()) {
-            context.registerMismatch(
-                String.format("Lists have different size. Expected: %d actual: %d", list1.size(), list2.size()));
+            context.registerMismatch("Lists have different size. Expected: %d actual: %d", list1.size(), list2.size());
 
             return;
         }

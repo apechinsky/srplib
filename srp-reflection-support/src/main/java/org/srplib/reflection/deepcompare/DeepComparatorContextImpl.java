@@ -39,9 +39,12 @@ public class DeepComparatorContextImpl implements DeepComparatorContext {
         compare(object1, object2, path);
     }
 
-    public void registerMismatch(String message) {
-        String mismatch = String.format("Mismatch at path '%s'. %s", path.format("."), message);
-        mismatches.add(mismatch);
+    public void registerMismatch(String pattern, Object... arguments) {
+        String providedMessage = String.format(pattern, arguments);
+
+        String contextMessage = String.format("Mismatch at path '%s'. %s", path.format("."), providedMessage);
+
+        mismatches.add(contextMessage);
     }
 
     public List<String> getMismatches() {

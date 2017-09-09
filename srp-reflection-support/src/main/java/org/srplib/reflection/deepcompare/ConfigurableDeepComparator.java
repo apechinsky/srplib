@@ -7,6 +7,7 @@ import java.util.Set;
 import org.srplib.contract.Argument;
 import org.srplib.conversion.Converter;
 import org.srplib.reflection.deepcompare.comparators.ReferenceComparatorDecorator;
+import org.srplib.reflection.deepcompare.support.StandardComparators;
 import org.srplib.support.CompositeKey;
 
 /**
@@ -29,6 +30,13 @@ public class ConfigurableDeepComparator implements DeepComparator {
         Argument.checkNotNull(comparators, "comparators must not be null!");
 
         this.comparators = comparators;
+    }
+
+    /**
+     * Constructor.
+     */
+    public ConfigurableDeepComparator() {
+        this(new StandardComparators());
     }
 
     /**

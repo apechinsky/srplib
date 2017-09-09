@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.srplib.reflection.classgraph.ClassGraphNode;
-import org.srplib.reflection.classgraph.TestObject;
+import org.srplib.reflection.support.TestObject;
 import org.srplib.reflection.objectfactory.ClassGraphFactory;
 import org.srplib.reflection.objectfactory.ConfigurableNodeValueFactory;
 import org.srplib.reflection.valuefactory.CollectionTypeMeta;
@@ -23,7 +23,6 @@ public class ConfigurableDeepComparatorTest {
 
     @Test
     public void testObjectComparison() throws Exception {
-
         TestObject expected = generateTestObject();
         TestObject actual = generateTestObject();
 
@@ -91,5 +90,7 @@ public class ConfigurableDeepComparatorTest {
             this.age = age;
             this.friends = friends;
         }
+
+
     }
 }

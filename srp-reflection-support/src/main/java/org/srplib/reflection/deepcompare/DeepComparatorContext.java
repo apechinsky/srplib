@@ -36,8 +36,9 @@ public interface DeepComparatorContext {
      *
      * <p>Implementation is responsible</p>
      *
-     * @param message String mismatch message.
+     * @param pattern String mismatch message pattern.
+     * @param arguments String mismatch message arguments.
      */
-    void registerMismatch(String message);
+    void registerMismatch(String pattern, Object... arguments);
 
 }

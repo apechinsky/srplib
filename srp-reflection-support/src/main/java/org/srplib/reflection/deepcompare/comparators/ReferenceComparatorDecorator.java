@@ -23,10 +23,17 @@ public class ReferenceComparatorDecorator<T> implements DeepComparator<T> {
 
     private DeepComparator<T> delegate;
 
-    public ReferenceComparatorDecorator(DeepComparator<T> delegate) {
+    private boolean checkClass;
+
+    public ReferenceComparatorDecorator(DeepComparator<T> delegate, boolean checkClass) {
         Argument.checkNotNull(delegate, "delegate must not be null!");
 
         this.delegate = delegate;
+        this.checkClass = checkClass;
+    }
+
+    public ReferenceComparatorDecorator(DeepComparator<T> delegate) {
+        this(delegate, false);
     }
 
     @Override
@@ -36,7 +43,13 @@ public class ReferenceComparatorDecorator<T> implements DeepComparator<T> {
         }
 
         if (object1 == null || object2 == null) {
-            context.registerMismatch(String.format("Expected: '%s' actual: '%s'", object1, object2));
+            context.registerMismatch("Compare null and non-null values. Expected: '%s' actual: '%s'", object1, object2);
+            return;
+        }
+
+        if (checkClass && object1.getClass() != object2.getClass()) {
+            context.registerMismatch("Different classes. Expected: '%s' actual: '%s'",
+                object1.getClass(), object2.getClass());
             return;
         }
 

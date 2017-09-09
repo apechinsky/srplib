@@ -23,12 +23,15 @@ import org.srplib.reflection.deepcompare.DeepComparatorContext;
  */
 public class ArrayDeepComparator implements DeepComparator<Object> {
 
+    /**
+     * @throws IllegalArgumentException if objects are not arrays
+     */
     @Override
     public void compare(Object array1, Object array2, DeepComparatorContext context) {
 
         if (Array.getLength(array1) != Array.getLength(array2)) {
-            context.registerMismatch(String.format(
-                "Array size mismatch. Expected: %d actual: %d", Array.getLength(array1), Array.getLength(array2)));
+            context.registerMismatch("Array size mismatch. Expected: %d actual: %d",
+                Array.getLength(array1), Array.getLength(array2));
 
             return;
         }

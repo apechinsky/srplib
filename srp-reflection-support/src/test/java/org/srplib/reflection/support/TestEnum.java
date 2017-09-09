@@ -1,4 +1,4 @@
-package org.srplib.reflection.classgraph;
+package org.srplib.reflection.support;
 
 /**
  * Перечисление.

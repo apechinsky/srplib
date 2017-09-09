@@ -6,7 +6,7 @@ package org.srplib.validation;
  * <p>This base class simplifies validators creation because subclasses are responsible only for checking validity condition
  * and providing validation error. This class populates validatable with validation error (if any)</p>
  *
- * TODO: does this class make sense? Subclasses have no chance to add value validation error.  
+ * TODO: does this class make sense? Subclasses have no chance to add value to validation error.
  *
  * @author Anton Pechinsky
  */
@@ -28,8 +28,11 @@ public abstract class AbstractValidator<T> implements Validator<T> {
     protected abstract boolean isValid(Validatable<T> validatable);
 
     /**
-     * Subclasses should implement this method and
-     * @return
+     * Subclasses should implement this method and return an error.
+     *
+     * <p>Method is called if {@link #isValid(Validatable)} returned false.</p>
+     *
+     * @return ValidationError
      */
     protected abstract ValidationError newError();
 
