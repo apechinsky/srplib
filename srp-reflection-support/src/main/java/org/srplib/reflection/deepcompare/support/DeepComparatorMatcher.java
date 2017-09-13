@@ -52,7 +52,7 @@ public class DeepComparatorMatcher extends BaseMatcher<Object> {
     }
 
     public static DeepComparatorMatcher deepCompare(Object expected) {
-        ConfigurableDeepComparator deepComparator = new ConfigurableDeepComparator(new StandardComparators());
+        ConfigurableDeepComparator deepComparator = new ConfigurableDeepComparator(new StandardConfiguration());
         return new DeepComparatorMatcher(deepComparator, expected);
     }
 

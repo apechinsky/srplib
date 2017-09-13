@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.srplib.contract.Argument;
-import org.srplib.conversion.Converter;
 import org.srplib.reflection.deepcompare.comparators.ReferenceComparatorDecorator;
-import org.srplib.reflection.deepcompare.support.StandardComparators;
+import org.srplib.reflection.deepcompare.support.StandardConfiguration;
 import org.srplib.support.CompositeKey;
 
 /**
@@ -19,24 +18,24 @@ public class ConfigurableDeepComparator implements DeepComparator {
 
     private Set<CompositeKey> processedIdentities = new HashSet<>();
 
-    private Converter<Class, DeepComparator> comparators;
+    private DeepComparatorConfiguration configuration;
 
     /**
      * Constructor.
      *
-     * @param comparators Converter class to comparator registry.
+     * @param configuration DeepComparatorConfiguraiton class to comparator registry.
      */
-    public ConfigurableDeepComparator(Converter<Class, DeepComparator> comparators) {
-        Argument.checkNotNull(comparators, "comparators must not be null!");
+    public ConfigurableDeepComparator(DeepComparatorConfiguration configuration) {
+        Argument.checkNotNull(configuration, "configuration must not be null!");
 
-        this.comparators = comparators;
+        this.configuration = configuration;
     }
 
     /**
-     * Constructor.
+     * Constructs comparator with default configuration.
      */
     public ConfigurableDeepComparator() {
-        this(new StandardComparators());
+        this(new StandardConfiguration());
     }
 
     /**
@@ -47,7 +46,9 @@ public class ConfigurableDeepComparator implements DeepComparator {
      * @return list of mismatch description strings or empty list if no mismatches found.
      */
     public List<String> compare(Object object1, Object object2) {
-        DeepComparatorContextImpl context = new DeepComparatorContextImpl(this);
+        ReferenceComparatorDecorator rootComparator = new ReferenceComparatorDecorator(this);
+
+        DeepComparatorContextImpl context = new DeepComparatorContextImpl(rootComparator);
 
         compare(object1, object2, context);
 
@@ -62,15 +63,11 @@ public class ConfigurableDeepComparator implements DeepComparator {
         }
         rememberProcessed(object1, object2);
 
-        DeepComparator comparator = getComparator(object1.getClass());
+        DeepComparator comparator = configuration.getComparator(object1.getClass());
 
         comparator = new ReferenceComparatorDecorator(comparator);
 
         comparator.compare(object1, object2, context);
-    }
-
-    private DeepComparator getComparator(Class<?> type) {
-        return comparators.convert(type);
     }
 
     private void rememberProcessed(Object object1, Object object2) {

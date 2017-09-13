@@ -8,6 +8,7 @@ import java.util.Set;
 import org.srplib.conversion.Converter;
 import org.srplib.conversion.mapper.MatcherMapBuilder;
 import org.srplib.reflection.deepcompare.DeepComparator;
+import org.srplib.reflection.deepcompare.DeepComparatorConfiguration;
 import org.srplib.reflection.deepcompare.comparators.ArrayDeepComparator;
 import org.srplib.reflection.deepcompare.comparators.EqualsDeepComparator;
 import org.srplib.reflection.deepcompare.comparators.ListDeepComparator;
@@ -18,11 +19,11 @@ import static org.srplib.reflection.valuefactory.factories.IsArrayMatcher.isArra
 
 
 /**
- * Standard comparator registry.
+ * Standard comparator configuration.
  *
  * @author Anton Pechinsky
  */
-public class StandardComparators implements Converter<Class, DeepComparator> {
+public class StandardConfiguration implements DeepComparatorConfiguration {
 
     private final Converter<Class<?>, DeepComparator> comparators = MatcherMapBuilder.<Class<?>, DeepComparator>create()
 
@@ -49,7 +50,7 @@ public class StandardComparators implements Converter<Class, DeepComparator> {
         .build();
 
     @Override
-    public DeepComparator convert(Class input) {
-        return comparators.convert(input);
+    public DeepComparator getComparator(Class type) {
+        return comparators.convert(type);
     }
 }

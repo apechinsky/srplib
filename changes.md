@@ -1,3 +1,7 @@
+# 0.8.3
+- Fixed: DeepComparator. NullPointerException comparing null values
+- Add DeepComparatorConfiguration - a configuration for DeepComparator.
+
 # 0.8.2
 - Fixed: DeepComparator. IndexOutOfBoundsException if actual collection/array/map length is greater than expected.
 - Fixed: DeepComparator compares arrays with standard equals. Changed to ArrayDeepComparator.

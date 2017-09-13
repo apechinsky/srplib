@@ -1,17 +1,22 @@
 package org.srplib.reflection.deepcompare;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import static java.util.Arrays.asList;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.srplib.reflection.classgraph.ClassGraphNode;
-import org.srplib.reflection.support.TestObject;
+import org.srplib.reflection.deepcompare.support.StandardConfiguration;
 import org.srplib.reflection.objectfactory.ClassGraphFactory;
 import org.srplib.reflection.objectfactory.ConfigurableNodeValueFactory;
+import org.srplib.reflection.support.TestObject;
 import org.srplib.reflection.valuefactory.CollectionTypeMeta;
 import org.srplib.reflection.valuefactory.MapTypeMeta;
 import org.srplib.reflection.valuefactory.NonDefaultValueFactory;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.srplib.reflection.deepcompare.support.DeepComparatorMatcher.deepCompare;
@@ -21,14 +26,43 @@ import static org.srplib.reflection.deepcompare.support.DeepComparatorMatcher.de
  */
 public class ConfigurableDeepComparatorTest {
 
+    private ConfigurableDeepComparator comparator;
+
+    public ConfigurableDeepComparatorTest() {
+        comparator = new ConfigurableDeepComparator(new StandardConfiguration());
+    }
+
     @Test
     public void testObjectComparison() throws Exception {
         TestObject expected = generateTestObject();
         TestObject actual = generateTestObject();
 
-        assertThat(expected, deepCompare(actual));
+        assertThat(actual, deepCompare(expected));
     }
 
+    @Test
+    public void nullValues() throws Exception {
+        Person expectedNested = new Person("nestedName", null, 23, Arrays.<Person>asList());
+        Person expected = new Person("name", null, 23, asList(expectedNested));
+
+        Person actualNested = new Person("nestedName", "actualSurname", 23, null);
+        Person actual = new Person("name", "name", 23, asList(actualNested));
+
+
+        List<String> compare = comparator.compare(expected, actual);
+
+
+        assertThat(compare, Matchers.hasSize(3));
+
+        assertThat(compare.get(0), is("Mismatch at path 'root.surname'. " +
+            "Compare null and non-null values. Expected: 'null' actual: 'name'"));
+
+        assertThat(compare.get(1), is("Mismatch at path 'root.friends.[0].surname'. " +
+            "Compare null and non-null values. Expected: 'null' actual: 'actualSurname'"));
+
+        assertThat(compare.get(2), is("Mismatch at path 'root.friends.[0].friends'. " +
+            "Compare null and non-null values. Expected: '[]' actual: 'null'"));
+    }
 
     @Test
     public void cyclicDependencies() throws Exception {
