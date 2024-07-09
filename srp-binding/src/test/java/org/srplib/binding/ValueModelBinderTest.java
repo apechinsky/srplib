@@ -8,6 +8,7 @@ import org.srplib.conversion.ConverterRegistry;
 import org.srplib.conversion.IntegerToStringConverter;
 import org.srplib.conversion.StringToIntegerConverter;
 import org.srplib.conversion.TwoWayConverter;
+import org.srplib.conversion.registry.ExactConverterRegistry;
 import org.srplib.model.BeanPropertyValueAdapter;
 import org.srplib.model.ValueModel;
 
@@ -50,9 +51,9 @@ public class ValueModelBinderTest {
 
     @Test
     public void testBindWithConversion() throws Exception {
-        ConverterRegistry converterRegistry = new ConverterRegistry();
-        converterRegistry.registerConverter(Integer.class, String.class, new IntegerToStringConverter());
-        converterRegistry.registerConverter(String.class, Integer.class, new StringToIntegerConverter());
+        ConverterRegistry converterRegistry = new ExactConverterRegistry();
+        converterRegistry.add(Integer.class, String.class, new IntegerToStringConverter());
+        converterRegistry.add(String.class, Integer.class, new StringToIntegerConverter());
 
         binder.setConverterRegistry(converterRegistry);
 

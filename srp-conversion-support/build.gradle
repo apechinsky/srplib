@@ -1,6 +1,7 @@
 dependencies {
     compile project(':srp-contract')
     compile project(':srp-conversion')
+    compile project(':srp-reflection')
 
     compile 'net.sourceforge.collections:collections-generic:4.01'
     compile 'commons-collections:commons-collections:3.2.2'

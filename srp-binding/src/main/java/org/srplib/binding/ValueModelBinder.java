@@ -10,6 +10,7 @@ import org.srplib.conversion.Converter;
 import org.srplib.conversion.ConverterRegistry;
 import org.srplib.conversion.EmptyConverter;
 import org.srplib.conversion.TwoWayConverter;
+import org.srplib.conversion.registry.ExactConverterRegistry;
 import org.srplib.model.ContextDependentValueModel;
 import org.srplib.model.ValueModel;
 import org.srplib.validation.ValidationErrors;
@@ -33,7 +34,7 @@ public class ValueModelBinder<T> implements Binder<T> {
     }
 
     private ConverterRegistry createDefaultConverterRegistry() {
-        ConverterRegistry converterRegistry = new ConverterRegistry();
+        ConverterRegistry converterRegistry = new ExactConverterRegistry();
         return converterRegistry;
     }
 
@@ -149,7 +150,7 @@ public class ValueModelBinder<T> implements Binder<T> {
             converter = EmptyConverter.instance();
         }
         else {
-            converter = converterRegistry.getConverter(source, target);
+            converter = converterRegistry.find(source, target);
         }
         Assert.checkNotNull(converter, "No converter from type '" + source + "' to type '" + target + "'.");
 

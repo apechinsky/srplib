@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.srplib.conversion.registry.ExactConverterRegistry;
+
 /**
  * Factory class producing instances of {@link Converter} and {@link ConverterRegistry}
  *
@@ -17,7 +19,7 @@ public class Converters {
      * @return ConverterRegistry converter registry without any converters.
      */
     public static ConverterRegistry newRegistry() {
-        return new ConverterRegistry();
+        return new ExactConverterRegistry();
     }
 
     /**
@@ -26,24 +28,24 @@ public class Converters {
      * @return ConverterRegistry converter registry.
      */
     public static ConverterRegistry newDefaultRegistry() {
-        ConverterRegistry converters = new ConverterRegistry();
+        ConverterRegistry converters = new ExactConverterRegistry();
 
-        converters.registerConverter(String.class, Double.class, new StringToDoubleConverter());
-        converters.registerConverter(String.class, double.class, new StringToDoubleConverter());
+        converters.add(String.class, Double.class, new StringToDoubleConverter());
+        converters.add(String.class, double.class, new StringToDoubleConverter());
 
-        converters.registerConverter(String.class, Integer.class, new StringToIntegerConverter());
-        converters.registerConverter(String.class, int.class, new StringToIntegerConverter());
+        converters.add(String.class, Integer.class, new StringToIntegerConverter());
+        converters.add(String.class, int.class, new StringToIntegerConverter());
 
-        converters.registerConverter(String.class, Boolean.class, new StringToBooleanConverter());
-        converters.registerConverter(String.class, boolean.class, new StringToBooleanConverter());
+        converters.add(String.class, Boolean.class, new StringToBooleanConverter());
+        converters.add(String.class, boolean.class, new StringToBooleanConverter());
 
-        converters.registerConverter(Boolean.class, boolean.class, EmptyConverter.<Boolean>instance());
+        converters.add(Boolean.class, boolean.class, EmptyConverter.instance());
 
-        converters.registerConverter(Integer.class, String.class, new IntegerToStringConverter());
-        converters.registerConverter(int.class, String.class, new IntegerToStringConverter());
+        converters.add(Integer.class, String.class, new IntegerToStringConverter());
+        converters.add(int.class, String.class, new IntegerToStringConverter());
 
-        converters.registerConverter(Integer.class, Long.class, new IntegerToLongConverter());
-        converters.registerConverter(Integer.class, long.class, new IntegerToLongConverter());
+        converters.add(Integer.class, Long.class, new IntegerToLongConverter());
+        converters.add(Integer.class, long.class, new IntegerToLongConverter());
 
         return converters;
     }

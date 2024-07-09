@@ -1,3 +1,11 @@
+# 0.8.4
+- ConverterRegistry 
+  -- converted from class into interface.
+  -- added two implementations: ExactConverterRegistry and SupertypeConverterRegistry.
+- Add ConversionService. Incapsulates conversion logic.
+- Add Registrar. Incapsulates registration parameters and logic.
+- Add ConverterConfigurer. Conversion system configurer.
+
 # 0.8.3
 - Fixed: DeepComparator. NullPointerException comparing null values
 - Add DeepComparatorConfiguration - a configuration for DeepComparator.
