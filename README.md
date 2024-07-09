@@ -14,7 +14,7 @@
   - support  - support library for other modules
   - model - general purpose model
   - binding - general purpose binding (experimental)
-  - validation - genral purpose validation (experimental)
+  - validation - general purpose validation (experimental)
   
 ## Design principles  
   
@@ -28,7 +28,7 @@
 
 ### Context independence
 
-  Libraries shold not depend on particular context (framework, other library, UI technology, etc.) and should be 
+  Libraries should not depend on particular context (framework, other library, UI technology, etc.) and should be 
   suitable for mobile as well as large enterprise applications.  
 
 
@@ -40,11 +40,11 @@
 Main module:
   
   - defines core interfaces and classes
-  - does not provide "useful" implementaions 
+  - does not provide "useful" implementations 
   - does not provide helper classes, factories, syntax sugar, etc.
     
 Optional module:
 
   - provides useful implementations
-  - privides factories and helper classes
+  - provides factories and helper classes
 
