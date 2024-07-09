@@ -1,4 +1,4 @@
-# 0.8.4
+# 0.9.0
 - ConverterRegistry 
   -- converted from class into interface.
   -- added two implementations: ExactConverterRegistry and SupertypeConverterRegistry.
