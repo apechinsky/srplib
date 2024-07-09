@@ -1,7 +1,6 @@
 package org.srplib.reflection.valuefactory.factories;
 
 import org.hamcrest.Description;
-import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -20,7 +19,6 @@ public class IsArrayMatcher extends TypeSafeMatcher<Class<?>> {
         description.appendText("isArray");
     }
 
-    @Factory
     public static Matcher<Class<?>> isArray() {
         return new IsArrayMatcher();
     }

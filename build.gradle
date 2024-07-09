@@ -1,7 +1,7 @@
 
 allprojects {
     group = 'org.srplib'
-    version = '0.8.3'
+    version = '0.8.4-SNAPSHOT'
 
     ext.isReleaseVersion = !version.endsWith("-SNAPSHOT")
 
@@ -15,12 +15,16 @@ allprojects {
 
     libs.junit = 'junit:junit:4.11'
 
-    libs.mockito = 'org.mockito:mockito-core:1.9.5'
+    libs.mockito = [
+        "org.mockito:mockito-core:2.21.0",
+        "org.mockito:mockito-junit-jupiter:2.23.0"
+    ]
 
     libs.hamcrest_all = [
-        libs.hamcrest_core = 'org.hamcrest:hamcrest-core:1.3',
-        libs.hamcrest_library = 'org.hamcrest:hamcrest-library:1.3'
+        libs.hamcrest_core = "org.hamcrest:hamcrest-core:2.2",
+        libs.hamcrest_library = "org.hamcrest:hamcrest-library:2.2",
     ]
+
 
     libs.objenesis = 'org.objenesis:objenesis:2.6'
 
@@ -34,89 +38,81 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     apply plugin: 'signing'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
 
-    if (JavaVersion.current().isJava8Compatible()) {
-        tasks.withType(Javadoc) {
+    javadoc {
+        if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
-    }
-  
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from 'build/docs/javadoc'
-    }
-     
-    task sourcesJar(type: Jar) {
-        from sourceSets.main.allSource
-        classifier = 'sources'
+        if(JavaVersion.current().isJava9Compatible()) {
+            options.addBooleanOption('html5', true)
+        }
     }
 
-    artifacts {
-        archives jar
-        archives javadocJar
-        archives sourcesJar
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+
+                pom {
+                   name = 'Single Responsibility Principle library'
+                   description = 'Single Responsibility Principle (SRP) libraries collection'
+                   url = 'https://github.com/apechinsky/srplib'
+
+                   licenses {
+                       license {
+                           name = 'The Apache Software License, Version 2.0'
+                           url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                       }
+                   }
+
+                   scm {
+                       url = 'scm:git:git@github.com:apechinsky/srplib.git'
+                       connection = 'scm:git:git@github.com:apechinsky/srplib.git'
+                       developerConnection = 'git@github.com:apechinsky/srplib.git'
+                   }
+
+                   developers {
+                       developer {
+                           id = 'apechinsky'
+                           name = 'Anton Pechinsky'
+                       }
+                   }
+                }
+            }
+        }
+        repositories {
+            def sonatypeCredentials = Credentials.fromProject(project)
+
+            maven {
+                def releasesRepoUrl =  "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl =  "https://oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username = sonatypeCredentials.ossrhUsername
+                    password = sonatypeCredentials.ossrhPassword
+                }
+            }
+        }
     }
 
     signing {
-        required { 
-            isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") 
-        }
-        sign configurations.archives
-    }
-
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                def credentials = Credentials.fromProject(project)
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: credentials.ossrhUsername, password: credentials.ossrhPassword)
-                }
-
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: credentials.ossrhUsername, password: credentials.ossrhPassword)
-                }               
-     
-                pom.project {
-                   name 'Single Responsibility Principle library'
-                   packaging 'jar'
-                   description 'Single Responsibility Principle (SRP) libraries collection'
-                   url 'https://github.com/apechinsky/srplib'
-     
-                   scm {
-                       url 'scm:git:git@github.com:apechinsky/srplib.git'
-                       connection 'scm:git:git@github.com:apechinsky/srplib.git'
-                       developerConnection 'git@github.com:apechinsky/srplib.git'
-                   }
-     
-                   licenses {
-                       license {
-                           name 'The Apache Software License, Version 2.0'
-                           url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                       }
-                   }
-     
-                   developers {
-                       developer {
-                           id 'apechinsky'
-                           name 'Anton Pechinsky'
-                       }
-                   }
-               }
-            }
-        }
+        sign publishing.publications.mavenJava
     }
 }
 
 
-  
+
 class Credentials {
 
     String ossrhUsername

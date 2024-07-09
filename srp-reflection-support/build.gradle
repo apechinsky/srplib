@@ -1,13 +1,13 @@
 dependencies {
-    compile project(':srp-contract')
-    compile project(':srp-support')
-    compile project(':srp-reflection')
-    compile project(':srp-conversion')
-    compile project(':srp-conversion-support')
+    implementation project(':srp-contract')
+    implementation project(':srp-support')
+    implementation project(':srp-reflection')
+    implementation project(':srp-conversion')
+    implementation project(':srp-conversion-support')
 
-    compile libs.hamcrest_all
+    implementation libs.hamcrest_all
 
-    compile libs.objenesis
+    implementation libs.objenesis
 
-    testCompile libs.test
+    testImplementation libs.test
 }

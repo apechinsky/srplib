@@ -1,6 +1,6 @@
 dependencies {
-    compile project(':srp-contract')
-    compile project(':srp-support')
+    implementation project(':srp-contract')
+    implementation project(':srp-support')
 
-    testCompile libs.test
+    testImplementation libs.test
 }

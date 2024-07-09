@@ -1,14 +1,15 @@
 dependencies {
-    compile project(':srp-contract')
-    compile project(':srp-conversion')
-    compile project(':srp-reflection')
+    implementation project(':srp-contract')
+    implementation project(':srp-support')
+    implementation project(':srp-conversion')
+    implementation project(':srp-reflection')
 
-    compile 'net.sourceforge.collections:collections-generic:4.01'
-    compile 'commons-collections:commons-collections:3.2.2'
-    compile 'org.apache.commons:commons-collections4:4.1'
-    compile libs.guava
-    compile libs.hamcrest_all
+    implementation 'net.sourceforge.collections:collections-generic:4.01'
+    implementation 'commons-collections:commons-collections:3.2.2'
+    implementation 'org.apache.commons:commons-collections4:4.1'
+    implementation libs.guava
+    implementation libs.hamcrest_all
 
-    testCompile libs.test
+    testImplementation libs.test
 }
 

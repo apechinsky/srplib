@@ -1,9 +1,9 @@
 dependencies {
-    compile project(':srp-support')
-    compile project(':srp-contract')
-    compile project(':srp-model')
-    compile project(':srp-conversion')
-    compile project(':srp-reflection')
+    implementation project(':srp-support')
+    implementation project(':srp-contract')
+    implementation project(':srp-model')
+    implementation project(':srp-conversion')
+    implementation project(':srp-reflection')
 
-    testCompile libs.test
+    testImplementation libs.test
 }

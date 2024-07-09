@@ -5,6 +5,10 @@
 - Add ConversionService. Incapsulates conversion logic.
 - Add Registrar. Incapsulates registration parameters and logic.
 - Add ConverterConfigurer. Conversion system configurer.
+- Gradle migration: 3.5 -> 8.5.
+- Replace 'maven' plugin with 'maven-publish'
+- Upgrade hamcrest: 1.3 -> 2.2
+- Upgrade mockito: 1.9.5 -> 2.21.0
 
 # 0.8.3
 - Fixed: DeepComparator. NullPointerException comparing null values
